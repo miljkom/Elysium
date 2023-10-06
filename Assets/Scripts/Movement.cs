@@ -1,33 +1,35 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public float swipeSpeed = 5.0f; // Adjust the swipe movement speed.
+    [SerializeField] private float maxSwipeDistance;
     private Vector2 startPosition;
     private Vector2 endPosition;
     private bool isSwiping = false;
-    
+    private Camera mainCamera;
+
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            startPosition = Input.mousePosition;
+            startPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Debug.Log(startPosition);
             isSwiping = true;
             Debug.Log("start");
         }
         if (Input.GetMouseButtonUp(0))
         {
-            endPosition = Input.mousePosition;
+            endPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Debug.Log(endPosition);
             if (isSwiping)
             {
                 // Calculate the swipe direction and apply movement.
-                Vector2 swipeDirection = (endPosition - startPosition);
-                Vector3 moveDirection = new Vector3(swipeDirection.x, swipeDirection.y, 0);
                 Debug.Log("end");
                 StartCoroutine(LerpPosition(transform.position, endPosition, 1));
             }
@@ -46,6 +48,10 @@ public class Movement : MonoBehaviour
         {
             float t = elapsedTime / duration;
             transform.position = Vector2.Lerp(position, transformPosition, t);
+            if (Vector2.Distance(startTransform, transform.position) > maxSwipeDistance)
+            {
+                yield break;
+            }
 
             elapsedTime += Time.deltaTime;
             yield return null; // Wait for the next frame.
