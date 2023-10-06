@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] private float maxSwipeDistance;
+    [SerializeField] private float swipeSpeed;
+    [SerializeField] private Rigidbody2D rb;
     private Vector2 startPosition;
     private Vector2 endPosition;
     private bool isSwiping = false;
@@ -31,14 +32,15 @@ public class Movement : MonoBehaviour
             {
                 // Calculate the swipe direction and apply movement.
                 Debug.Log("end");
-                StartCoroutine(LerpPosition(transform.position, endPosition, 1));
+                //StartCoroutine(LerpPosition(transform.position, endPosition, 1));
+                rb.AddForce(endPosition * swipeSpeed);
             }
             isSwiping = false;
             Debug.Log("up");
         }
     }
 
-    private IEnumerator LerpPosition(Vector2 startTransform, Vector2 endTransform, int duration)
+    /*private IEnumerator LerpPosition(Vector2 startTransform, Vector2 endTransform, int duration)
     {
         float elapsedTime = 0.0f;
         Vector2 position = startTransform;
@@ -59,5 +61,5 @@ public class Movement : MonoBehaviour
 
         // Ensure the final position is the end position.
         transform.position = transformPosition;
-    }
+    }*/
 }
