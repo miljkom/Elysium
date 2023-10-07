@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour
         previousYPosition = _transform.position.y;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         var currentYPosition = _transform.position.y;
         playerFalling = currentYPosition + 0.01f <= previousYPosition;
