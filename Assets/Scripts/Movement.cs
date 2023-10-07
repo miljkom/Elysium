@@ -5,18 +5,32 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] private float swipeSpeed;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private BoxCollider2D boxCollider2D;
+    
     private Vector2 startPosition;
     private Vector2 endPosition;
-    private bool isSwiping = false;
+    private Transform _transform;
     private Camera mainCamera;
+    private float previousYPosition;
+    private bool isSwiping;
+
+    private bool playerFalling;
 
     private void Awake()
     {
         mainCamera = Camera.main;
+        _transform = transform;
+        previousYPosition = _transform.position.y;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
+        var currentYPosition = _transform.position.y;
+        playerFalling = currentYPosition + 0.01f <= previousYPosition;
+        if (playerFalling)
+            boxCollider2D.isTrigger = false;
+        
+        previousYPosition = currentYPosition;
         if (Input.GetMouseButtonDown(0))
         {
             startPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -34,6 +48,7 @@ public class Movement : MonoBehaviour
                 Debug.Log("end");
                 //StartCoroutine(LerpPosition(transform.position, endPosition, 1));
                 rb.AddForce(endPosition * swipeSpeed);
+                boxCollider2D.isTrigger = true;
             }
             isSwiping = false;
             Debug.Log("up");

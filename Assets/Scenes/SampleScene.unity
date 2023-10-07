@@ -1298,6 +1298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swipeSpeed: 50
   rb: {fileID: 1752711855}
+  boxCollider2D: {fileID: 1752711854}
 --- !u!4 &1752711852
 Transform:
   m_ObjectHideFlags: 0
@@ -1411,4 +1412,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
