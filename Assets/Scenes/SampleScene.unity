@@ -1335,6 +1335,7 @@ GameObject:
   - component: {fileID: 1752711853}
   - component: {fileID: 1752711854}
   - component: {fileID: 1752711855}
+  - component: {fileID: 1752711856}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1349,7 +1350,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752711847}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 476fa2bfef187c94a8c2371384c3dfd7, type: 3}
   m_Name: 
@@ -1472,3 +1473,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1752711856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752711847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb687bb7f3cb534a9191fc234085759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectSwipeOnlyAfterRelease: 0
+  SWIPE_THRESHOLD: 20
