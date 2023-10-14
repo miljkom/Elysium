@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PhoneMovement : MonoBehaviour
 {
-    [SerializeField] private float swipeThreshold = 20f;
+    [SerializeField] private float verticalSwipeThreshold = 20f;
+    [SerializeField] private float horizontalSwipeThreshold = 20f;
     
     private Vector2 _fingerDown;
     private Vector2 _fingerUp;
@@ -21,23 +21,6 @@ public class PhoneMovement : MonoBehaviour
         }
     }
 
-    private void LastTouch(Touch touch)
-    {
-        if (touch.phase != TouchPhase.Ended) return;
-        
-        _fingerDown = touch.position;
-        CheckSwipe();
-    }
-
-    private void TouchWhileFingerIsMoving(Touch touch)
-    {
-        if (touch.phase != TouchPhase.Moved) return;
-        if (_detectSwipeOnlyAfterRelease) return;
-        
-        _fingerDown = touch.position;
-        CheckSwipe();
-    }
-
     private void FirstTouch(Touch touch)
     {
         if (touch.phase != TouchPhase.Began) return;
@@ -46,33 +29,32 @@ public class PhoneMovement : MonoBehaviour
         _fingerDown = touch.position;
     }
 
-    private void CheckSwipe()
+    private void TouchWhileFingerIsMoving(Touch touch)
     {
-        //Check if Vertical swipe
-        MoveVertically();
+        if (touch.phase != TouchPhase.Moved) return;
+        if (_detectSwipeOnlyAfterRelease) return;
+        
+        _fingerDown = touch.position;
+        Swipe();
+    }
 
-        //Check if Horizontal swipe
+    private void LastTouch(Touch touch)
+    {
+        if (touch.phase != TouchPhase.Ended) return;
+        
+        _fingerDown = touch.position;
+        Swipe();
+    }
+    
+    private void Swipe()
+    {
+        MoveVertically();
         MoveHorizontally();
     }
-
-    private void MoveHorizontally()
-    {
-        if (!(HorizontalValMove() > swipeThreshold) || !(HorizontalValMove() > VerticalMove())) return;
-        if (_fingerDown.x - _fingerUp.x > 0)
-        {
-            OnSwipeRight();
-        }
-        else if (_fingerDown.x - _fingerUp.x < 0)
-        {
-            OnSwipeLeft();
-        }
-
-        _fingerUp = _fingerDown;
-    }
-
+    
     private void MoveVertically()
     {
-        if (!(VerticalMove() > swipeThreshold) || !(VerticalMove() > HorizontalValMove())) return;
+        if (VerticalFingerMove() > verticalSwipeThreshold) return;
         
         if (_fingerDown.y - _fingerUp.y > 0)
         {
@@ -81,6 +63,22 @@ public class PhoneMovement : MonoBehaviour
         else if (_fingerDown.y - _fingerUp.y < 0)
         {
             OnSwipeDown();
+        }
+
+        _fingerUp = _fingerDown;
+    }
+
+    private void MoveHorizontally()
+    {
+        if (HorizontalFingerMove() < horizontalSwipeThreshold) return;
+        
+        if (_fingerDown.x - _fingerUp.x > 0)
+        {
+            OnSwipeRight();
+        }
+        else if (_fingerDown.x - _fingerUp.x < 0)
+        {
+            OnSwipeLeft();
         }
 
         _fingerUp = _fingerDown;
@@ -96,16 +94,6 @@ public class PhoneMovement : MonoBehaviour
         gameObject.transform.position = transform.position + Vector3.right;
     }
 
-    private float VerticalMove()
-    {
-        return Mathf.Abs(_fingerDown.y - _fingerUp.y);
-    }
-
-    private float HorizontalValMove()
-    {
-        return Mathf.Abs(_fingerDown.x - _fingerUp.x);
-    }
-
     private void OnSwipeUp()
     {
         gameObject.transform.position = transform.position + Vector3.up;
@@ -114,6 +102,16 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeDown()
     {
         gameObject.transform.position = transform.position + Vector3.down;
+    }
+    
+    private float VerticalFingerMove()
+    {
+        return Mathf.Abs(_fingerDown.y - _fingerUp.y);
+    }
+
+    private float HorizontalFingerMove()
+    {
+        return Mathf.Abs(_fingerDown.x - _fingerUp.x);
     }
 }
  
