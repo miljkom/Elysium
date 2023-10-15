@@ -247,6 +247,72 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
   m_PrefabInstance: {fileID: 132127704}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &297365625
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 778887686}
+    m_Modifications:
+    - target: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_Name
+      value: Platform (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+--- !u!4 &297365626 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3028690488938659896, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+  m_PrefabInstance: {fileID: 297365625}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &658548342
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +404,7 @@ GameObject:
   - component: {fileID: 671812565}
   m_Layer: 0
   m_Name: ObsticlePrefab (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -565,7 +631,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: -3
   m_TargetDisplay: 0
@@ -714,9 +780,15 @@ Transform:
   - {fileID: 132127705}
   - {fileID: 1313467804}
   - {fileID: 1317945358}
+  - {fileID: 297365626}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &934795551 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+  m_PrefabInstance: {fileID: 297365625}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +962,7 @@ GameObject:
   - component: {fileID: 1081843240}
   m_Layer: 0
   m_Name: ObsticlePrefab (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1125,7 +1197,7 @@ GameObject:
   - component: {fileID: 1364901466}
   m_Layer: 0
   m_Name: ObsticlePrefab (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1274,6 +1346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1467060717}
   - component: {fileID: 1467060718}
+  - component: {fileID: 1467060719}
   m_Layer: 7
   m_Name: Player (1)
   m_TagString: Untagged
@@ -1322,6 +1395,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.24, y: 0.24}
   m_EdgeRadius: 0
+--- !u!114 &1467060719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467060716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3cd5e5dec07d44da5ff90465c0f8a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phoneMovement: {fileID: 1752711856}
 --- !u!1 &1752711847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1336,6 +1422,7 @@ GameObject:
   - component: {fileID: 1752711854}
   - component: {fileID: 1752711855}
   - component: {fileID: 1752711856}
+  - component: {fileID: 1752711857}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1485,5 +1572,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb687bb7f3cb534a9191fc234085759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectSwipeOnlyAfterRelease: 0
-  SWIPE_THRESHOLD: 20
+  verticalSwipeThreshold: 20
+  horizontalSwipeThreshold: 20
+  comboObject: {fileID: 934795551}
+  rigidbody2D: {fileID: 1752711855}
+  swipeSpeed: 60
+  blockMovement: 0
+--- !u!114 &1752711857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752711847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e31057ef324a04478bb4f7d469b3cdc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

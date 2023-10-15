@@ -1,16 +1,35 @@
+using System;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.Touch;
 
 public class PhoneMovement : MonoBehaviour
 {
     [SerializeField] private float verticalSwipeThreshold = 20f;
     [SerializeField] private float horizontalSwipeThreshold = 20f;
+    [SerializeField] private GameObject comboObject;
+    [SerializeField] private Rigidbody2D rigidbody2D;
+    [SerializeField] private float swipeSpeed = 1f;
+    [SerializeField] private bool blockMovement;
     
-    private Vector2 _fingerDown;
-    private Vector2 _fingerUp;
+    private Vector2 _fingerCurrentPosition;
+    private Vector2 _fingerStartingPosition;
+    private MovementDirection _movementDirection;
     private bool _detectSwipeOnlyAfterRelease = false;
-
-    void Update()
+    private float _timerToResetFingerStartingPosition;
+    private bool _isSwiping;
+    private bool _failedCombo;
+    private bool _goingUp;
+    private bool _goingDown;
+    private bool _goingLeft;
+    private bool _goingRight;
+    private bool _inCollisionWithWall;
+    //private bool _blockMovement;
+    private void Update()
     {
+        if (blockMovement) return;
         foreach (Touch touch in Input.touches)
         {
             FirstTouch(touch);
@@ -25,8 +44,8 @@ public class PhoneMovement : MonoBehaviour
     {
         if (touch.phase != TouchPhase.Began) return;
         
-        _fingerUp = touch.position;
-        _fingerDown = touch.position;
+        _fingerStartingPosition = touch.position;
+        _fingerCurrentPosition = touch.position;
     }
 
     private void TouchWhileFingerIsMoving(Touch touch)
@@ -34,7 +53,8 @@ public class PhoneMovement : MonoBehaviour
         if (touch.phase != TouchPhase.Moved) return;
         if (_detectSwipeOnlyAfterRelease) return;
         
-        _fingerDown = touch.position;
+        _fingerCurrentPosition = touch.position;
+        
         Swipe();
     }
 
@@ -42,7 +62,7 @@ public class PhoneMovement : MonoBehaviour
     {
         if (touch.phase != TouchPhase.Ended) return;
         
-        _fingerDown = touch.position;
+        _fingerCurrentPosition = touch.position;
         Swipe();
     }
     
@@ -50,68 +70,141 @@ public class PhoneMovement : MonoBehaviour
     {
         MoveVertically();
         MoveHorizontally();
+        _isSwiping = true;
     }
     
     private void MoveVertically()
     {
         if (VerticalFingerMove() > verticalSwipeThreshold) return;
         
-        if (_fingerDown.y - _fingerUp.y > 0)
+        if (_fingerCurrentPosition.y - _fingerStartingPosition.y > 0)
         {
             OnSwipeUp();
         }
-        else if (_fingerDown.y - _fingerUp.y < 0)
+        else if (_fingerCurrentPosition.y - _fingerStartingPosition.y < 0)
         {
             OnSwipeDown();
         }
 
-        _fingerUp = _fingerDown;
+        //_fingerStartingPosition = _fingerCurrentPosition;
     }
 
     private void MoveHorizontally()
     {
         if (HorizontalFingerMove() < horizontalSwipeThreshold) return;
         
-        if (_fingerDown.x - _fingerUp.x > 0)
+        if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
+            var tryComboWhileGoingLeft = _isSwiping && _goingLeft && !_failedCombo && _inCollisionWithWall;
+            if (tryComboWhileGoingLeft)
+            {
+                MakeCombo();
+            }
+                
             OnSwipeRight();
         }
-        else if (_fingerDown.x - _fingerUp.x < 0)
+        else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
+            var tryComboWhileGoingRight = _isSwiping && _goingRight && !_failedCombo && _inCollisionWithWall;
+            if (tryComboWhileGoingRight)
+            {
+                MakeCombo();
+            }
             OnSwipeLeft();
         }
-
-        _fingerUp = _fingerDown;
+        ResetEverything();
+       
     }
 
     private void OnSwipeLeft()
     {
-        gameObject.transform.position = transform.position + Vector3.left;
+        //gameObject.transform.position = transform.position + Vector3.left;
+        if (_goingUp)
+        {
+            //gameObject.transform.position = transform.position + Vector3.up;
+            _movementDirection = MovementDirection.TopLeft;
+            rigidbody2D.AddForce(new Vector2(-1,3) * swipeSpeed);
+        }
+        rigidbody2D.AddForce(new Vector2(-1,0) * swipeSpeed);
+        _goingLeft = true;
+        ResetEverything();
     }
 
     private void OnSwipeRight()
     {
-        gameObject.transform.position = transform.position + Vector3.right;
+        //gameObject.transform.position = transform.position + Vector3.right;
+        if (_goingUp)
+        {
+            //gameObject.transform.position = transform.position + Vector3.up;
+            _movementDirection = MovementDirection.TopRight;
+            rigidbody2D.AddForce(new Vector2(1,3) * swipeSpeed);
+        }
+        rigidbody2D.AddForce(new Vector2(1,0) * swipeSpeed);
+        _goingRight = true;
     }
 
     private void OnSwipeUp()
     {
-        gameObject.transform.position = transform.position + Vector3.up;
+        //gameObject.transform.position = transform.position + Vector3.up;
+        _goingUp = true;
     }
 
     private void OnSwipeDown()
     {
-        gameObject.transform.position = transform.position + Vector3.down;
+        //gameObject.transform.position = transform.position + Vector3.down;
+        _goingDown = true;
     }
     
     private float VerticalFingerMove()
     {
-        return Mathf.Abs(_fingerDown.y - _fingerUp.y);
+        return Mathf.Abs(_fingerCurrentPosition.y - _fingerStartingPosition.y);
     }
 
     private float HorizontalFingerMove()
     {
-        return Mathf.Abs(_fingerDown.x - _fingerUp.x);
+        return Mathf.Abs(_fingerCurrentPosition.x - _fingerStartingPosition.x);
+    }
+    
+    
+    private void MakeCombo()
+    {
+        comboObject.SetActive(true);
+        Invoke(nameof(DeactivateObject), 1.5f);
+    }
+
+    private void DeactivateObject()
+    {
+        comboObject.SetActive(false);
+    }
+    
+    private void ResetEverything()
+    {
+        _goingUp = false;
+        _goingLeft = false;
+        _goingDown = false;
+        _goingRight = false;
+        _fingerStartingPosition = _fingerCurrentPosition;
+        blockMovement = true;
+    }
+
+    public void SetInCollisionWithWall(bool isInCollision)
+    {
+        _inCollisionWithWall = isInCollision;
+    }
+
+    private void OnEnable()
+    {
+        //TouchSimulation.Enable();
     }
 }
- 
+
+public enum MovementDirection
+{
+    TopLeft = 0,
+    TopRight = 1,
+    DownLeft = 2,
+    DownRight = 3,
+    Standing = 4,
+    StraightLeft = 5,
+    StraightRight = 6
+}
