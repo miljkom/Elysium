@@ -1,8 +1,5 @@
 using System;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.Touch;
 
 public class PhoneMovement : MonoBehaviour
@@ -10,16 +7,19 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private float verticalSwipeThreshold = 20f;
     [SerializeField] private float horizontalSwipeThreshold = 20f;
     [SerializeField] private GameObject comboObject;
-    [SerializeField] private Rigidbody2D rigidbody2D;
+    [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float swipeSpeed = 1f;
     [SerializeField] private bool blockMovement;
+    [SerializeField] private BoxCollider2D boxCollider2D;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
     private MovementDirection _movementDirection;
+    private Transform _transform;
+    private float _previousPlayerYPosition;
     private bool _detectSwipeOnlyAfterRelease = false;
     private float _timerToResetFingerStartingPosition;
-    private bool _isSwiping;
+    private bool _swipeHappened;
     private bool _failedCombo;
     private bool _goingUp;
     private bool _goingDown;
@@ -27,17 +27,44 @@ public class PhoneMovement : MonoBehaviour
     private bool _goingRight;
     private bool _inCollisionWithWall;
     //private bool _blockMovement;
+    
+    private void OnEnable()
+    {
+        _transform = transform;
+    }
+
     private void Update()
     {
-        if (blockMovement) return;
+        CheckIfPlayerIsFalling();
         foreach (Touch touch in Input.touches)
         {
+            if (blockMovement) return;
             FirstTouch(touch);
 
             TouchWhileFingerIsMoving(touch);
 
             LastTouch(touch);
         }
+    }
+
+    private void CheckIfPlayerIsFalling()
+    {
+        var currentYPosition = _transform.position.y;
+        var playerFalling = currentYPosition + 0.01f <= _previousPlayerYPosition;
+        if (playerFalling)
+        {
+            boxCollider2D.isTrigger = false;
+            if (_movementDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopLeft)
+                PlayerStartedFalling();
+        }
+
+        _previousPlayerYPosition = currentYPosition;
+    }
+
+    private void PlayerStartedFalling()
+    {
+        _movementDirection = MovementDirection.Down;
+        blockMovement = false;
     }
 
     private void FirstTouch(Touch touch)
@@ -70,7 +97,7 @@ public class PhoneMovement : MonoBehaviour
     {
         MoveVertically();
         MoveHorizontally();
-        _isSwiping = true;
+        _swipeHappened = true;
     }
     
     private void MoveVertically()
@@ -95,7 +122,7 @@ public class PhoneMovement : MonoBehaviour
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
-            var tryComboWhileGoingLeft = _isSwiping && _goingLeft && !_failedCombo && _inCollisionWithWall;
+            var tryComboWhileGoingLeft = _swipeHappened && _goingLeft && !_failedCombo && _inCollisionWithWall;
             if (tryComboWhileGoingLeft)
             {
                 MakeCombo();
@@ -105,7 +132,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            var tryComboWhileGoingRight = _isSwiping && _goingRight && !_failedCombo && _inCollisionWithWall;
+            var tryComboWhileGoingRight = _swipeHappened && _goingRight && !_failedCombo && _inCollisionWithWall;
             if (tryComboWhileGoingRight)
             {
                 MakeCombo();
@@ -123,11 +150,12 @@ public class PhoneMovement : MonoBehaviour
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopLeft;
-            rigidbody2D.AddForce(new Vector2(-1,3) * swipeSpeed);
+            rb2D.AddForce(new Vector2(-1,3) * swipeSpeed);
         }
-        rigidbody2D.AddForce(new Vector2(-1,0) * swipeSpeed);
+        rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
         _goingLeft = true;
         ResetEverything();
+        boxCollider2D.isTrigger = true;
     }
 
     private void OnSwipeRight()
@@ -137,10 +165,11 @@ public class PhoneMovement : MonoBehaviour
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopRight;
-            rigidbody2D.AddForce(new Vector2(1,3) * swipeSpeed);
+            rb2D.AddForce(new Vector2(1,3) * swipeSpeed);
         }
-        rigidbody2D.AddForce(new Vector2(1,0) * swipeSpeed);
+        rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
         _goingRight = true;
+        boxCollider2D.isTrigger = true;
     }
 
     private void OnSwipeUp()
@@ -192,9 +221,16 @@ public class PhoneMovement : MonoBehaviour
         _inCollisionWithWall = isInCollision;
     }
 
-    private void OnEnable()
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        //TouchSimulation.Enable();
+        if (!_swipeHappened) return;
+        if (other.gameObject.CompareTag("Platform") || other.gameObject.CompareTag("Wall"))
+        {
+            blockMovement = false;
+            _swipeHappened = false;
+        }
+            
+            
     }
 }
 
@@ -206,5 +242,6 @@ public enum MovementDirection
     DownRight = 3,
     Standing = 4,
     StraightLeft = 5,
-    StraightRight = 6
+    StraightRight = 6,
+    Down = 7
 }

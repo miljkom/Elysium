@@ -1348,7 +1348,7 @@ GameObject:
   - component: {fileID: 1467060718}
   - component: {fileID: 1467060719}
   m_Layer: 7
-  m_Name: Player (1)
+  m_Name: ColliderWithBorderWalls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1422,7 +1422,6 @@ GameObject:
   - component: {fileID: 1752711854}
   - component: {fileID: 1752711855}
   - component: {fileID: 1752711856}
-  - component: {fileID: 1752711857}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1575,18 +1574,7 @@ MonoBehaviour:
   verticalSwipeThreshold: 20
   horizontalSwipeThreshold: 20
   comboObject: {fileID: 934795551}
-  rigidbody2D: {fileID: 1752711855}
-  swipeSpeed: 60
+  rb2D: {fileID: 1752711855}
+  swipeSpeed: 100
   blockMovement: 0
---- !u!114 &1752711857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752711847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e31057ef324a04478bb4f7d469b3cdc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  boxCollider2D: {fileID: 1752711854}
