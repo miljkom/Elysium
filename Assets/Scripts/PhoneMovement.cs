@@ -6,30 +6,32 @@ public class PhoneMovement : MonoBehaviour
 {
     [SerializeField] private float verticalSwipeThreshold = 20f;
     [SerializeField] private float horizontalSwipeThreshold = 20f;
+    [SerializeField] private float touchResetTimer;
+    [SerializeField] private MovementDirection _movementDirection;
     [SerializeField] private GameObject comboObject;
     [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float swipeSpeed = 1f;
     [SerializeField] private bool blockMovement;
-    [SerializeField] private BoxCollider2D boxCollider2D;
+    [SerializeField] private BoxCollider2D platformCollider2D;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
-    private MovementDirection _movementDirection;
     private Transform _transform;
     private float _previousPlayerYPosition;
-    private bool _detectSwipeOnlyAfterRelease = false;
-    private float _timerToResetFingerStartingPosition;
-    private bool _swipeHappened;
+    private bool _swipeHappened; //wont need most likely
     private bool _failedCombo;
-    private bool _goingUp;
-    private bool _goingDown;
     private bool _goingLeft;
     private bool _goingRight;
     private bool _inCollisionWithWall;
-    //private bool _blockMovement;
     
-    private void OnEnable()
+    /*private void OnEnable()
     {
+        _transform = transform;
+    }*/
+
+    private void Awake()
+    {
+        _movementDirection = MovementDirection.Standing;
         _transform = transform;
     }
 
@@ -53,7 +55,7 @@ public class PhoneMovement : MonoBehaviour
         var playerFalling = currentYPosition + 0.01f <= _previousPlayerYPosition;
         if (playerFalling)
         {
-            boxCollider2D.isTrigger = false;
+            platformCollider2D.isTrigger = false;
             if (_movementDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopLeft)
                 PlayerStartedFalling();
         }
@@ -63,7 +65,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void PlayerStartedFalling()
     {
-        _movementDirection = MovementDirection.Down;
+        _movementDirection = MovementDirection.FallingDown;
         blockMovement = false;
     }
 
@@ -78,7 +80,6 @@ public class PhoneMovement : MonoBehaviour
     private void TouchWhileFingerIsMoving(Touch touch)
     {
         if (touch.phase != TouchPhase.Moved) return;
-        if (_detectSwipeOnlyAfterRelease) return;
         
         _fingerCurrentPosition = touch.position;
         
@@ -95,25 +96,22 @@ public class PhoneMovement : MonoBehaviour
     
     private void Swipe()
     {
-        MoveVertically();
-        MoveHorizontally();
-        _swipeHappened = true;
+        if (CanJump())
+        {
+            MoveVertically();
+            MoveHorizontally();
+            _swipeHappened = true;
+        }
     }
     
     private void MoveVertically()
     {
-        if (VerticalFingerMove() > verticalSwipeThreshold) return;
+        if (VerticalFingerMove() < verticalSwipeThreshold) return;
         
-        if (_fingerCurrentPosition.y - _fingerStartingPosition.y > 0)
+        if (HorizontalFingerMove() < horizontalSwipeThreshold)
         {
             OnSwipeUp();
         }
-        else if (_fingerCurrentPosition.y - _fingerStartingPosition.y < 0)
-        {
-            OnSwipeDown();
-        }
-
-        //_fingerStartingPosition = _fingerCurrentPosition;
     }
 
     private void MoveHorizontally()
@@ -146,7 +144,7 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeLeft()
     {
         //gameObject.transform.position = transform.position + Vector3.left;
-        if (_goingUp)
+        if (VerticalFingerMove() > verticalSwipeThreshold)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopLeft;
@@ -161,19 +159,20 @@ public class PhoneMovement : MonoBehaviour
             Debug.LogError(y);
             Debug.LogError( new Vector2(x, y).normalized);
         }
-        else
+        else if(_movementDirection == MovementDirection.Standing)
         {
+            _movementDirection = MovementDirection.StraightLeft;
             rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
         }
         
         _goingLeft = true;
         ResetEverything();
-        boxCollider2D.isTrigger = true;
+        platformCollider2D.isTrigger = true;
     }
 
     private void OnSwipeRight()
     {
-        if (_goingUp)
+        if (VerticalFingerMove() > verticalSwipeThreshold)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopRight;
@@ -187,28 +186,24 @@ public class PhoneMovement : MonoBehaviour
             Debug.LogError(y);
             Debug.LogError( new Vector2(x, y).normalized);
         }
-        else
+        else if(_movementDirection == MovementDirection.Standing)
         {
+            _movementDirection = MovementDirection.StraightRight;
+            //TODO 
             rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
         }
         
         _goingRight = true;
         ResetEverything();
-        boxCollider2D.isTrigger = true;
+        platformCollider2D.isTrigger = true;
     }
 
     private void OnSwipeUp()
     {
-        //gameObject.transform.position = transform.position + Vector3.up;
-        _goingUp = true;
+        _movementDirection = MovementDirection.StraightUp;
+        rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
     }
 
-    private void OnSwipeDown()
-    {
-        //gameObject.transform.position = transform.position + Vector3.down;
-        _goingDown = true;
-    }
-    
     private float VerticalFingerMove()
     {
         return Mathf.Abs(_fingerCurrentPosition.y - _fingerStartingPosition.y);
@@ -233,9 +228,7 @@ public class PhoneMovement : MonoBehaviour
     
     private void ResetEverything()
     {
-        _goingUp = false;
         _goingLeft = false;
-        _goingDown = false;
         _goingRight = false;
         _fingerStartingPosition = _fingerCurrentPosition;
         blockMovement = true;
@@ -253,9 +246,24 @@ public class PhoneMovement : MonoBehaviour
         {
             blockMovement = false;
             _swipeHappened = false;
+            _movementDirection = MovementDirection.Standing;
         }
-            
-            
+    }
+
+    private bool CanJump()
+    {
+        if (_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.OnWall
+            || _movementDirection == MovementDirection.OnWallSliding || PossibleCombo())
+            return true;
+        return false;
+    }
+
+    private bool PossibleCombo()
+    {
+        if ((_movementDirection == MovementDirection.TopLeft && _inCollisionWithWall) ||
+            (_movementDirection == MovementDirection.TopRight && _inCollisionWithWall))
+            return true;
+        return false;
     }
 }
 
@@ -263,10 +271,12 @@ public enum MovementDirection
 {
     TopLeft = 0,
     TopRight = 1,
-    DownLeft = 2,
-    DownRight = 3,
-    Standing = 4,
-    StraightLeft = 5,
-    StraightRight = 6,
-    Down = 7
+    Standing = 2,
+    StraightLeft = 3,
+    StraightRight = 4,
+    StraightUp = 5,
+    FallingDown = 6,
+    OnWall = 7,
+    OnWallSliding = 8,
+    
 }
