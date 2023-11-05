@@ -44,8 +44,6 @@ public class PhoneMovement : MonoBehaviour
             FirstTouch(touch);
 
             TouchWhileFingerIsMoving(touch);
-
-            LastTouch(touch);
         }
     }
 
@@ -83,14 +81,6 @@ public class PhoneMovement : MonoBehaviour
         
         _fingerCurrentPosition = touch.position;
         
-        Swipe();
-    }
-
-    private void LastTouch(Touch touch)
-    {
-        if (touch.phase != TouchPhase.Ended) return;
-        
-        _fingerCurrentPosition = touch.position;
         Swipe();
     }
     
