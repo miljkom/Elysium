@@ -1575,6 +1575,6 @@ MonoBehaviour:
   horizontalSwipeThreshold: 20
   comboObject: {fileID: 934795551}
   rb2D: {fileID: 1752711855}
-  swipeSpeed: 100
+  swipeSpeed: 300
   blockMovement: 0
   boxCollider2D: {fileID: 1752711854}

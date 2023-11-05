@@ -150,9 +150,22 @@ public class PhoneMovement : MonoBehaviour
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopLeft;
-            rb2D.AddForce(new Vector2(-1,3) * swipeSpeed);
+            //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
+            var x = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).x -
+                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).x;
+            //ovo verovatno moze da se abuse-uje. Kada koristis 2 prsta ili dignes prst i krenes sa vrha ekrana da pomeras. Alternativa da biras min izmedju 1 i ove visine
+            var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
+                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
+            rb2D.AddForce( new Vector2(x, y).normalized * swipeSpeed);
+            Debug.LogError(x);
+            Debug.LogError(y);
+            Debug.LogError( new Vector2(x, y).normalized);
         }
-        rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
+        else
+        {
+            rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
+        }
+        
         _goingLeft = true;
         ResetEverything();
         boxCollider2D.isTrigger = true;
@@ -160,15 +173,27 @@ public class PhoneMovement : MonoBehaviour
 
     private void OnSwipeRight()
     {
-        //gameObject.transform.position = transform.position + Vector3.right;
         if (_goingUp)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopRight;
-            rb2D.AddForce(new Vector2(1,3) * swipeSpeed);
+            //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
+            var x = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).x -
+                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).x;
+            var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
+                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
+            rb2D.AddForce( new Vector2(x, y).normalized * swipeSpeed);
+            Debug.LogError(x);
+            Debug.LogError(y);
+            Debug.LogError( new Vector2(x, y).normalized);
         }
-        rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
+        else
+        {
+            rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
+        }
+        
         _goingRight = true;
+        ResetEverything();
         boxCollider2D.isTrigger = true;
     }
 
