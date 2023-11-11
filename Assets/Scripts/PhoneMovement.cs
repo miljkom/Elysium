@@ -16,6 +16,7 @@ public class PhoneMovement : MonoBehaviour
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
+    private Vector2 _jumpAngle;
     private Transform _transform;
     private float _previousPlayerYPosition;
     private bool _swipeHappened; //wont need most likely
@@ -113,22 +114,42 @@ public class PhoneMovement : MonoBehaviour
             var tryComboWhileGoingLeft = _swipeHappened && _goingLeft && !_failedCombo && _inCollisionWithWall;
             if (tryComboWhileGoingLeft)
             {
-                MakeCombo();
+                MakeComboRight();
             }
                 
             OnSwipeRight();
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            var tryComboWhileGoingRight = _swipeHappened && _goingRight && !_failedCombo && _inCollisionWithWall;
-            if (tryComboWhileGoingRight)
+            //var tryComboWhileGoingRight = _swipeHappened && _goingRight && !_failedCombo && _inCollisionWithWall;
+            var tryComboLeft = _movementDirection == MovementDirection.TopLeft;
+            if (tryComboLeft)
             {
-                MakeCombo();
+                MakeComboLeft();
             }
-            OnSwipeLeft();
+            else
+            {
+                OnSwipeLeft();
+            }
         }
         ResetEverything();
        
+    }
+
+    private void MakeComboLeft()
+    {
+        _movementDirection = MovementDirection.TopLeft;
+        _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
+        rb2D.AddForce(_jumpAngle.normalized * 2  * swipeSpeed);
+        MakeCombo();
+    }
+
+    private void MakeComboRight()
+    {
+        _movementDirection = MovementDirection.TopRight;
+        _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
+        rb2D.AddForce(_jumpAngle.normalized * 2  * swipeSpeed);
+        MakeCombo();
     }
 
     private void OnSwipeLeft()
@@ -144,10 +165,8 @@ public class PhoneMovement : MonoBehaviour
             //ovo verovatno moze da se abuse-uje. Kada koristis 2 prsta ili dignes prst i krenes sa vrha ekrana da pomeras. Alternativa da biras min izmedju 1 i ove visine
             var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
                     Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
-            rb2D.AddForce( new Vector2(x, y).normalized * swipeSpeed);
-            Debug.LogError(x);
-            Debug.LogError(y);
-            Debug.LogError( new Vector2(x, y).normalized);
+            _jumpAngle = new Vector2(x, y).normalized;
+            rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
@@ -171,10 +190,8 @@ public class PhoneMovement : MonoBehaviour
                     Camera.main.ScreenToWorldPoint(_fingerStartingPosition).x;
             var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
                     Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
-            rb2D.AddForce( new Vector2(x, y).normalized * swipeSpeed);
-            Debug.LogError(x);
-            Debug.LogError(y);
-            Debug.LogError( new Vector2(x, y).normalized);
+            _jumpAngle = new Vector2(x, y).normalized;
+            rb2D.AddForce(_jumpAngle * swipeSpeed);
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
@@ -209,6 +226,7 @@ public class PhoneMovement : MonoBehaviour
     {
         comboObject.SetActive(true);
         Invoke(nameof(DeactivateObject), 1.5f);
+        Debug.LogError("Crazyy combo");
     }
 
     private void DeactivateObject()
