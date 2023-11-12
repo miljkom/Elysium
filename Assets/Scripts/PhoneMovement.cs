@@ -1,6 +1,7 @@
-using System;
 using UnityEngine;
 using Touch = UnityEngine.Touch;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class PhoneMovement : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class PhoneMovement : MonoBehaviour
     private bool _goingRight;
     private bool _inCollisionWithWall;
     private float _timeCollisionWithWall;
+    private Vector2 _positionInPreviousFrame;
     
     /*private void OnEnable()
     {
@@ -47,9 +49,16 @@ public class PhoneMovement : MonoBehaviour
         {
             if (blockMovement) return;
             FirstTouch(touch);
-
             TouchWhileFingerIsMoving(touch);
         }
+        _positionInPreviousFrame = _fingerCurrentPosition;
+    }
+
+    private void FallingDownMovement()
+    {
+        var _goToPosition = _fingerCurrentPosition;
+        var _deltaX = _goToPosition.x - _positionInPreviousFrame.x;
+        transform.position += (Vector3.right  * (_deltaX * 20 *  Time.deltaTime));
     }
 
     private void UpdateWallCollision()
@@ -69,7 +78,8 @@ public class PhoneMovement : MonoBehaviour
                 _movementDirection == MovementDirection.StraightUp)
                 PlayerStartedFalling();
         }
-
+        if(_movementDirection == MovementDirection.FallingDown)
+            FallingDownMovement();
         _previousPlayerYPosition = currentYPosition;
     }
 
