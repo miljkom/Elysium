@@ -13,6 +13,7 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private float swipeSpeed = 1f;
     [SerializeField] private bool blockMovement;
     [SerializeField] private BoxCollider2D platformCollider2D;
+    [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
@@ -24,6 +25,7 @@ public class PhoneMovement : MonoBehaviour
     private bool _goingLeft;
     private bool _goingRight;
     private bool _inCollisionWithWall;
+    private float _timeCollisionWithWall;
     
     /*private void OnEnable()
     {
@@ -38,6 +40,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void Update()
     {
+        UpdateWallCollision();
         CheckIfPlayerIsFalling();
         foreach (Touch touch in Input.touches)
         {
@@ -46,6 +49,12 @@ public class PhoneMovement : MonoBehaviour
 
             TouchWhileFingerIsMoving(touch);
         }
+    }
+
+    private void UpdateWallCollision()
+    {
+        if (_inCollisionWithWall)
+            _timeCollisionWithWall += Time.deltaTime;
     }
 
     private void CheckIfPlayerIsFalling()
@@ -111,8 +120,8 @@ public class PhoneMovement : MonoBehaviour
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
-            var tryComboWhileGoingLeft = _swipeHappened && _goingLeft && !_failedCombo && _inCollisionWithWall;
-            if (tryComboWhileGoingLeft)
+            var tryComboRight = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+            if (tryComboRight)
             {
                 MakeComboRight();
             }
@@ -121,8 +130,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            //var tryComboWhileGoingRight = _swipeHappened && _goingRight && !_failedCombo && _inCollisionWithWall;
-            var tryComboLeft = _movementDirection == MovementDirection.TopLeft;
+            var tryComboLeft = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboLeft)
             {
                 MakeComboLeft();
@@ -245,6 +253,7 @@ public class PhoneMovement : MonoBehaviour
     public void SetInCollisionWithWall(bool isInCollision)
     {
         _inCollisionWithWall = isInCollision;
+        _timeCollisionWithWall = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
