@@ -39,7 +39,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void Awake()
     {
-        _movementDirection = MovementDirection.Standing;
+        SetMovementDirection(MovementDirection.Standing);
         _transform = transform;
         _cameraMain = Camera.main;
     }
@@ -60,10 +60,9 @@ public class PhoneMovement : MonoBehaviour
 
     private void FallingDownMovement()
     {
-        var _goToPosition = _fingerCurrentPosition;
-        var _deltaX = _goToPosition.x - _positionInPreviousFrame.x;
-        transform.position += (Vector3.right  * (_deltaX * fallingSpeed *  Time.deltaTime));
-        _positionInPreviousFrame = _fingerCurrentPosition;
+        var goToPosition = _fingerCurrentPosition;
+        var deltaX = goToPosition.x - _positionInPreviousFrame.x;
+        transform.position += (Vector3.right  * (deltaX * 20 *  Time.deltaTime));
     }
 
     private void UpdateWallCollision()
@@ -85,11 +84,12 @@ public class PhoneMovement : MonoBehaviour
                 PlayerStartedFalling();
         }
         _previousPlayerYPosition = currentYPosition;
+        _positionInPreviousFrame = _fingerCurrentPosition;
     }
 
     private void PlayerStartedFalling()
     {
-        _movementDirection = MovementDirection.FallingDown;
+        SetMovementDirection(MovementDirection.FallingDown);
         blockMovement = false;
     }
 
@@ -162,7 +162,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void MakeComboLeft()
     {
-        _movementDirection = MovementDirection.TopLeft;
+        SetMovementDirection(MovementDirection.TopLeft);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
         rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
@@ -170,7 +170,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void MakeComboRight()
     {
-        _movementDirection = MovementDirection.TopRight;
+        SetMovementDirection(MovementDirection.TopRight);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
         rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
@@ -182,7 +182,7 @@ public class PhoneMovement : MonoBehaviour
         if (VerticalFingerMove() > verticalSwipeThreshold)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
-            _movementDirection = MovementDirection.TopLeft;
+            SetMovementDirection(MovementDirection.TopLeft);
             //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
@@ -194,7 +194,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
-            _movementDirection = MovementDirection.StraightLeft;
+            SetMovementDirection(MovementDirection.StraightLeft);
             rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
         }
         
@@ -208,7 +208,7 @@ public class PhoneMovement : MonoBehaviour
         if (VerticalFingerMove() > verticalSwipeThreshold)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
-            _movementDirection = MovementDirection.TopRight;
+            SetMovementDirection(MovementDirection.TopRight);
             //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
@@ -219,7 +219,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
-            _movementDirection = MovementDirection.StraightRight;
+            SetMovementDirection(MovementDirection.StraightRight);
             //TODO 
             rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
         }
@@ -231,7 +231,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void OnSwipeUp()
     {
-        _movementDirection = MovementDirection.StraightUp;
+        SetMovementDirection(MovementDirection.StraightUp);
         rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
     }
 
@@ -279,7 +279,7 @@ public class PhoneMovement : MonoBehaviour
         {
             blockMovement = false;
             _swipeHappened = false;
-            _movementDirection = MovementDirection.Standing;
+            SetMovementDirection(MovementDirection.Standing);
         }
     }
 
@@ -299,10 +299,10 @@ public class PhoneMovement : MonoBehaviour
         return false;
     }
 
-    private void SetMovementDirection()
+    private void SetMovementDirection(MovementDirection movementDirection)
     {
         _previousStateDirection = _movementDirection;
-        
+        _movementDirection = movementDirection;
     }
 }
 
