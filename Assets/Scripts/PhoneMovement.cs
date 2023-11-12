@@ -5,8 +5,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PhoneMovement : MonoBehaviour
 {
-    [SerializeField] private float verticalSwipeThreshold = 20f;
-    [SerializeField] private float horizontalSwipeThreshold = 20f;
+    [SerializeField] private float verticalSwipeThreshold = 0.5f;
+    [SerializeField] private float horizontalSwipeThreshold = 0.5f;
     [SerializeField] private float touchResetTimer;
     [SerializeField] private MovementDirection _movementDirection;
     [SerializeField] private GameObject comboObject;
@@ -15,6 +15,7 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private bool blockMovement;
     [SerializeField] private BoxCollider2D platformCollider2D;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
+    [SerializeField] private float fallingSpeed = 25f;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
@@ -29,6 +30,7 @@ public class PhoneMovement : MonoBehaviour
     private bool _inCollisionWithWall;
     private float _timeCollisionWithWall;
     private Vector2 _positionInPreviousFrame;
+    private Camera _cameraMain;
     
     /*private void OnEnable()
     {
@@ -39,6 +41,7 @@ public class PhoneMovement : MonoBehaviour
     {
         _movementDirection = MovementDirection.Standing;
         _transform = transform;
+        _cameraMain = Camera.main;
     }
 
     private void Update()
@@ -51,14 +54,16 @@ public class PhoneMovement : MonoBehaviour
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
         }
-        _positionInPreviousFrame = _fingerCurrentPosition;
+        if(_movementDirection == MovementDirection.FallingDown)
+            FallingDownMovement();
     }
 
     private void FallingDownMovement()
     {
         var _goToPosition = _fingerCurrentPosition;
         var _deltaX = _goToPosition.x - _positionInPreviousFrame.x;
-        transform.position += (Vector3.right  * (_deltaX * 20 *  Time.deltaTime));
+        transform.position += (Vector3.right  * (_deltaX * fallingSpeed *  Time.deltaTime));
+        _positionInPreviousFrame = _fingerCurrentPosition;
     }
 
     private void UpdateWallCollision()
@@ -71,6 +76,7 @@ public class PhoneMovement : MonoBehaviour
     {
         var currentYPosition = _transform.position.y;
         var playerFalling = currentYPosition < _previousPlayerYPosition;
+        _positionInPreviousFrame = _fingerCurrentPosition;
         if (playerFalling)
         {
             platformCollider2D.isTrigger = false;
@@ -78,8 +84,6 @@ public class PhoneMovement : MonoBehaviour
                 _movementDirection == MovementDirection.StraightUp)
                 PlayerStartedFalling();
         }
-        if(_movementDirection == MovementDirection.FallingDown)
-            FallingDownMovement();
         _previousPlayerYPosition = currentYPosition;
     }
 
@@ -93,15 +97,15 @@ public class PhoneMovement : MonoBehaviour
     {
         if (touch.phase != TouchPhase.Began) return;
         
-        _fingerStartingPosition = touch.position;
-        _fingerCurrentPosition = touch.position;
+        _fingerStartingPosition = _cameraMain.ScreenToWorldPoint(touch.position);
+        _fingerCurrentPosition = _cameraMain.ScreenToWorldPoint(touch.position);
     }
 
     private void TouchWhileFingerIsMoving(Touch touch)
     {
         if (touch.phase != TouchPhase.Moved) return;
         
-        _fingerCurrentPosition = touch.position;
+        _fingerCurrentPosition = _cameraMain.ScreenToWorldPoint(touch.position);
         
         Swipe();
     }
@@ -180,11 +184,11 @@ public class PhoneMovement : MonoBehaviour
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopLeft;
             //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
-            var x = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).x -
-                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).x;
+            var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
+                    _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
             //ovo verovatno moze da se abuse-uje. Kada koristis 2 prsta ili dignes prst i krenes sa vrha ekrana da pomeras. Alternativa da biras min izmedju 1 i ove visine
-            var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
-                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
+            var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
+                        _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
             rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
         }
@@ -206,10 +210,10 @@ public class PhoneMovement : MonoBehaviour
             //gameObject.transform.position = transform.position + Vector3.up;
             _movementDirection = MovementDirection.TopRight;
             //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
-            var x = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).x -
-                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).x;
-            var y = Camera.main.ScreenToWorldPoint(_fingerCurrentPosition).y -
-                    Camera.main.ScreenToWorldPoint(_fingerStartingPosition).y;
+            var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
+                    _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
+            var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
+                    _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
             rb2D.AddForce(_jumpAngle * swipeSpeed);
         }

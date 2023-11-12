@@ -1571,8 +1571,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb687bb7f3cb534a9191fc234085759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalSwipeThreshold: 20
-  horizontalSwipeThreshold: 20
+  verticalSwipeThreshold: 0.5
+  horizontalSwipeThreshold: 0.5
   touchResetTimer: 0
   _movementDirection: 2
   comboObject: {fileID: 934795551}
@@ -1580,3 +1580,5 @@ MonoBehaviour:
   swipeSpeed: 300
   blockMovement: 0
   platformCollider2D: {fileID: 1752711854}
+  timeToMakeComboWhenInCollision: 1
+  fallingSpeed: 25
