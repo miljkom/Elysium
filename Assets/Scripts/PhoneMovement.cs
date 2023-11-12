@@ -19,6 +19,7 @@ public class PhoneMovement : MonoBehaviour
     private Vector2 _fingerStartingPosition;
     private Vector2 _jumpAngle;
     private Transform _transform;
+    private MovementDirection _previousStateDirection;
     private float _previousPlayerYPosition;
     private bool _swipeHappened; //wont need most likely
     private bool _failedCombo;
@@ -60,11 +61,12 @@ public class PhoneMovement : MonoBehaviour
     private void CheckIfPlayerIsFalling()
     {
         var currentYPosition = _transform.position.y;
-        var playerFalling = currentYPosition + 0.01f <= _previousPlayerYPosition;
+        var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling)
         {
             platformCollider2D.isTrigger = false;
-            if (_movementDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopLeft)
+            if (_movementDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopLeft ||
+                _movementDirection == MovementDirection.StraightUp)
                 PlayerStartedFalling();
         }
 
@@ -148,7 +150,7 @@ public class PhoneMovement : MonoBehaviour
     {
         _movementDirection = MovementDirection.TopLeft;
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * 2  * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
@@ -156,7 +158,7 @@ public class PhoneMovement : MonoBehaviour
     {
         _movementDirection = MovementDirection.TopRight;
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * 2  * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
@@ -281,6 +283,12 @@ public class PhoneMovement : MonoBehaviour
             (_movementDirection == MovementDirection.TopRight && _inCollisionWithWall))
             return true;
         return false;
+    }
+
+    private void SetMovementDirection()
+    {
+        _previousStateDirection = _movementDirection;
+        
     }
 }
 
