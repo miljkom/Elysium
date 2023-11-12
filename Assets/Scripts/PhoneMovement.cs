@@ -136,7 +136,8 @@ public class PhoneMovement : MonoBehaviour
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
-            var tryComboRight = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+            var tryComboRight = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision &&
+                                (_previousStateDirection == MovementDirection.TopLeft || _movementDirection == MovementDirection.TopLeft);
             if (tryComboRight)
             {
                 MakeComboRight();
@@ -146,7 +147,8 @@ public class PhoneMovement : MonoBehaviour
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            var tryComboLeft = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+            var tryComboLeft = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision &&
+                               (_previousStateDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopRight);
             if (tryComboLeft)
             {
                 MakeComboLeft();
