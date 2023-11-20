@@ -8,7 +8,7 @@ public class CollisionWithWall : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            phoneMovement.SetInCollisionWithWall(true);
+            phoneMovement.SetInCollisionWithWall();
         }
     }
 
@@ -16,7 +16,7 @@ public class CollisionWithWall : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            phoneMovement.SetInCollisionWithWall(true);
+            phoneMovement.NotInCollisionWithWall();
         }
     }
 }

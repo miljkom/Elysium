@@ -55,10 +55,10 @@ public class PhoneMovement : MonoBehaviour
             TouchWhileFingerIsMoving(touch);
         }
         if(_movementDirection == MovementDirection.FallingDown)
-            FallingDownMovement();
+            StraightHorizontalMovement();
     }
 
-    private void FallingDownMovement()
+    private void StraightHorizontalMovement()
     {
         var goToPosition = _fingerCurrentPosition;
         var deltaX = goToPosition.x - _positionInPreviousFrame.x;
@@ -136,8 +136,8 @@ public class PhoneMovement : MonoBehaviour
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
-            var tryComboRight = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision &&
-                                (_previousStateDirection == MovementDirection.TopLeft || _movementDirection == MovementDirection.TopLeft);
+            var tryComboRight = _movementDirection == MovementDirection.Standing &&
+                                _timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboRight)
             {
                 MakeComboRight();
@@ -147,8 +147,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            var tryComboLeft = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision &&
-                               (_previousStateDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopRight);
+            var tryComboLeft = _movementDirection == MovementDirection.Standing && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboLeft)
             {
                 MakeComboLeft();
@@ -158,8 +157,6 @@ public class PhoneMovement : MonoBehaviour
                 OnSwipeLeft();
             }
         }
-        ResetEverything();
-       
     }
 
     private void MakeComboLeft()
@@ -193,15 +190,16 @@ public class PhoneMovement : MonoBehaviour
                         _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
             rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
+            ResetEverything();
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
             SetMovementDirection(MovementDirection.StraightLeft);
-            rb2D.AddForce(new Vector2(-1,0) * swipeSpeed);
+            StraightHorizontalMovement();
         }
         
         _goingLeft = true;
-        ResetEverything();
+        
         platformCollider2D.isTrigger = true;
     }
 
@@ -218,16 +216,16 @@ public class PhoneMovement : MonoBehaviour
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
             rb2D.AddForce(_jumpAngle * swipeSpeed);
+            ResetEverything();
         }
         else if(_movementDirection == MovementDirection.Standing)
         {
             SetMovementDirection(MovementDirection.StraightRight);
             //TODO 
-            rb2D.AddForce(new Vector2(1,0) * swipeSpeed);
+            StraightHorizontalMovement();
         }
         
         _goingRight = true;
-        ResetEverything();
         platformCollider2D.isTrigger = true;
     }
 
@@ -268,10 +266,17 @@ public class PhoneMovement : MonoBehaviour
         blockMovement = true;
     }
 
-    public void SetInCollisionWithWall(bool isInCollision)
+    public void SetInCollisionWithWall()
     {
-        _inCollisionWithWall = isInCollision;
+        _inCollisionWithWall = true;
         _timeCollisionWithWall = 0;
+        _movementDirection = MovementDirection.OnWall;
+    }
+    
+    public void NotInCollisionWithWall()
+    {
+        _inCollisionWithWall = false;
+        
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -306,6 +311,8 @@ public class PhoneMovement : MonoBehaviour
         _previousStateDirection = _movementDirection;
         _movementDirection = movementDirection;
     }
+
+
 }
 
 public enum MovementDirection
