@@ -1571,8 +1571,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb687bb7f3cb534a9191fc234085759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalSwipeThreshold: 0.1
-  horizontalSwipeThreshold: 0.1
+  verticalSwipeThreshold: 0.3
+  horizontalSwipeThreshold: 0.3
   touchResetTimer: 0
   _movementDirection: 2
   comboObject: {fileID: 934795551}

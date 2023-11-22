@@ -32,11 +32,6 @@ public class PhoneMovement : MonoBehaviour
     private Vector2 _positionInPreviousFrame;
     private Camera _cameraMain;
     
-    /*private void OnEnable()
-    {
-        _transform = transform;
-    }*/
-
     private void Awake()
     {
         SetMovementDirection(MovementDirection.Standing);
@@ -123,9 +118,7 @@ public class PhoneMovement : MonoBehaviour
     
     private void MoveVertically()
     {
-        if (VerticalFingerMove() < verticalSwipeThreshold) return;
-        
-        if (HorizontalFingerMove() < horizontalSwipeThreshold)
+        if (HorizontalFingerMove() < horizontalSwipeThreshold && UpFingerMove())
         {
             OnSwipeUp();
         }
@@ -164,7 +157,7 @@ public class PhoneMovement : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.TopLeft);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        //rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
@@ -172,25 +165,23 @@ public class PhoneMovement : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.TopRight);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        //rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
     private void OnSwipeLeft()
     {
         //gameObject.transform.position = transform.position + Vector3.left;
-        if (UpFingerMove() > verticalSwipeThreshold)
+        if (UpFingerMove())
         {
-            //gameObject.transform.position = transform.position + Vector3.up;
             SetMovementDirection(MovementDirection.TopLeft);
-            //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
             //ovo verovatno moze da se abuse-uje. Kada koristis 2 prsta ili dignes prst i krenes sa vrha ekrana da pomeras. Alternativa da biras min izmedju 1 i ove visine
             var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
                         _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
-            rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
+            //rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
             ResetEverything();
         }
         if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
@@ -205,24 +196,17 @@ public class PhoneMovement : MonoBehaviour
         platformCollider2D.isTrigger = true;
     }
 
-    private float UpFingerMove()
-    {
-        return _fingerCurrentPosition.y - _fingerStartingPosition.y;
-    }
-
     private void OnSwipeRight()
     {
-        if (VerticalFingerMove() > verticalSwipeThreshold)
+        if (UpFingerMove())
         {
-            //gameObject.transform.position = transform.position + Vector3.up;
             SetMovementDirection(MovementDirection.TopRight);
-            //rb2D.AddForce( Camera.main.ScreenToWorldPoint(_fingerCurrentPosition - _fingerStartingPosition).normalized * swipeSpeed);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).x;
             var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
-            rb2D.AddForce(_jumpAngle * swipeSpeed);
+            //rb2D.AddForce(_jumpAngle * swipeSpeed);
             ResetEverything();
         }
         else if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
@@ -240,9 +224,14 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeUp()
     {
         SetMovementDirection(MovementDirection.StraightUp);
-        rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
+        //rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
     }
 
+    private bool UpFingerMove()
+    {
+        return _fingerCurrentPosition.y - _fingerStartingPosition.y > verticalSwipeThreshold;
+    }
+    
     private float VerticalFingerMove()
     {
         return Mathf.Abs(_fingerCurrentPosition.y - _fingerStartingPosition.y);
@@ -301,7 +290,7 @@ public class PhoneMovement : MonoBehaviour
     private bool CanJump()
     {
         if (_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.OnWall
-            || _movementDirection == MovementDirection.OnWallSliding || PossibleCombo())
+            || _movementDirection == MovementDirection.OnWallSliding)// || PossibleCombo())
             return true;
         return false;
     }
