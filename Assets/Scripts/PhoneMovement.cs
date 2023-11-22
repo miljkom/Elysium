@@ -157,7 +157,7 @@ public class PhoneMovement : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.TopLeft);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        //rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
@@ -165,7 +165,7 @@ public class PhoneMovement : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.TopRight);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        //rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
         MakeCombo();
     }
 
@@ -181,7 +181,7 @@ public class PhoneMovement : MonoBehaviour
             var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
                         _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
-            //rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
+            rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
             ResetEverything();
         }
         if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
@@ -206,7 +206,7 @@ public class PhoneMovement : MonoBehaviour
             var y = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).y -
                     _cameraMain.ScreenToWorldPoint(_fingerStartingPosition).y;
             _jumpAngle = new Vector2(x, y).normalized;
-            //rb2D.AddForce(_jumpAngle * swipeSpeed);
+            rb2D.AddForce(_jumpAngle * swipeSpeed);
             ResetEverything();
         }
         else if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
@@ -224,7 +224,7 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeUp()
     {
         SetMovementDirection(MovementDirection.StraightUp);
-        //rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
+        rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
     }
 
     private bool UpFingerMove()
