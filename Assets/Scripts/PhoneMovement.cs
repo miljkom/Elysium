@@ -115,9 +115,10 @@ public class PhoneMovement : MonoBehaviour
         if (CanJump())
         {
             MoveVertically();
-            MoveHorizontally();
             _swipeHappened = true;
         }
+        
+        MoveHorizontally();
     }
     
     private void MoveVertically()
@@ -136,8 +137,8 @@ public class PhoneMovement : MonoBehaviour
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
-            var tryComboRight = _movementDirection == MovementDirection.Standing &&
-                                _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+            var tryComboRight = false;//_movementDirection == MovementDirection.Standing &&
+                                //_timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboRight)
             {
                 MakeComboRight();
@@ -147,7 +148,7 @@ public class PhoneMovement : MonoBehaviour
         }
         else if (_fingerCurrentPosition.x - _fingerStartingPosition.x < 0)
         {
-            var tryComboLeft = _movementDirection == MovementDirection.Standing && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+            var tryComboLeft = false;//_movementDirection == MovementDirection.Standing && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboLeft)
             {
                 MakeComboLeft();
@@ -178,7 +179,7 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeLeft()
     {
         //gameObject.transform.position = transform.position + Vector3.left;
-        if (VerticalFingerMove() > verticalSwipeThreshold)
+        if (UpFingerMove() > verticalSwipeThreshold)
         {
             //gameObject.transform.position = transform.position + Vector3.up;
             SetMovementDirection(MovementDirection.TopLeft);
@@ -192,7 +193,8 @@ public class PhoneMovement : MonoBehaviour
             rb2D.AddForce( _jumpAngle.normalized * swipeSpeed);
             ResetEverything();
         }
-        else if(_movementDirection == MovementDirection.Standing)
+        if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
+                                                                 || _movementDirection == MovementDirection.StraightRight)
         {
             SetMovementDirection(MovementDirection.StraightLeft);
             StraightHorizontalMovement();
@@ -201,6 +203,11 @@ public class PhoneMovement : MonoBehaviour
         _goingLeft = true;
         
         platformCollider2D.isTrigger = true;
+    }
+
+    private float UpFingerMove()
+    {
+        return _fingerCurrentPosition.y - _fingerStartingPosition.y;
     }
 
     private void OnSwipeRight()
@@ -218,7 +225,8 @@ public class PhoneMovement : MonoBehaviour
             rb2D.AddForce(_jumpAngle * swipeSpeed);
             ResetEverything();
         }
-        else if(_movementDirection == MovementDirection.Standing)
+        else if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
+                || _movementDirection == MovementDirection.StraightRight)
         {
             SetMovementDirection(MovementDirection.StraightRight);
             //TODO 
