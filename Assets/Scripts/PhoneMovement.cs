@@ -14,6 +14,7 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private float swipeSpeed = 1f;
     [SerializeField] private bool blockMovement;
     [SerializeField] private BoxCollider2D platformCollider2D;
+    [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private float fallingSpeed = 25f;
     
@@ -41,6 +42,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void Update()
     {
+        _positionInPreviousFrame = _fingerCurrentPosition;
         UpdateWallCollision();
         CheckIfPlayerIsFalling();
         foreach (Touch touch in Input.touches)
@@ -57,7 +59,13 @@ public class PhoneMovement : MonoBehaviour
     {
         var goToPosition = _fingerCurrentPosition;
         var deltaX = goToPosition.x - _positionInPreviousFrame.x;
-        transform.position += (Vector3.right  * (deltaX * 20 *  Time.deltaTime));
+        transform.position += (Vector3.right  * (deltaX * straightMovementSpeed *  Time.deltaTime));
+        StayInsideWalls();
+    }
+
+    private void StayInsideWalls()
+    {
+        //TODO Uros implement this
     }
 
     private void UpdateWallCollision()
@@ -70,7 +78,6 @@ public class PhoneMovement : MonoBehaviour
     {
         var currentYPosition = _transform.position.y;
         var playerFalling = currentYPosition < _previousPlayerYPosition;
-        _positionInPreviousFrame = _fingerCurrentPosition;
         if (playerFalling)
         {
             platformCollider2D.isTrigger = false;
@@ -79,7 +86,6 @@ public class PhoneMovement : MonoBehaviour
                 PlayerStartedFalling();
         }
         _previousPlayerYPosition = currentYPosition;
-        _positionInPreviousFrame = _fingerCurrentPosition;
     }
 
     private void PlayerStartedFalling()
