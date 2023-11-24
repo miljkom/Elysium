@@ -172,7 +172,7 @@ public class PhoneMovement : MonoBehaviour
     private void OnSwipeLeft()
     {
         //gameObject.transform.position = transform.position + Vector3.left;
-        if (UpFingerMove())
+        if (UpFingerMove() && _movementDirection == MovementDirection.Standing)
         {
             SetMovementDirection(MovementDirection.TopLeft);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
@@ -198,7 +198,7 @@ public class PhoneMovement : MonoBehaviour
 
     private void OnSwipeRight()
     {
-        if (UpFingerMove())
+        if (UpFingerMove() && _movementDirection == MovementDirection.Standing)
         {
             SetMovementDirection(MovementDirection.TopRight);
             var x = _cameraMain.ScreenToWorldPoint(_fingerCurrentPosition).x -
