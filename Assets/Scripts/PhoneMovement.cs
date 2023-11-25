@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Touch = UnityEngine.Touch;
 using Vector2 = UnityEngine.Vector2;
@@ -17,6 +18,8 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private float fallingSpeed = 25f;
+    [SerializeField] private Vector2 leftBoundaryWall;
+    [SerializeField] private Vector2 rightBoundaryWall;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
@@ -32,7 +35,10 @@ public class PhoneMovement : MonoBehaviour
     private float _timeCollisionWithWall;
     private Vector2 _positionInPreviousFrame;
     private Camera _cameraMain;
-    
+    private float _xValueForLeftBoundaryWall;
+    private float _xValueForRightBoundaryWall;
+
+
     private void Awake()
     {
         SetMovementDirection(MovementDirection.Standing);
@@ -60,12 +66,18 @@ public class PhoneMovement : MonoBehaviour
         var goToPosition = _fingerCurrentPosition;
         var deltaX = goToPosition.x - _positionInPreviousFrame.x;
         transform.position += (Vector3.right  * (deltaX * straightMovementSpeed *  Time.deltaTime));
-        StayInsideWalls();
+        StayInsideWalls(deltaX);
     }
 
-    private void StayInsideWalls()
+    private void StayInsideWalls(float deltaX)
     {
         //TODO Uros implement this
+        // if (_transform.position.x < _yValueForBottomBoundary && deltaX < 0)
+        // {
+        //     Vector2 boundaryPosition = _transform.position;
+        //     boundaryPosition.y = _yValueForBottomBoundary;
+        //     _transform.position = boundaryPosition;
+        // }
     }
 
     private void UpdateWallCollision()
@@ -193,7 +205,7 @@ public class PhoneMovement : MonoBehaviour
         if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
                                                                  || _movementDirection == MovementDirection.StraightRight)
         {
-            SetMovementDirection(MovementDirection.StraightLeft);
+            //SetMovementDirection(MovementDirection.StraightLeft);
             StraightHorizontalMovement();
         }
         
@@ -218,7 +230,7 @@ public class PhoneMovement : MonoBehaviour
         else if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
                 || _movementDirection == MovementDirection.StraightRight)
         {
-            SetMovementDirection(MovementDirection.StraightRight);
+            //SetMovementDirection(MovementDirection.StraightRight);
             //TODO 
             StraightHorizontalMovement();
         }
@@ -292,6 +304,7 @@ public class PhoneMovement : MonoBehaviour
             SetMovementDirection(MovementDirection.Standing);
         }
     }
+    
 
     private bool CanJump()
     {
@@ -329,5 +342,6 @@ public enum MovementDirection
     FallingDown = 6,
     OnWall = 7,
     OnWallSliding = 8,
-    
+    PossibleComboLeft = 9,
+    PossibleComboRight = 10
 }

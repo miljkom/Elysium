@@ -763,7 +763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &778887686
 Transform:
   m_ObjectHideFlags: 0
@@ -1580,5 +1580,8 @@ MonoBehaviour:
   swipeSpeed: 300
   blockMovement: 0
   platformCollider2D: {fileID: 1752711854}
+  straightMovementSpeed: 20
   timeToMakeComboWhenInCollision: 0.5
   fallingSpeed: 25
+  leftBoundaryWall: {x: 0, y: 0}
+  rightBoundaryWall: {x: 0, y: 0}
