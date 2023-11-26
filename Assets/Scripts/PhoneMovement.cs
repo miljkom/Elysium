@@ -280,6 +280,7 @@ public class PhoneMovement : MonoBehaviour
 
     public void SetInCollisionWithWall()
     {
+        if (true) return;
         _inCollisionWithWall = true;
         _timeCollisionWithWall = 0;
         _movementDirection = MovementDirection.OnWall;
@@ -287,6 +288,7 @@ public class PhoneMovement : MonoBehaviour
     
     public void NotInCollisionWithWall()
     {
+        if (true) return;
         _inCollisionWithWall = false;
         
     }
