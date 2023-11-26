@@ -62,7 +62,8 @@ public class PhoneMovement : MonoBehaviour
     {
         var goToPosition = _fingerCurrentPosition;
         var deltaX = goToPosition.x - _positionInPreviousFrame.x;
-        transform.position += (Vector3.right  * (deltaX * straightMovementSpeed *  Time.deltaTime));
+        rb2D.velocity = new Vector2(0, rb2D.velocity.y);
+        transform.position += Vector3.right  * (deltaX * straightMovementSpeed *  Time.deltaTime);
         StayInsideWalls(deltaX);
     }
 
