@@ -52,8 +52,8 @@ public class PhoneMovement : MonoBehaviour
         CheckIfPlayerIsFalling();
         foreach (Touch touch in Input.touches)
         {
-            if (blockMovement) return;
             FirstTouch(touch);
+            if (blockMovement) return;
             TouchWhileFingerIsMoving(touch);
         }
     }
