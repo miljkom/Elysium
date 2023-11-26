@@ -14,7 +14,6 @@ public class PhoneMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float swipeSpeed = 1f;
     [SerializeField] private bool blockMovement;
-    [SerializeField] private BoxCollider2D platformCollider2D;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private float fallingSpeed = 25f;
@@ -57,8 +56,6 @@ public class PhoneMovement : MonoBehaviour
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
         }
-        if(_movementDirection == MovementDirection.FallingDown)
-            StraightHorizontalMovement();
     }
 
     private void StraightHorizontalMovement()
@@ -92,7 +89,6 @@ public class PhoneMovement : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling)
         {
-            platformCollider2D.isTrigger = false;
             if (_movementDirection == MovementDirection.TopRight || _movementDirection == MovementDirection.TopLeft ||
                 _movementDirection == MovementDirection.StraightUp)
                 PlayerStartedFalling();
@@ -203,7 +199,8 @@ public class PhoneMovement : MonoBehaviour
             ResetEverything();
         }
         if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
-                                                                 || _movementDirection == MovementDirection.StraightRight)
+                                                                 || _movementDirection == MovementDirection.StraightRight
+                                                                 || _movementDirection == MovementDirection.FallingDown)
         {
             //SetMovementDirection(MovementDirection.StraightLeft);
             StraightHorizontalMovement();
@@ -211,7 +208,6 @@ public class PhoneMovement : MonoBehaviour
         
         _goingLeft = true;
         
-        platformCollider2D.isTrigger = true;
     }
 
     private void OnSwipeRight()
@@ -228,7 +224,7 @@ public class PhoneMovement : MonoBehaviour
             ResetEverything();
         }
         else if(_movementDirection == MovementDirection.Standing || _movementDirection == MovementDirection.StraightLeft 
-                || _movementDirection == MovementDirection.StraightRight)
+                || _movementDirection == MovementDirection.StraightRight || _movementDirection == MovementDirection.FallingDown)
         {
             //SetMovementDirection(MovementDirection.StraightRight);
             //TODO 
@@ -236,7 +232,6 @@ public class PhoneMovement : MonoBehaviour
         }
         
         _goingRight = true;
-        platformCollider2D.isTrigger = true;
     }
 
     private void OnSwipeUp()
@@ -297,7 +292,7 @@ public class PhoneMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!_swipeHappened) return;
-        if (other.gameObject.CompareTag("Platform") || other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Platform") && other.enabled)// || other.gameObject.CompareTag("Wall"))
         {
             blockMovement = false;
             _swipeHappened = false;
