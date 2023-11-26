@@ -62,7 +62,6 @@ public class PhoneMovement : MonoBehaviour
     {
         var goToPosition = _fingerCurrentPosition;
         var deltaX = goToPosition.x - _positionInPreviousFrame.x;
-        rb2D.velocity = new Vector2(0, rb2D.velocity.y);
         transform.position += Vector3.right  * (deltaX * straightMovementSpeed *  Time.deltaTime);
         StayInsideWalls(deltaX);
     }
@@ -142,9 +141,11 @@ public class PhoneMovement : MonoBehaviour
     private void MoveHorizontally()
     {
         if (HorizontalFingerMove() < horizontalSwipeThreshold) return;
+        rb2D.velocity = new Vector2(0, rb2D.velocity.y);
         
         if (_fingerCurrentPosition.x - _fingerStartingPosition.x > 0)
         {
+            
             var tryComboRight = false;//_movementDirection == MovementDirection.Standing &&
                                 //_timeCollisionWithWall < timeToMakeComboWhenInCollision;
             if (tryComboRight)
