@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Movement
 {
     public class FallingDownState : State
@@ -14,12 +16,12 @@ namespace Movement
 
         public void UpLeft()
         {
-            throw new System.NotImplementedException();
+            Debug.Log($"Can't jump up left in {this} state");
         }
 
         public void UpRight()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't jump up right in FallingDownState state");
         }
     }
 }

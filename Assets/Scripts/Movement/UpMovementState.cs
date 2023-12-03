@@ -1,25 +1,27 @@
+using UnityEngine;
+
 namespace Movement
 {
     public class UpMovementState : State
     {
         public void StraightLeft()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't move left in UpMovementState");
         }
 
         public void StraightRight()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't move right in UpMovementState");
         }
 
         public void UpLeft()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't move up left in UpMovementState");
         }
 
         public void UpRight()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't move up right in UpMovementState");
         }
     }
 }
