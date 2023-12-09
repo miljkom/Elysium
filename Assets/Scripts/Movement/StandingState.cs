@@ -1,23 +1,23 @@
 namespace Movement
 {
-    public class StandingState : IState
+    public class StandingState : State
     {
-        public void StraightLeft()
+        public override void StraightLeft()
         {
             throw new System.NotImplementedException();
         }
 
-        public void StraightRight()
+        public override void StraightRight()
         {
             throw new System.NotImplementedException();
         }
 
-        public void UpLeft()
+        public override void UpLeft()
         {
             throw new System.NotImplementedException();
         }
 
-        public void UpRight()
+        public override void UpRight()
         {
             throw new System.NotImplementedException();
         }

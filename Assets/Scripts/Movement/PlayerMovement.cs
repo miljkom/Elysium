@@ -4,7 +4,7 @@ namespace Movement
 {
     public class PlayerMovement : MonoBehaviour
     {
-        private IState _state;
+        private State _state;
 
         private void Awake()
         {
@@ -13,7 +13,7 @@ namespace Movement
         }
 
 
-        private void ChangeState(IState state)
+        private void ChangeState(State state)
         {
             _state = state;
         }

@@ -2,24 +2,24 @@ using UnityEngine;
 
 namespace Movement
 {
-    public class FallingDownState : IState
+    public class FallingDownState : State
     {
-        public void StraightLeft()
+        public override void StraightLeft()
         {
             throw new System.NotImplementedException();
         }
 
-        public void StraightRight()
+        public override void StraightRight()
         {
             throw new System.NotImplementedException();
         }
 
-        public void UpLeft()
+        public override void UpLeft()
         {
             Debug.Log($"Can't jump up left in {this} state");
         }
 
-        public void UpRight()
+        public override void UpRight()
         {
             Debug.Log("Can't jump up right in FallingDownState state");
         }
