@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Touch = UnityEngine.Touch;
 
@@ -11,8 +12,14 @@ public class InputSystem : MonoBehaviour
     private Vector2 _fingerStartingPosition;
     private Camera _cameraMain;
 
+    private void Awake()
+    {
+        _cameraMain = Camera.main;
+    }
+
     private void Update()
     {
+        _fingerStartingPosition = _fingerCurrentPosition;
         foreach (Touch touch in Input.touches)
         {
             FirstTouch(touch);
@@ -63,6 +70,6 @@ public class InputSystem : MonoBehaviour
   
     private float CalculateUpFingerMovement() => _fingerCurrentPosition.y - _fingerStartingPosition.y;
     private bool CheckUpFingerMove() => CalculateUpFingerMovement() > verticalSwipeThreshold;
-    private float CalculateHorizontalFingerMovement() => Mathf.Abs(_fingerCurrentPosition.x - _fingerStartingPosition.x);
-    private bool CheckHorizontalFingerMove() => CalculateHorizontalFingerMovement() > horizontalSwipeThreshold;
+    private float CalculateHorizontalFingerMovement() => _fingerCurrentPosition.x - _fingerStartingPosition.x;
+    private bool CheckHorizontalFingerMove() => Mathf.Abs(_fingerCurrentPosition.x - _fingerStartingPosition.x) > horizontalSwipeThreshold;
 }

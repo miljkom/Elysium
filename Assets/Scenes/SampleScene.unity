@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -788,11 +788,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &934795551 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
-  m_PrefabInstance: {fileID: 297365625}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1411,7 +1406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d3cd5e5dec07d44da5ff90465c0f8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phoneMovement: {fileID: 1752711856}
+  player: {fileID: 1752711857}
 --- !u!1 &1752711847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1421,10 +1416,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1752711852}
-  - component: {fileID: 1752711849}
   - component: {fileID: 1752711853}
   - component: {fileID: 1752711855}
   - component: {fileID: 1752711856}
+  - component: {fileID: 1752711857}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1432,21 +1427,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1752711849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752711847}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 476fa2bfef187c94a8c2371384c3dfd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swipeSpeed: 50
-  rb: {fileID: 1752711855}
-  boxCollider2D: {fileID: 0}
 --- !u!4 &1752711852
 Transform:
   m_ObjectHideFlags: 0
@@ -1550,14 +1530,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalSwipeThreshold: 0.3
   horizontalSwipeThreshold: 0.1
+  player: {fileID: 1752711857}
+--- !u!114 &1752711857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752711847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d599627e8c4203891f649a9f12d8c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   touchResetTimer: 0
-  _movementDirection: 2
-  comboObject: {fileID: 934795551}
+  _movementDirection: 0
+  comboObject: {fileID: 0}
   rb2D: {fileID: 1752711855}
-  swipeSpeed: 300
-  blockMovement: 0
+  swipeSpeed: 20
   straightMovementSpeed: 20
-  timeToMakeComboWhenInCollision: 0.5
+  timeToMakeComboWhenInCollision: 1
   fallingSpeed: 25
   leftBoundaryWall: {x: 0, y: 0}
   rightBoundaryWall: {x: 0, y: 0}
