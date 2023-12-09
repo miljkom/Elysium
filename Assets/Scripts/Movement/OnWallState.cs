@@ -1,6 +1,6 @@
 namespace Movement
 {
-    public class OnWallState : State
+    public class OnWallState : IState
     {
         public void StraightLeft()
         {

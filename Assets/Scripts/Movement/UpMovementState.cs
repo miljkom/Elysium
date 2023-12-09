@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Movement
 {
-    public class UpMovementState : State
+    public class UpMovementState : IState
     {
         public void StraightLeft()
         {

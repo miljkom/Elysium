@@ -1,4 +1,4 @@
-public interface State
+public interface IState
 {
     public void StraightLeft();
     public void StraightRight();

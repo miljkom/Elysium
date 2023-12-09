@@ -1,6 +1,6 @@
 namespace Movement
 {
-    public class ComboState : State
+    public class ComboState : IState
     {
         public void StraightLeft()
         {

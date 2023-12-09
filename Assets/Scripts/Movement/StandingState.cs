@@ -1,6 +1,6 @@
 namespace Movement
 {
-    public class StandingState : State
+    public class StandingState : IState
     {
         public void StraightLeft()
         {
