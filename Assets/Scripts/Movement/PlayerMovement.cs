@@ -1,21 +1,24 @@
-using UnityEngine;
-
 namespace Movement
 {
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement
     {
         private State _state;
 
-        private void Awake()
+        public PlayerMovement()
         {
-            _state = new ComboState();
             ChangeState(new StandingState());
         }
 
 
-        private void ChangeState(State state)
+        public void ChangeState(State state)
         {
             _state = state;
+            //for music and animations
+            //state.EnteringState()
+            
+            //rb2D.velocity = new Vector2(0, rb2D.velocity.y);
+            
+            //ResetEverythingInBothClasses
         }
     }
 }

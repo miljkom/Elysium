@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CollisionWithWall : MonoBehaviour
 {
-    [SerializeField] private PhoneMovement phoneMovement;
+    [SerializeField] private Player player;
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            phoneMovement.SetInCollisionWithWall();
+            player.SetInCollisionWithWall();
         }
     }
 
@@ -16,7 +16,7 @@ public class CollisionWithWall : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            phoneMovement.NotInCollisionWithWall();
+            player.NotInCollisionWithWall();
         }
     }
 }
