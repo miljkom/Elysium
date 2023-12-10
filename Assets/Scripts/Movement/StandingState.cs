@@ -1,23 +1,26 @@
+using UnityEngine;
+
 namespace Movement
 {
     public class StandingState : State
     {
-        public override void StraightLeft()
+        public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D)
+            : base(playerMovement, playerTransform, rigidbody2D)
+        {
+        }
+        
+        public override void StraightMovement(float deltaXMovement)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void StraightRight()
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle)
         {
-            throw new System.NotImplementedException();
+            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
+            Rigidbody2D.AddForce(jumpAngle.normalized * 200);
         }
 
-        public override void UpLeft()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UpRight()
+        public override void EnterState()
         {
             throw new System.NotImplementedException();
         }

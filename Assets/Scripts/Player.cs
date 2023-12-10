@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.Standing);
         _transform = transform;
-        _playerMovement = new PlayerMovement();
+        _playerMovement = new PlayerMovement(_transform, rb2D);
     }
 
     private void Update()
@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling)
         {
-            _playerMovement.ChangeState(new FallingDownState());
+            //_playerMovement.ChangeState(new FallingDownState(_transform, rb2D));
         }
         _previousPlayerYPosition = currentYPosition;
     }
@@ -129,8 +129,7 @@ public class Player : MonoBehaviour
     public void UpAndHorizontalMovement(Vector2 jumpAngle)
     {
         _jumpAngle = jumpAngle.normalized;
-        _playerMovement.ChangeState(new UpMovementState());
-        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle);
     }
     
     private void MakeComboLeft()
