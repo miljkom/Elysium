@@ -38,7 +38,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -9850,7 +9850,9 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 98344704a66b9da4e9ac150d52c8d75c, type: 3}
+      name: _MaskTex
     nameFileIdTable:
       character-1_3-atlas_0: 800200146
       character-1_3-atlas_1: -738772588
