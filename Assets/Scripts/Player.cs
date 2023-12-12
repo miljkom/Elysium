@@ -73,8 +73,7 @@ public class Player : MonoBehaviour
 
     public void OnSwipeUp()
     {
-        SetMovementDirection(MovementDirection.StraightUp);
-        rb2D.AddForce(new Vector2(0,1) * upSpeedMovement);
+        _playerMovement.ChangeState(States.UpMovementState);
     }
     
     private void StayInsideWalls()

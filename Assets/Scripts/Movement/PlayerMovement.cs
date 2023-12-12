@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Movement
@@ -14,8 +15,17 @@ namespace Movement
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
             SetPlayerMovementData(playerMovementData);
+            CreateStates();
+            ChangeState(States.StandingState);
+        }
 
-            ChangeState(new StandingState(this, _playerTransform, _rigidbody2D));
+        private void CreateStates()
+        {
+            ConcreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D));
+            ConcreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D));
+            ConcreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D));
+            ConcreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D));
+            ConcreteState.Add(States.ComboState, new ComboState(this, _playerTransform, _rigidbody2D));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
@@ -28,10 +38,10 @@ namespace Movement
         }
 
 
-        public void ChangeState(State state)
+        public void ChangeState(States state)
         {
-            _state = state;
-            state.EnterState();
+            _state = ConcreteState[state];
+            _state.EnterState();
             
             _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             
@@ -52,6 +62,17 @@ namespace Movement
         {
             _state.UpMovement(new Vector2(0,1), _upMovementSpeed);
         }
+
+        private Dictionary<States, State> ConcreteState = new Dictionary<States, State>();
+    }
+
+    public enum States
+    {
+        StandingState = 0,
+        UpMovementState = 1,
+        FallingDownState = 2,
+        OnWallState = 3,
+        ComboState = 4,
     }
 
     public class PlayerMovementData
