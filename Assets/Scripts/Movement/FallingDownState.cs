@@ -9,19 +9,25 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed)
         {
-            throw new System.NotImplementedException();
+            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
+        {
+            Debug.Log("Can't move up and horizontal in Falling down state. Will move straight.");
+            PlayerMovement.StraightMovement(jumpAngle.x);
+        }
+
+        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
         {
             throw new System.NotImplementedException();
         }
 
         public override void EnterState()
         {
-            Debug.Log($"Can't jump up left in {this} state");
+            Debug.Log($"Welcome to {this}");
         }
     }
 }

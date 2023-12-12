@@ -14,7 +14,12 @@ public abstract class State
         Rigidbody2D = rigidbody2D;
     }
     
-    public abstract void StraightMovement(float deltaXMovement);
-    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle);
-    public abstract void EnterState();
+    public abstract void StraightMovement(float deltaXMovement, float movementSpeed);
+    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed);
+    public abstract void UpMovement(Vector2 jumpAngle, float movementSpeed);
+
+    public virtual void EnterState()
+    {
+        //Debug.Log($"Welcome to {this}");
+    }
 }

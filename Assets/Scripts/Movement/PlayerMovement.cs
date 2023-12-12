@@ -5,21 +5,26 @@ namespace Movement
     public class PlayerMovement
     {
         private State _state;
-        private readonly Transform _playerTransform;
-        private readonly Rigidbody2D _rigidbody2D;
-        private readonly float _upMovementSpeed;
-        private readonly float _straightMovementSpeed;
-        private readonly float _upAndHorizontalMovementSpeed;
+        private Transform _playerTransform;
+        private Rigidbody2D _rigidbody2D;
+        private float _upMovementSpeed;
+        private float _straightMovementSpeed;
+        private float _upAndHorizontalMovementSpeed;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
+        {
+            SetPlayerMovementData(playerMovementData);
+
+            ChangeState(new StandingState(this, _playerTransform, _rigidbody2D));
+        }
+
+        private void SetPlayerMovementData(PlayerMovementData playerMovementData)
         {
             _playerTransform = playerMovementData.PlayerTransform;
             _rigidbody2D = playerMovementData.Rigidbody2D;
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
-            ChangeState(new StandingState(this, _playerTransform, _rigidbody2D));
-
         }
 
 
@@ -35,7 +40,17 @@ namespace Movement
 
         public void UpAndHorizontalMovement(Vector2 jumpAngle)
         {
-            _state.UpAndHorizontalMovement(jumpAngle, 200);
+            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed);
+        }
+        
+        public void StraightMovement(float deltaXMovement)
+        {
+            _state.StraightMovement(deltaXMovement, _upAndHorizontalMovementSpeed);
+        }
+        
+        public void UpMovement()
+        {
+            _state.UpMovement(new Vector2(0,1), _upMovementSpeed);
         }
     }
 

@@ -11,23 +11,24 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed)
         {
-            throw new System.NotImplementedException();
+            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
         }
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
         {
-            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
             Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
         }
 
-        public override void UpMovement(float movementSpeed)
+        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
         {
-            throw new System.NotImplementedException();
+            Rigidbody2D.AddForce(new Vector2(0,1) * movementSpeed);
+            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
         }
 
         public override void EnterState()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Welcome to StandingState");
         }
     }
 }

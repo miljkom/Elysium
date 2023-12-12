@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
-    [SerializeField] private float upAndHorizontalMovementSpeed = 20f;
+    [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private Vector2 leftBoundaryWall;
     [SerializeField] private Vector2 rightBoundaryWall;
@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
     
     public void StraightHorizontalMovement(float deltaInputXPosition)
     {
-        transform.position += Vector3.right  * (deltaInputXPosition * straightMovementSpeed *  Time.deltaTime);
+        _playerMovement.StraightMovement(deltaInputXPosition);
         StayInsideWalls();
     }
 
