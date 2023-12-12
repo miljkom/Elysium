@@ -9,12 +9,17 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
         {
             throw new System.NotImplementedException();
         }

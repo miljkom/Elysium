@@ -20,7 +20,7 @@ public class InputSystem : MonoBehaviour
     private void Update()
     {
         _fingerStartingPosition = _fingerCurrentPosition;
-        foreach (Touch touch in Input.touches)
+        foreach (var touch in Input.touches)
         {
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);

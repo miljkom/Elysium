@@ -76,7 +76,7 @@ public class Player : MonoBehaviour
 
     public void OnSwipeUp()
     {
-        _playerMovement.ChangeState(States.UpMovementState);
+        _playerMovement.UpMovement();
     }
     
     private void StayInsideWalls()
