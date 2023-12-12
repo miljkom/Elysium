@@ -5,31 +5,56 @@ namespace Movement
     public class PlayerMovement
     {
         private State _state;
-        private Transform _playerTransform;
-        private Rigidbody2D _rigidbody2D;
+        private readonly Transform _playerTransform;
+        private readonly Rigidbody2D _rigidbody2D;
+        private readonly float _upMovementSpeed;
+        private readonly float _straightMovementSpeed;
+        private readonly float _upAndHorizontalMovementSpeed;
 
-        public PlayerMovement(Transform playerTransform, Rigidbody2D rigidbody2D)
+        public PlayerMovement(PlayerMovementData playerMovementData)
         {
-            ChangeState(new StandingState(this, playerTransform, rigidbody2D));
-            _playerTransform = playerTransform;
-            _rigidbody2D = rigidbody2D;
+            _playerTransform = playerMovementData.PlayerTransform;
+            _rigidbody2D = playerMovementData.Rigidbody2D;
+            _upMovementSpeed = playerMovementData.UpMovementSpeed;
+            _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
+            _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
+            ChangeState(new StandingState(this, _playerTransform, _rigidbody2D));
+
         }
 
 
         public void ChangeState(State state)
         {
             _state = state;
-            //for music and animations
-            //state.EnteringState()
+            state.EnterState();
             
-            //rb2D.velocity = new Vector2(0, rb2D.velocity.y);
+            _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             
             //ResetEverythingInBothClasses
         }
 
         public void UpAndHorizontalMovement(Vector2 jumpAngle)
         {
-            _state.UpAndHorizontalMovement(jumpAngle);
+            _state.UpAndHorizontalMovement(jumpAngle, 200);
+        }
+    }
+
+    public class PlayerMovementData
+    {
+        public readonly Transform PlayerTransform;
+        public readonly Rigidbody2D Rigidbody2D;
+        public readonly float UpMovementSpeed;
+        public readonly float StraightMovementSpeed;
+        public readonly float UpAndHorizontalMovementSpeed;
+
+        public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
+            float straightMovementSpeed, float upAndHorizontalMovementSpeed)
+        {
+            PlayerTransform = playerTransform;
+            Rigidbody2D = rigidbody2D;
+            UpMovementSpeed = upMovementSpeed;
+            StraightMovementSpeed = straightMovementSpeed;
+            UpAndHorizontalMovementSpeed = upAndHorizontalMovementSpeed;
         }
     }
 }

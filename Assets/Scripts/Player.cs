@@ -7,10 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] private MovementDirection _movementDirection;
     [SerializeField] private GameObject comboObject;
     [SerializeField] private Rigidbody2D rb2D;
-    [SerializeField] private float swipeSpeed = 1f;
+    [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
+    [SerializeField] private float upAndHorizontalMovementSpeed = 20f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
-    [SerializeField] private float fallingSpeed = 25f;
     [SerializeField] private Vector2 leftBoundaryWall;
     [SerializeField] private Vector2 rightBoundaryWall;
 
@@ -30,9 +30,10 @@ public class Player : MonoBehaviour
     
     private void Awake()
     {
-        SetMovementDirection(MovementDirection.Standing);
         _transform = transform;
-        _playerMovement = new PlayerMovement(_transform, rb2D);
+        var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
+            upAndHorizontalMovementSpeed);
+        _playerMovement = new PlayerMovement(playerMovementData);
     }
 
     private void Update()
@@ -40,28 +41,11 @@ public class Player : MonoBehaviour
         UpdateWallCollision();
         CheckIfPlayerIsFalling();
     }
-
-    public void StraightHorizontalMovement(float deltaInputXPosition)
-    {
-        transform.position += Vector3.right  * (deltaInputXPosition * straightMovementSpeed *  Time.deltaTime);
-        StayInsideWalls();
-    }
     
     private void UpdateWallCollision()
     {
         if (_inCollisionWithWall)
             _timeCollisionWithWall += Time.deltaTime;
-    }
-    
-    private void StayInsideWalls()
-    {
-        //TODO Uros implement this
-        // if (_transform.position.x < _yValueForBottomBoundary && deltaX < 0)
-        // {
-        //     Vector2 boundaryPosition = _transform.position;
-        //     boundaryPosition.y = _yValueForBottomBoundary;
-        //     _transform.position = boundaryPosition;
-        // }
     }
 
     private void CheckIfPlayerIsFalling()
@@ -74,11 +58,34 @@ public class Player : MonoBehaviour
         }
         _previousPlayerYPosition = currentYPosition;
     }
+    
+    public void UpAndHorizontalMovement(Vector2 jumpAngle)
+    {
+        _jumpAngle = jumpAngle.normalized;
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle);
+    }
+    
+    public void StraightHorizontalMovement(float deltaInputXPosition)
+    {
+        transform.position += Vector3.right  * (deltaInputXPosition * straightMovementSpeed *  Time.deltaTime);
+        StayInsideWalls();
+    }
 
     public void OnSwipeUp()
     {
         SetMovementDirection(MovementDirection.StraightUp);
-        rb2D.AddForce(new Vector2(0,1) * swipeSpeed);
+        rb2D.AddForce(new Vector2(0,1) * upSpeedMovement);
+    }
+    
+    private void StayInsideWalls()
+    {
+        //TODO Uros implement this
+        // if (_transform.position.x < _yValueForBottomBoundary && deltaX < 0)
+        // {
+        //     Vector2 boundaryPosition = _transform.position;
+        //     boundaryPosition.y = _yValueForBottomBoundary;
+        //     _transform.position = boundaryPosition;
+        // }
     }
 
     private void DeactivateObject()
@@ -125,18 +132,12 @@ public class Player : MonoBehaviour
         _inCollisionWithWall = false;
         
     }
-
-    public void UpAndHorizontalMovement(Vector2 jumpAngle)
-    {
-        _jumpAngle = jumpAngle.normalized;
-        _playerMovement.UpAndHorizontalMovement(_jumpAngle);
-    }
     
     private void MakeComboLeft()
     {
         SetMovementDirection(MovementDirection.TopLeft);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
         MakeCombo();
     }
 
@@ -144,7 +145,7 @@ public class Player : MonoBehaviour
     {
         SetMovementDirection(MovementDirection.TopRight);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * swipeSpeed);
+        rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
         MakeCombo();
     }
     

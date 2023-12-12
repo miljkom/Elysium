@@ -9,14 +9,19 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed)
         {
             Debug.Log("Can't move left in UpMovementState");
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
         {
             Debug.Log("Can't move right in UpMovementState");
+        }
+
+        public override void UpMovement(float movementSpeed)
+        {
+            
         }
 
         public override void EnterState()
