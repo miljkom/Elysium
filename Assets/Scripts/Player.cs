@@ -4,7 +4,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float touchResetTimer;
-    [SerializeField] private MovementDirection _movementDirection;
     [SerializeField] private GameObject comboObject;
     [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float upSpeedMovement = 1f;
@@ -17,7 +16,6 @@ public class Player : MonoBehaviour
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
     private Transform _transform;
-    private MovementDirection _previousStateDirection;
     private float _previousPlayerYPosition;
     private bool _swipeHappened; //wont need most likely
     private bool _failedCombo;
@@ -31,6 +29,11 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _transform = transform;
+        InitializePlayerMovement();
+    }
+
+    private void InitializePlayerMovement()
+    {
         var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
             upAndHorizontalMovementSpeed);
         _playerMovement = new PlayerMovement(playerMovementData);
@@ -98,23 +101,8 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Platform") && other.enabled)// || other.gameObject.CompareTag("Wall"))
         {
             _swipeHappened = false;
-            SetMovementDirection(MovementDirection.Standing);
+            _playerMovement.ChangeState(States.StandingState);
         }
-    }
-    
-
-    private bool PossibleCombo()
-    {
-        if ((_movementDirection == MovementDirection.TopLeft && _inCollisionWithWall) ||
-            (_movementDirection == MovementDirection.TopRight && _inCollisionWithWall))
-            return true;
-        return false;
-    }
-
-    private void SetMovementDirection(MovementDirection movementDirection)
-    {
-        _previousStateDirection = _movementDirection;
-        _movementDirection = movementDirection;
     }
     
     public void SetInCollisionWithWall()
@@ -122,7 +110,6 @@ public class Player : MonoBehaviour
         if (true) return;
         _inCollisionWithWall = true;
         _timeCollisionWithWall = 0;
-        _movementDirection = MovementDirection.OnWall;
     }
     
     public void NotInCollisionWithWall()
@@ -134,7 +121,6 @@ public class Player : MonoBehaviour
     
     private void MakeComboLeft()
     {
-        SetMovementDirection(MovementDirection.TopLeft);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
         rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
         MakeCombo();
@@ -142,7 +128,6 @@ public class Player : MonoBehaviour
 
     private void MakeComboRight()
     {
-        SetMovementDirection(MovementDirection.TopRight);
         _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
         rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
         MakeCombo();
@@ -153,21 +138,6 @@ public class Player : MonoBehaviour
         comboObject.SetActive(true);
         Invoke(nameof(DeactivateObject), 1.5f);
         Debug.LogError("Crazyy combo");
-    }
-    
-    private enum MovementDirection
-    {
-        TopLeft = 0,
-        TopRight = 1,
-        Standing = 2,
-        StraightLeft = 3,
-        StraightRight = 4,
-        StraightUp = 5,
-        FallingDown = 6,
-        OnWall = 7,
-        OnWallSliding = 8,
-        PossibleComboLeft = 9,
-        PossibleComboRight = 10
     }
 }
 
