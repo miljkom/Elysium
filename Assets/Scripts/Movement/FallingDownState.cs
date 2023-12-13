@@ -22,7 +22,7 @@ namespace Movement
 
         public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Can't move up and horizontal in Falling down state. Will move straight.");
         }
 
         public override void EnterState()

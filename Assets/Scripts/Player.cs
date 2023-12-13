@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     private Vector2 _jumpAngle;
     private Transform _transform;
     private float _previousPlayerYPosition;
-    private bool _swipeHappened; //wont need most likely
     private bool _failedCombo;
     private bool _goingLeft;
     private bool _goingRight;
@@ -29,6 +28,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _transform = transform;
+        _previousPlayerYPosition = _transform.position.y;
         InitializePlayerMovement();
     }
 
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling)
         {
-            //_playerMovement.ChangeState(new FallingDownState(_transform, rb2D));
+           _playerMovement.ChangeState(States.FallingDownState);
         }
         _previousPlayerYPosition = currentYPosition;
     }
@@ -97,10 +97,8 @@ public class Player : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (!_swipeHappened) return;
-        if (other.gameObject.CompareTag("Platform") && other.enabled)// || other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Platform") && other.enabled)
         {
-            _swipeHappened = false;
             _playerMovement.ChangeState(States.StandingState);
         }
     }

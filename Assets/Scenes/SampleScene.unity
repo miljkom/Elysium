@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1435,7 +1435,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752711847}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.27, y: -8.09, z: 0}
+  m_LocalPosition: {x: 1.27, y: -8.2, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1544,12 +1544,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   touchResetTimer: 0
-  _movementDirection: 0
   comboObject: {fileID: 0}
   rb2D: {fileID: 1752711855}
-  swipeSpeed: 20
+  upSpeedMovement: 222
   straightMovementSpeed: 20
+  upAndHorizontalMovementSpeed: 222
   timeToMakeComboWhenInCollision: 1
-  fallingSpeed: 25
   leftBoundaryWall: {x: 0, y: 0}
   rightBoundaryWall: {x: 0, y: 0}

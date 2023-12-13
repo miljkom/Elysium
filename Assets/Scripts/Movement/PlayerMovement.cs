@@ -40,10 +40,10 @@ namespace Movement
 
         public void ChangeState(States state)
         {
+            Debug.LogError($"ide iz {_state} u {state}");
             _state = ConcreteState[state];
             _state.EnterState();
-            
-            _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
+            //_rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             
             //ResetEverythingInBothClasses
         }
@@ -55,7 +55,7 @@ namespace Movement
         
         public void StraightMovement(float deltaXMovement)
         {
-            _state.StraightMovement(deltaXMovement, _upAndHorizontalMovementSpeed);
+            _state.StraightMovement(deltaXMovement, _straightMovementSpeed);
         }
         
         public void UpMovement()
