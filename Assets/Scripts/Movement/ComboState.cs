@@ -19,7 +19,7 @@ namespace Movement
             throw new System.NotImplementedException();
         }
 
-        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
+        public override void UpMovement(float movementSpeed)
         {
             throw new System.NotImplementedException();
         }

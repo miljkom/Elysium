@@ -19,7 +19,7 @@ namespace Movement
             Debug.Log("Can't move up and horizontal in UpMovementState");
         }
 
-        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
+        public override void UpMovement(float movementSpeed)
         {
             Debug.Log("Can't move up in UpMovementState");
         }

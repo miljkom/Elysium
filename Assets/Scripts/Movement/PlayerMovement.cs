@@ -59,7 +59,7 @@ namespace Movement
         
         public void UpMovement()
         {
-            _state.UpMovement(new Vector2(0,1), _upMovementSpeed);
+            _state.UpMovement(_upMovementSpeed);
         }
 
         private Dictionary<States, State> ConcreteState = new Dictionary<States, State>();

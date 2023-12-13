@@ -16,10 +16,7 @@ public abstract class State
     
     public abstract void StraightMovement(float deltaXMovement, float movementSpeed);
     public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed);
-    public abstract void UpMovement(Vector2 jumpAngle, float movementSpeed);
+    public abstract void UpMovement(float movementSpeed);
 
-    public virtual void EnterState()
-    {
-        Debug.LogError($"Welcome to {this}");
-    }
+    public abstract void EnterState();
 }

@@ -21,10 +21,15 @@ namespace Movement
             Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
         }
 
-        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
+        public override void UpMovement(float movementSpeed)
         {
             PlayerMovement.ChangeState(States.UpMovementState);
             Rigidbody2D.AddForce(Vector2.up * movementSpeed);
+        }
+
+        public override void EnterState()
+        {
+            return;
         }
     }
 }

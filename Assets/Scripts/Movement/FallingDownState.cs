@@ -21,7 +21,7 @@ namespace Movement
             PlayerMovement.StraightMovement(jumpAngle.x);
         }
 
-        public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
+        public override void UpMovement(float movementSpeed)
         {
             Debug.Log("Can't move up and horizontal in Falling down state. Will move straight.");
         }
