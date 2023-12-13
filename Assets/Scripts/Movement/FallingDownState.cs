@@ -11,6 +11,7 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed)
         {
+            Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
             PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
         }
 

@@ -43,7 +43,6 @@ namespace Movement
             Debug.LogError($"ide iz {_state} u {state}");
             _state = ConcreteState[state];
             _state.EnterState();
-            //_rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             
             //ResetEverythingInBothClasses
         }

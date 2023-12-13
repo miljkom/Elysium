@@ -20,6 +20,6 @@ public abstract class State
 
     public virtual void EnterState()
     {
-        //Debug.Log($"Welcome to {this}");
+        Debug.LogError($"Welcome to {this}");
     }
 }
