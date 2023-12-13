@@ -17,13 +17,13 @@ namespace Movement
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
         {
             Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
-            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
+            PlayerMovement.ChangeState(States.UpMovementState);
         }
 
         public override void UpMovement(Vector2 jumpAngle, float movementSpeed)
         {
             Rigidbody2D.AddForce(new Vector2(0,1) * movementSpeed);
-            PlayerMovement.ChangeState(new UpMovementState(PlayerMovement, PlayerTransform, Rigidbody2D));
+            PlayerMovement.ChangeState(States.UpMovementState);
         }
 
         public override void EnterState()
