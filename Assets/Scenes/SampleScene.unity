@@ -1547,7 +1547,7 @@ MonoBehaviour:
   comboObject: {fileID: 0}
   rb2D: {fileID: 1752711855}
   upSpeedMovement: 222
-  straightMovementSpeed: 20
+  straightMovementSpeed: 40
   upAndHorizontalMovementSpeed: 222
   timeToMakeComboWhenInCollision: 1
   leftBoundaryWall: {x: 0, y: 0}

@@ -40,11 +40,10 @@ namespace Movement
 
         public void ChangeState(States state)
         {
+            if (_state == ConcreteState[state]) return;
             Debug.LogError($"ide iz {_state} u {state}");
             _state = ConcreteState[state];
             _state.EnterState();
-            
-            //ResetEverythingInBothClasses
         }
 
         public void UpAndHorizontalMovement(Vector2 jumpAngle)
