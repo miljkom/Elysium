@@ -37,6 +37,7 @@ public class CameraAnchor : MonoBehaviour {
 		if (cameraWaitCycles > 0) {
 			print(string.Format("CameraAnchor found ViewportHandler instance after waiting {0} frame(s). You might want to check that ViewportHandler has an earlie execution order.", cameraWaitCycles));
 		}
+		
 		UpdateAnchor();
 		updateAnchorRoutine = null;
 	}
@@ -83,9 +84,12 @@ public class CameraAnchor : MonoBehaviour {
 #if UNITY_EDITOR
 	// Update is called once per frame
 	void Update () {
-		if (updateAnchorRoutine == null) {
-			updateAnchorRoutine = UpdateAnchorAsync();
-			StartCoroutine(updateAnchorRoutine);
+		if (Input.GetKeyDown(KeyCode.T))
+		{
+			if (updateAnchorRoutine == null) {
+				updateAnchorRoutine = UpdateAnchorAsync();
+				StartCoroutine(updateAnchorRoutine);
+			}
 		}
 	}
 #endif

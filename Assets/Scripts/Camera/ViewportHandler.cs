@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -8,6 +10,8 @@ public class ViewportHandler : MonoBehaviour
 {
     #region FIELDS
     [SerializeField] private SpriteRenderer mainObjectBackground;
+    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
+    [SerializeField] private Transform playerTransform;
     public static ViewportHandler Instance;
     public new Camera camera;
 
@@ -100,10 +104,10 @@ public class ViewportHandler : MonoBehaviour
         float leftX, rightX, topY, bottomY;
 
         var newOrthographicSize = mainObjectBackground.bounds.size.x * Screen.height / Screen.width * 0.5f;
-        Camera.main.orthographicSize = (newOrthographicSize > 9) ? newOrthographicSize : 9;
+        cinemachineVirtualCamera.m_Lens.OrthographicSize = (newOrthographicSize > 9) ? newOrthographicSize : 9;
 
-        _height = 2f * camera.orthographicSize;
-        _width = _height * camera.aspect;
+        _height = 2f * cinemachineVirtualCamera.m_Lens.OrthographicSize;
+        _width = _height * cinemachineVirtualCamera.m_Lens.Aspect;
 
         float cameraX, cameraY;
         cameraX = camera.transform.position.x;
@@ -113,7 +117,7 @@ public class ViewportHandler : MonoBehaviour
         rightX = cameraX + _width / 2;
         topY = cameraY + _height / 2;
         bottomY = cameraY - _height / 2;
-
+        
         //*** bottom
         _bl = new Vector3(leftX, bottomY, 0);
         _bc = new Vector3(cameraX, bottomY, 0);
@@ -127,7 +131,6 @@ public class ViewportHandler : MonoBehaviour
         _tc = new Vector3(cameraX, topY , 0);
         _tr = new Vector3(rightX, topY, 0);           
     }
-
     private void Update()
     {
         #if UNITY_EDITOR
