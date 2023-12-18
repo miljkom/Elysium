@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         if (_transform.position.x >= _xValueForLeftBoundaryWall || deltaInputXPosition > 0) return;
         
         Vector2 boundaryPosition = _transform.position;
-        boundaryPosition.y = _xValueForLeftBoundaryWall;
+        boundaryPosition.x = _xValueForLeftBoundaryWall;
         _transform.position = boundaryPosition;
     }
 
@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
         if (_transform.position.x < _xValueForRightBoundaryWall || deltaInputXPosition < 0) return;
         
         Vector2 boundaryPosition = _transform.position;
-        boundaryPosition.y = _xValueForRightBoundaryWall;
+        boundaryPosition.x = _xValueForRightBoundaryWall;
         _transform.position = boundaryPosition;
     }
 
