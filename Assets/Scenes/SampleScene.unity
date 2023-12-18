@@ -958,7 +958,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1081843239}
   - component: {fileID: 1081843241}
-  - component: {fileID: 1081843240}
   m_Layer: 0
   m_Name: ObsticlePrefab (2)
   m_TagString: Wall
@@ -981,32 +980,6 @@ Transform:
   m_Father: {fileID: 1388458144}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1081843240
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081843238}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.32, y: 0.32}
-    newSize: {x: 0.48, y: 0.48}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.32, y: 0.32}
-  m_EdgeRadius: 0
 --- !u!212 &1081843241
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1193,7 +1166,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1364901465}
   - component: {fileID: 1364901467}
-  - component: {fileID: 1364901466}
   m_Layer: 0
   m_Name: ObsticlePrefab (3)
   m_TagString: Wall
@@ -1216,32 +1188,6 @@ Transform:
   m_Father: {fileID: 1388458144}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1364901466
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364901464}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.32, y: 0.32}
-    newSize: {x: 0.48, y: 0.48}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.32, y: 0.32}
-  m_EdgeRadius: 0
 --- !u!212 &1364901467
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1550,5 +1496,5 @@ MonoBehaviour:
   straightMovementSpeed: 40
   upAndHorizontalMovementSpeed: 222
   timeToMakeComboWhenInCollision: 1
-  leftBoundaryWall: {x: 0, y: 0}
-  rightBoundaryWall: {x: 0, y: 0}
+  leftBoundaryWall: {fileID: 0}
+  rightBoundaryWall: {fileID: 0}
