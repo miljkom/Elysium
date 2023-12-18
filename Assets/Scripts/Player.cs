@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
-    [SerializeField] private Vector2 leftBoundaryWall;
-    [SerializeField] private Vector2 rightBoundaryWall;
+    [SerializeField] private Transform leftBoundaryWall;
+    [SerializeField] private Transform rightBoundaryWall;
 
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
     {
         _transform = transform;
         _previousPlayerYPosition = _transform.position.y;
+        _xValueForLeftBoundaryWall = leftBoundaryWall.position.x;
+        _xValueForRightBoundaryWall = rightBoundaryWall.position.x;
         InitializePlayerMovement();
     }
 
@@ -71,7 +73,7 @@ public class Player : MonoBehaviour
     public void StraightHorizontalMovement(float deltaInputXPosition)
     {
         _playerMovement.StraightMovement(deltaInputXPosition);
-        StayInsideWalls();
+        StayInsideWalls(deltaInputXPosition);
     }
 
     public void OnSwipeUp()
@@ -79,15 +81,29 @@ public class Player : MonoBehaviour
         _playerMovement.UpMovement();
     }
     
-    private void StayInsideWalls()
+    private void StayInsideWalls(float deltaInputXPosition)
     {
-        //TODO Uros implement this
-        // if (_transform.position.x < _yValueForBottomBoundary && deltaX < 0)
-        // {
-        //     Vector2 boundaryPosition = _transform.position;
-        //     boundaryPosition.y = _yValueForBottomBoundary;
-        //     _transform.position = boundaryPosition;
-        // }
+        //todo Uros use left and right side of player
+        DontGoOverLeftWall(deltaInputXPosition);
+        DontGoOverRightWall(deltaInputXPosition);
+    }
+
+    private void DontGoOverLeftWall(float deltaInputXPosition)
+    {
+        if (_transform.position.x >= _xValueForLeftBoundaryWall || deltaInputXPosition > 0) return;
+        
+        Vector2 boundaryPosition = _transform.position;
+        boundaryPosition.y = _xValueForLeftBoundaryWall;
+        _transform.position = boundaryPosition;
+    }
+
+    private void DontGoOverRightWall(float deltaInputXPosition)
+    {
+        if (_transform.position.x < _xValueForRightBoundaryWall || deltaInputXPosition < 0) return;
+        
+        Vector2 boundaryPosition = _transform.position;
+        boundaryPosition.y = _xValueForRightBoundaryWall;
+        _transform.position = boundaryPosition;
     }
 
     private void DeactivateObject()
