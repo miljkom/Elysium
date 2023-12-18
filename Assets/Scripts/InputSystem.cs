@@ -20,17 +20,12 @@ public class InputSystem : MonoBehaviour
     private void Update()
     {
         _fingerStartingPosition = _fingerCurrentPosition;
+        //todo Uros ovo je verovatno bolje da uzme samo 1. touch. Verujem da moze da se pojebe ukoliko igrac koristi 2 prsta
         foreach (var touch in Input.touches)
         {
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
         }
-    }
-
-    private void ResetInputValues()
-    {
-        //on timer or on switch state
-        _fingerStartingPosition = _fingerCurrentPosition;
     }
 
     private void FirstTouch(Touch touch)
