@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class PlatformObjectPool : MonoBehaviour
 {
-    public GameObject platformPrefab;
-    public int platformPoolSize = 30;
-    public float despawnDistance = 30f;
-    public float spawnInterval = 2f;
-
-    public Transform playerTransform;
-    public Transform container;
-    public Transform topBounds;
-    public Transform bottomBounds;
-    
-    private float lastSpawnPlatformPositionY;
+    [SerializeField] private GameObject platformPrefab;
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Transform container;
+    [SerializeField] private Transform topBounds;
+    [SerializeField] private Transform bottomBounds;
+    [SerializeField] private int platformPoolSize = 30;
+    [SerializeField] private float despawnDistance = 30f;
+    [SerializeField] private float spawnInterval = 2f;
+    [SerializeField] private float despawnTimer = 3f;
+    [SerializeField] private float lastSpawnPlatformPositionY;
     
     private List<GameObject> platformPool = new List<GameObject>();
 
@@ -34,6 +33,17 @@ public class PlatformObjectPool : MonoBehaviour
             GameObject platform = Instantiate(platformPrefab, container);
             platform.SetActive(false);
             platformPool.Add(platform);
+        }
+
+        int initialActivePlatforms = 10;
+        for (int i = 0; i < initialActivePlatforms; i++)
+        {
+            platformPool[i].SetActive(true);
+            float spawnX = Random.Range(-4f, 4f); // Adjust as needed
+            float spawnY = lastSpawnPlatformPositionY + 2.5f; // Adjust as needed
+
+            platformPool[i].transform.position = new Vector3(spawnX, spawnY, 0f);
+            lastSpawnPlatformPositionY = spawnY;
         }
     }
 
@@ -81,7 +91,7 @@ public class PlatformObjectPool : MonoBehaviour
 
     private void Update()
     {
-        //DespawnPlatforms();
+        DespawnPlatforms();
     }
 
     private void DespawnPlatforms()
@@ -90,8 +100,15 @@ public class PlatformObjectPool : MonoBehaviour
         {
             if (platform.activeInHierarchy && playerTransform.position.y - platform.transform.position.y > despawnDistance)
             {
-                platform.SetActive(false);
+                StartCoroutine(DeactivatePlatformDelayed(platform));
             }
         }
+    }
+
+    private IEnumerator DeactivatePlatformDelayed(GameObject platform)
+    {
+        //animation
+        yield return new WaitForSeconds(despawnTimer);
+        platform.SetActive(false);
     }
 }

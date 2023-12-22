@@ -277,7 +277,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509111036}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -6.15, z: 0}
+  m_LocalPosition: {x: -0, y: -9.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -652,13 +652,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   platformPrefab: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
-  platformPoolSize: 30
-  despawnDistance: 15
-  spawnInterval: 3
-  playerTransform: {fileID: 1891948760}
+  playerTransform: {fileID: 1016334933}
   container: {fileID: 1891948760}
   topBounds: {fileID: 1278275834}
   bottomBounds: {fileID: 1263685646}
+  platformPoolSize: 30
+  despawnDistance: 15
+  spawnInterval: 3
+  lastSpawnPlatformPositionY: 0
 --- !u!4 &1917120740
 Transform:
   m_ObjectHideFlags: 0
