@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class ParallaxBackground : MonoBehaviour
 {
-    public ParallaxCamera parallaxCamera;
-    List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
+    [SerializeField] private ParallaxCamera parallaxCamera;
+    [SerializeField] private ParallaxObject maxPoint;
+    [SerializeField] private ParallaxObject minPoint;
+    
+    private List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
  
     void Start()
     {
@@ -16,6 +19,8 @@ public class ParallaxBackground : MonoBehaviour
             parallaxCamera.onCameraTranslate += Move;
  
         SetLayers();
+        maxPoint.hideObject += HideObject;
+        minPoint.hideObject += HideObject;
     }
  
     void SetLayers()
@@ -30,6 +35,8 @@ public class ParallaxBackground : MonoBehaviour
             {
                 parallaxLayers.Add(layer);
             }
+
+            // layer.hideObject += HideObject;
         }
     }
  
@@ -39,5 +46,10 @@ public class ParallaxBackground : MonoBehaviour
         {
             layer.Move(delta);
         }
+    }
+
+    private void HideObject(GameObject parallaxObject)
+    {
+        parallaxObject.SetActive(false);
     }
 }
