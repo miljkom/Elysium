@@ -8,6 +8,7 @@ namespace Movement
         private State _state;
         private Transform _playerTransform;
         private Rigidbody2D _rigidbody2D;
+        private AnimationController _animationController;
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
         private float _upAndHorizontalMovementSpeed;
@@ -21,17 +22,18 @@ namespace Movement
 
         private void CreateStates()
         {
-            ConcreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D));
-            ConcreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D));
-            ConcreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D));
-            ConcreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D));
-            ConcreteState.Add(States.ComboState, new ComboState(this, _playerTransform, _rigidbody2D));
+            ConcreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController));
+            ConcreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
+            ConcreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
+            ConcreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
+            ConcreteState.Add(States.ComboState, new ComboState(this, _playerTransform, _rigidbody2D, _animationController));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
         {
             _playerTransform = playerMovementData.PlayerTransform;
             _rigidbody2D = playerMovementData.Rigidbody2D;
+            _animationController = playerMovementData.AnimationController;
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
@@ -41,6 +43,7 @@ namespace Movement
         public void ChangeState(States state)
         {
             if (_state == ConcreteState[state]) return;
+            _state?.ExitState();
             Debug.LogError($"ide iz {_state} u {state}");
             _state = ConcreteState[state];
             _state.EnterState();
@@ -80,15 +83,17 @@ namespace Movement
         public readonly float UpMovementSpeed;
         public readonly float StraightMovementSpeed;
         public readonly float UpAndHorizontalMovementSpeed;
+        public readonly AnimationController AnimationController;
 
         public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
-            float straightMovementSpeed, float upAndHorizontalMovementSpeed)
+            float straightMovementSpeed, float upAndHorizontalMovementSpeed, AnimationController animationController)
         {
             PlayerTransform = playerTransform;
             Rigidbody2D = rigidbody2D;
             UpMovementSpeed = upMovementSpeed;
             StraightMovementSpeed = straightMovementSpeed;
             UpAndHorizontalMovementSpeed = upAndHorizontalMovementSpeed;
+            AnimationController = animationController;
         }
     }
 }

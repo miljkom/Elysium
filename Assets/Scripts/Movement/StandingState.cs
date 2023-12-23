@@ -4,8 +4,8 @@ namespace Movement
 {
     public class StandingState : State
     {
-        public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D)
-            : base(playerMovement, playerTransform, rigidbody2D)
+        public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
+            : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
         }
         
@@ -30,6 +30,11 @@ namespace Movement
         public override void EnterState()
         {
             return;
+        }
+        
+        public override void ExitState()
+        {
+            
         }
     }
 }

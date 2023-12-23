@@ -4,8 +4,8 @@ namespace Movement
 {
     public class OnWallState : State
     {
-        public OnWallState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D)
-            : base(playerMovement, playerTransform, rigidbody2D)
+        public OnWallState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
+            : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
         }
         
@@ -25,6 +25,11 @@ namespace Movement
         }
 
         public override void EnterState()
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public override void ExitState()
         {
             throw new System.NotImplementedException();
         }

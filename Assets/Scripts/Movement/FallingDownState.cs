@@ -4,8 +4,8 @@ namespace Movement
 {
     public class FallingDownState : State
     {
-        public FallingDownState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D)
-            : base(playerMovement, playerTransform, rigidbody2D)
+        public FallingDownState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
+            : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
         }
         
@@ -29,6 +29,12 @@ namespace Movement
         public override void EnterState()
         {
             Debug.Log($"Welcome to {this}");
+            AnimationController.PlayFallAnimation();
+        }
+        
+        public override void ExitState()
+        {
+            AnimationController.PlayLandAnimation();
         }
     }
 }

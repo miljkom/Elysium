@@ -4,8 +4,8 @@ namespace Movement
 {
     public class UpMovementState : State
     {
-        public UpMovementState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D) 
-            : base(playerMovement, playerTransform, rigidbody2D)
+        public UpMovementState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController) 
+            : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
         }
         
@@ -27,6 +27,13 @@ namespace Movement
         public override void EnterState()
         {
             Debug.Log("Welcome to UpMovementState");
+            AnimationController.ResetAllTriggers();
+            AnimationController.PlayJumpAnimation();
+        }
+        
+        public override void ExitState()
+        {
+            
         }
     }
 }

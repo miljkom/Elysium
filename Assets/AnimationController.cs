@@ -27,4 +27,17 @@ public class AnimationController : MonoBehaviour
     {
         animator.SetTrigger(WallHold);
     }
+
+    public void RotatePlayer()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * -1, transform.localScale.z);
+    }
+
+    public void ResetAllTriggers()
+    {
+        animator.ResetTrigger(Jump);
+        animator.ResetTrigger(Fall);
+        animator.ResetTrigger(Land);
+        animator.ResetTrigger(WallHold);
+    }
 }
