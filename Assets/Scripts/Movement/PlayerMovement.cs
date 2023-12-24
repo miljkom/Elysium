@@ -49,14 +49,14 @@ namespace Movement
             _state.EnterState();
         }
 
-        public void UpAndHorizontalMovement(Vector2 jumpAngle)
+        public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
         {
-            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed);
+            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction);
         }
         
-        public void StraightMovement(float deltaXMovement)
+        public void StraightMovement(float deltaXMovement, bool direction)
         {
-            _state.StraightMovement(deltaXMovement, _straightMovementSpeed);
+            _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction);
         }
         
         public void UpMovement()

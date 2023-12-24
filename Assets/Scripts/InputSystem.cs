@@ -50,11 +50,11 @@ public class InputSystem : MonoBehaviour
         var horizontalFingerMovement = CheckHorizontalFingerMove();
         if (upFingerMovement && horizontalFingerMovement)
         {
-            player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(), CalculateUpFingerMovement()));
+            player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(), CalculateUpFingerMovement()), CheckDirectionOnXAxis());
         }
         else if (horizontalFingerMovement)
         {
-            player.StraightHorizontalMovement(CalculateHorizontalFingerMovement());
+            player.StraightHorizontalMovement(CalculateHorizontalFingerMovement(), CheckDirectionOnXAxis());
         }
         else if (upFingerMovement)
         {
@@ -66,4 +66,5 @@ public class InputSystem : MonoBehaviour
     private bool CheckUpFingerMove() => CalculateUpFingerMovement() > verticalSwipeThreshold;
     private float CalculateHorizontalFingerMovement() => _fingerCurrentPosition.x - _fingerStartingPosition.x;
     private bool CheckHorizontalFingerMove() => Mathf.Abs(_fingerCurrentPosition.x - _fingerStartingPosition.x) > horizontalSwipeThreshold;
+    private bool CheckDirectionOnXAxis() => _fingerCurrentPosition.x > _fingerStartingPosition.x;
 }

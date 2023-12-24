@@ -9,16 +9,18 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement, float movementSpeed)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction)
         {
             Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
             PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
+            AnimationController.RotatePlayer(direction);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction)
         {
             PlayerMovement.ChangeState(States.UpMovementState);
             Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            AnimationController.RotatePlayer(direction);
         }
 
         public override void UpMovement(float movementSpeed)

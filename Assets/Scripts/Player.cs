@@ -65,15 +65,16 @@ public class Player : MonoBehaviour
         _previousPlayerYPosition = currentYPosition;
     }
     
-    public void UpAndHorizontalMovement(Vector2 jumpAngle)
+    public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
     {
+        // Debug.Log(jumpAngle);
         _jumpAngle = jumpAngle.normalized;
-        _playerMovement.UpAndHorizontalMovement(_jumpAngle);
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction);
     }
     
-    public void StraightHorizontalMovement(float deltaInputXPosition)
+    public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
     {
-        _playerMovement.StraightMovement(deltaInputXPosition);
+        _playerMovement.StraightMovement(deltaInputXPosition, direction);
         StayInsideWalls(deltaInputXPosition);
     }
 
