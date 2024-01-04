@@ -18694,7 +18694,7 @@ PrefabInstance:
     - target: {fileID: 1614010288853347944, guid: 5faef765d8e98be4e80594c4e6252b06, type: 3}
       propertyPath: playerTransform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 42013305}
     - target: {fileID: 1614010288853347945, guid: 5faef765d8e98be4e80594c4e6252b06, type: 3}
       propertyPath: m_Name
       value: pooler
