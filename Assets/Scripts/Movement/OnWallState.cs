@@ -9,12 +9,12 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
             throw new System.NotImplementedException();
         }

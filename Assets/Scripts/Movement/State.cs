@@ -16,8 +16,8 @@ public abstract class State
         AnimationController = animationController;
     }
     
-    public abstract void StraightMovement(float deltaXMovement, float movementSpeed, bool direction);
-    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction);
+    public abstract void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo);
+    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo);
     public abstract void UpMovement(float movementSpeed);
 
     public abstract void EnterState();

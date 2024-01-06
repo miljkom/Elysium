@@ -9,12 +9,12 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
             Debug.Log("Can't move straight in UpMovementState");
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
             Debug.Log("Can't move up and horizontal in UpMovementState");
         }
@@ -29,6 +29,7 @@ namespace Movement
             Debug.Log("Welcome to UpMovementState");
             AnimationController.ResetAllTriggers();
             AnimationController.PlayJumpAnimation();
+            PlayerMovement.ResetComboCounter();
         }
         
         public override void ExitState()

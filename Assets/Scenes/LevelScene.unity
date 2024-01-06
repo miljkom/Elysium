@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 339547562}
   m_Layer: 0
   m_Name: Wall_Right
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10738,7 +10738,7 @@ GameObject:
   - component: {fileID: 690701624}
   m_Layer: 0
   m_Name: Wall_Left
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16676,6 +16676,14 @@ PrefabInstance:
     - target: {fileID: 5474409419448949915, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5474409420471881682, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
+      propertyPath: m_Size.x
+      value: 2.9583938
+      objectReference: {fileID: 0}
+    - target: {fileID: 5474409420471881682, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.017856956
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}

@@ -16,7 +16,7 @@ namespace Movement
         {
         }
         
-        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction)
+        public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
             _timesWhenMovementHappened.Add(Time.time + SecondsTillPossibleCombo);
             Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
@@ -24,13 +24,15 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
             if (ShouldMakeCombo())
             {
                 FirstComboJump(movementSpeed, jumpAngle.x);
                 //todo change to combo state
-                PlayerMovement.ChangeState(States.UpMovementState);
+                PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
+                    ? States.ComboStateGoingLeft
+                    : States.ComboStateGoingRight);
             }
             else
             {
@@ -63,6 +65,7 @@ namespace Movement
         public override void EnterState()
         {
             _timesWhenMovementHappened = new List<float>();
+            PlayerMovement.ResetComboCounter();
         }
         
         public override void ExitState()
@@ -71,9 +74,8 @@ namespace Movement
 
         private void FirstComboJump(float movementSpeed, float direction)
         {
-            var jumpAngle = new Vector2(1 * direction,2).normalized;
-            var comboCounter = 1;
-            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * comboCounter));
+            var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
+            Rigidbody2D.AddForce(jumpAngle * movementSpeed);
             Debug.LogError("Combooooooo");
         }
     }

@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private AnimationController animationController;
 
+    public static int ComboCounter;
+    
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
     private Transform _transform;
@@ -58,7 +60,7 @@ public class Player : MonoBehaviour
     {
         var currentYPosition = _transform.position.y;
         var playerFalling = currentYPosition < _previousPlayerYPosition;
-        if (playerFalling)
+        if (playerFalling && !CanMakeCombo())
         {
            _playerMovement.ChangeState(States.FallingDownState);
         }
@@ -67,14 +69,13 @@ public class Player : MonoBehaviour
     
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
     {
-        // Debug.Log(jumpAngle);
         _jumpAngle = jumpAngle.normalized;
-        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction);
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction, CanMakeCombo());
     }
     
     public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
     {
-        _playerMovement.StraightMovement(deltaInputXPosition, direction);
+        _playerMovement.StraightMovement(deltaInputXPosition, direction, CanMakeCombo());
         StayInsideWalls(deltaInputXPosition);
     }
 
@@ -123,37 +124,21 @@ public class Player : MonoBehaviour
     
     public void SetInCollisionWithWall()
     {
-        if (true) return;
         _inCollisionWithWall = true;
         _timeCollisionWithWall = 0;
     }
     
     public void NotInCollisionWithWall()
     {
-        if (true) return;
         _inCollisionWithWall = false;
-        
-    }
-    
-    private void MakeComboLeft()
-    {
-        _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
-        MakeCombo();
+        _timeCollisionWithWall = 0;
     }
 
-    private void MakeComboRight()
+    private bool CanMakeCombo()
     {
-        _jumpAngle = new Vector2(-_jumpAngle.x, _jumpAngle.y).normalized;
-        rb2D.AddForce(_jumpAngle.normalized * upSpeedMovement);
-        MakeCombo();
-    }
-    
-    private void MakeCombo()
-    {
-        comboObject.SetActive(true);
-        Invoke(nameof(DeactivateObject), 1.5f);
-        Debug.LogError("Crazyy combo");
+        var canMakeComboFromWall = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+        //todo Uros add platform condition
+        return canMakeComboFromWall;
     }
 }
 

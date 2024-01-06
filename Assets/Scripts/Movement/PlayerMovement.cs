@@ -5,6 +5,10 @@ namespace Movement
 {
     public class PlayerMovement
     {
+        public int ComboCounter { get; private set; } = 2;
+
+        private const int MaxComboCounter = 5;
+        
         private State _state;
         private Transform _playerTransform;
         private Rigidbody2D _rigidbody2D;
@@ -12,6 +16,7 @@ namespace Movement
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
         private float _upAndHorizontalMovementSpeed;
+        private float _comboMovementSpeed;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -26,7 +31,8 @@ namespace Movement
             ConcreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
             ConcreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
             ConcreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
-            ConcreteState.Add(States.ComboState, new ComboState(this, _playerTransform, _rigidbody2D, _animationController));
+            ConcreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
+            ConcreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
@@ -43,20 +49,20 @@ namespace Movement
         public void ChangeState(States state)
         {
             if (_state == ConcreteState[state]) return;
+            Debug.LogError("from " + _state + " to " + state);
             _state?.ExitState();
-            Debug.LogError($"ide iz {_state} u {state}");
             _state = ConcreteState[state];
             _state.EnterState();
         }
 
-        public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
+        public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction, bool canMakeCombo)
         {
-            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction);
+            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction, canMakeCombo);
         }
         
-        public void StraightMovement(float deltaXMovement, bool direction)
+        public void StraightMovement(float deltaXMovement, bool direction, bool canMakeCombo)
         {
-            _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction);
+            _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction, canMakeCombo);
         }
         
         public void UpMovement()
@@ -65,6 +71,17 @@ namespace Movement
         }
 
         private Dictionary<States, State> ConcreteState = new Dictionary<States, State>();
+
+        public void IncreaseComboCounter()
+        {
+            if(ComboCounter < MaxComboCounter)
+                ComboCounter++;
+        }
+
+        public void ResetComboCounter()
+        {
+            ComboCounter = 2;
+        }
     }
 
     public enum States
@@ -73,7 +90,8 @@ namespace Movement
         UpMovementState = 1,
         FallingDownState = 2,
         OnWallState = 3,
-        ComboState = 4,
+        ComboStateGoingLeft = 4,
+        ComboStateGoingRight = 5,
     }
 
     public class PlayerMovementData
