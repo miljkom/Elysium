@@ -20,7 +20,7 @@ namespace Movement
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 var jumpAngle = new Vector2(-1,2).normalized;
-                Rigidbody2D.AddForce(jumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 6f));
+                Rigidbody2D.AddForce(jumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.IncreaseComboCounter();
                 PlayerMovement.ChangeState(States.ComboStateGoingLeft);
                 AnimationController.RotatePlayer(direction);

@@ -7,7 +7,7 @@ namespace Movement
     {
         public int ComboCounter { get; private set; } = 2;
 
-        private const int MaxComboCounter = 5;
+        private const int MaxComboCounter = 4;
         
         private State _state;
         private Transform _playerTransform;
@@ -49,7 +49,7 @@ namespace Movement
         public void ChangeState(States state)
         {
             if (_state == ConcreteState[state]) return;
-            Debug.LogError("from " + _state + " to " + state);
+            if (state == States.FallingDownState && _state is ComboStateGoingRight or ComboStateGoingLeft) return;
             _state?.ExitState();
             _state = ConcreteState[state];
             _state.EnterState();
