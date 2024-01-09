@@ -6,6 +6,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] private float verticalSwipeThreshold = 0.5f;
     [SerializeField] private float horizontalSwipeThreshold = 0.5f;
     [SerializeField] private Player player;
+    [SerializeField] private GameObject boundary;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
@@ -25,6 +26,8 @@ public class InputSystem : MonoBehaviour
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
         }
+        //delete magic number
+        boundary.SetActive(!(transform.position.y >= 17f));
     }
 
     private void FirstTouch(Touch touch)

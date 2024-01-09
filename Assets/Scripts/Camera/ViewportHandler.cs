@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using Cinemachine;
-using Unity.Mathematics;
 using UnityEngine;
 
 [ExecuteInEditMode]

@@ -17,9 +17,5 @@ public class QuickController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
             rb.AddForce(Vector2.up * force);
-        if(transform.position.y >= 17f)
-            boundary.SetActive(false);
-        else
-            boundary.SetActive(true);
     }
 }
