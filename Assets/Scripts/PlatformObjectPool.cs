@@ -47,13 +47,20 @@ public class PlatformObjectPool : MonoBehaviour
         }
 
         int initialActivePlatforms = 10;
+        lastSpawnPlatformPositionY = -15f;
         PlayerStats.platformSpawned = initialActivePlatforms;
         for (int i = 0; i < initialActivePlatforms; i++)
         {
             platformPool[i].SetActive(true);
-            float spawnX = Random.Range(-4f, 4f); // Adjust as needed
+            float randomX = Random.Range(0.2f, 0.8f);
+            float spawnX = Random.Range(-4f,4f);
+            if(randomX > 0.5f)
+                spawnX = Random.Range(-2.2f, 2.2f); // Adjust as needed
+            else
+            {
+                spawnX = Random.Range(-3.6f, 3.6f);
+            }
             float spawnY = lastSpawnPlatformPositionY + 2.5f; // Adjust as needed
-            float randomX = Random.Range(0.2f, 1f);
             float fixedY = platformPool[i].transform.localScale.y;
             float fixedZ = platformPool[i].transform.localScale.z;
 
@@ -102,7 +109,7 @@ public class PlatformObjectPool : MonoBehaviour
         GameObject platform = GetPooledPlatform();
         if (platform != null)
         {
-            float spawnX = Random.Range(-4f, 4f); // Adjust as needed
+            float spawnX = Random.Range(-2.2f, 2.2f); // Adjust as needed
             float spawnY = lastSpawnPlatformPositionY + 2f; // Adjust as needed
             float randomX = Random.Range(0.2f, 1f);
             var localScale = platform.transform.localScale;
