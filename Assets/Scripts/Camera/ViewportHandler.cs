@@ -1,7 +1,7 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-[ExecuteInEditMode]
 [RequireComponent (typeof (Camera))]
 public class ViewportHandler : MonoBehaviour
 {
@@ -9,6 +9,7 @@ public class ViewportHandler : MonoBehaviour
     [SerializeField] private SpriteRenderer mainObjectBackground;
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private BoxCollider boundaryCollider;
     public static ViewportHandler Instance;
     public new Camera camera;
 
@@ -94,6 +95,7 @@ public class ViewportHandler : MonoBehaviour
         camera = GetComponent<Camera>();
         Instance = this;
         ComputeResolution();
+        SetBoundaryForCamera();
     }
 
     private void ComputeResolution()
@@ -148,6 +150,14 @@ public class ViewportHandler : MonoBehaviour
             Gizmos.DrawFrustum(Vector3.zero, camera.fieldOfView, camera.farClipPlane, camera.nearClipPlane, camera.aspect);
         }
         Gizmos.matrix = temp;
+    }
+
+    private void SetBoundaryForCamera()
+    {
+        boundaryCollider.gameObject.SetActive(true);
+        var cameraYDistance = Vector3.Distance(BottomCenter, TopCenter);
+        boundaryCollider.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y + cameraYDistance, 0);
+        boundaryCollider.size = new Vector3(14f, cameraYDistance * 3f, 1f);
     }
     #endregion
 
