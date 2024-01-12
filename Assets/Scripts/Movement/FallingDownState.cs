@@ -38,6 +38,7 @@ namespace Movement
         public override void ExitState()
         {
             AnimationController.PlayLandAnimation();
+            PlayerMovement.ResetComboCounter();
         }
     }
 }

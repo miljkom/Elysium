@@ -157,7 +157,7 @@ public class ViewportHandler : MonoBehaviour
         boundaryCollider.gameObject.SetActive(true);
         var cameraYDistance = Vector3.Distance(BottomCenter, TopCenter);
         boundaryCollider.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y + cameraYDistance, 0);
-        boundaryCollider.size = new Vector3(14f, cameraYDistance * 3f, 1f);
+        boundaryCollider.size = new Vector3(14f, cameraYDistance * 3f, 50f); // 50 da ne bi kamera snepovala poziciju na Z osi
     }
     #endregion
 
