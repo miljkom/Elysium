@@ -38,10 +38,11 @@ namespace Movement
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 var comboJumpAngle = new Vector2(-1,2).normalized;
-                Rigidbody2D.AddForce(comboJumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.IncreaseComboCounter();
+                Rigidbody2D.AddForce(comboJumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.ChangeState(States.ComboStateGoingLeft);
                 AnimationController.RotatePlayer(direction);
+                PlayerMovement.OnComboHappened();
                 Debug.LogError("Combooooooo. Now will go left. Combo Counter is " + PlayerMovement.ComboCounter);
             }
         }

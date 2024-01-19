@@ -1,14 +1,14 @@
+using System;
 using Movement;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float touchResetTimer;
-    [SerializeField] private GameObject comboObject;
     [SerializeField] private Rigidbody2D rb2D;
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
+    [SerializeField] private float comboDuration;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
     private float _timeCollisionWithWall;
     private float _xValueForLeftBoundaryWall;
     private float _xValueForRightBoundaryWall;
+    private float _secondsSinceLastCombo;
+    private bool _inComboState;
     
     private void Awake()
     {
@@ -40,20 +42,39 @@ public class Player : MonoBehaviour
     private void InitializePlayerMovement()
     {
         var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, animationController);
+            upAndHorizontalMovementSpeed, animationController, OnComboHappened);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
 
     private void Update()
     {
-        UpdateWallCollision();
+        CheckComboState();
         CheckIfPlayerIsFalling();
     }
-    
+
+    private void CheckComboState()
+    {
+        UpdateWallCollision();
+        CheckIfComboIsDone();
+    }
+
     private void UpdateWallCollision()
     {
         if (_inCollisionWithWall)
             _timeCollisionWithWall += Time.deltaTime;
+    }
+
+    private void CheckIfComboIsDone()
+    {
+        if (!_inComboState) return;
+        _timeCollisionWithWall += Time.deltaTime;
+
+        if (_secondsSinceLastCombo > comboDuration)
+        {
+            _inComboState = false;
+            _timeCollisionWithWall = 0;
+        }
+        
     }
 
     private void CheckIfPlayerIsFalling()
@@ -108,11 +129,6 @@ public class Player : MonoBehaviour
         boundaryPosition.x = _xValueForRightBoundaryWall;
         _transform.position = boundaryPosition;
     }
-
-    private void DeactivateObject()
-    {
-        comboObject.SetActive(false);
-    }
     
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -137,8 +153,13 @@ public class Player : MonoBehaviour
     private bool CanMakeCombo()
     {
         var canMakeComboFromWall = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
-        //todo Uros add platform condition
-        return canMakeComboFromWall;
+        return canMakeComboFromWall || _inComboState;
+    }
+
+    private void OnComboHappened()
+    {
+        _secondsSinceLastCombo = 0;
+        _inComboState = true;
     }
 }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace Movement
         private Transform _playerTransform;
         private Rigidbody2D _rigidbody2D;
         private AnimationController _animationController;
+        private Dictionary<States, State> _concreteState = new Dictionary<States, State>();
+        private Action _onComboHappened;
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
         private float _upAndHorizontalMovementSpeed;
@@ -27,12 +30,12 @@ namespace Movement
 
         private void CreateStates()
         {
-            ConcreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController));
-            ConcreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
-            ConcreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
-            ConcreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
-            ConcreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
-            ConcreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
+            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
+            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
@@ -43,15 +46,16 @@ namespace Movement
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
+            _onComboHappened = playerMovementData.OnComboHappened;
         }
 
 
         public void ChangeState(States state)
         {
-            if (_state == ConcreteState[state]) return;
+            if (_state == _concreteState[state]) return;
             if (state == States.FallingDownState && _state is ComboStateGoingRight or ComboStateGoingLeft) return;
             _state?.ExitState();
-            _state = ConcreteState[state];
+            _state = _concreteState[state];
             _state.EnterState();
         }
 
@@ -69,8 +73,7 @@ namespace Movement
         {
             _state.UpMovement(_upMovementSpeed);
         }
-
-        private Dictionary<States, State> ConcreteState = new Dictionary<States, State>();
+        
 
         public void IncreaseComboCounter()
         {
@@ -80,8 +83,10 @@ namespace Movement
 
         public void ResetComboCounter()
         {
-            ComboCounter = 2;
+            ComboCounter = 1;
         }
+        
+        public void OnComboHappened()=> _onComboHappened?.Invoke();
     }
 
     public enum States
@@ -102,9 +107,11 @@ namespace Movement
         public readonly float StraightMovementSpeed;
         public readonly float UpAndHorizontalMovementSpeed;
         public readonly AnimationController AnimationController;
+        public readonly Action OnComboHappened;
 
         public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
-            float straightMovementSpeed, float upAndHorizontalMovementSpeed, AnimationController animationController)
+            float straightMovementSpeed, float upAndHorizontalMovementSpeed, AnimationController animationController,
+            Action onComboHappened)
         {
             PlayerTransform = playerTransform;
             Rigidbody2D = rigidbody2D;
@@ -112,6 +119,7 @@ namespace Movement
             StraightMovementSpeed = straightMovementSpeed;
             UpAndHorizontalMovementSpeed = upAndHorizontalMovementSpeed;
             AnimationController = animationController;
+            onComboHappened = OnComboHappened;
         }
     }
 }

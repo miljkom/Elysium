@@ -29,7 +29,6 @@ namespace Movement
             if (ShouldMakeCombo())
             {
                 FirstComboJump(movementSpeed, jumpAngle.x);
-                //todo change to combo state
                 PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
                     ? States.ComboStateGoingLeft
                     : States.ComboStateGoingRight);
@@ -76,6 +75,7 @@ namespace Movement
         {
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
             Rigidbody2D.AddForce(jumpAngle * movementSpeed);
+            PlayerMovement.OnComboHappened();
             Debug.LogError("Combooooooo");
         }
     }

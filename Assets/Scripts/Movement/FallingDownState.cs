@@ -32,7 +32,6 @@ namespace Movement
         {
             Debug.Log($"Welcome to {this}");
             AnimationController.PlayFallAnimation();
-            PlayerMovement.ResetComboCounter();
         }
         
         public override void ExitState()
