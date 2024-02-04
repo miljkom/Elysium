@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
 
     private void DontGoOverLeftWall()
     {
-        if (_transform.position.x < _xValueForLeftBoundaryWall) return;
+        if (_transform.position.x >= _xValueForLeftBoundaryWall) return;
         
         var boundaryPosition = _transform.position;
         boundaryPosition.x = _xValueForLeftBoundaryWall + 0.1f;
@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
 
     private void DontGoOverRightWall()
     {
-        if (_transform.position.x > _xValueForRightBoundaryWall) return;
+        if (_transform.position.x <= _xValueForRightBoundaryWall) return;
         
         var boundaryPosition = _transform.position;
         boundaryPosition.x = _xValueForRightBoundaryWall - 0.1f;
