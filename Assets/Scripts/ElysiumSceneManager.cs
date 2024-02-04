@@ -10,7 +10,7 @@ namespace Managers
     public class ElysiumSceneManager : MonoBehaviourSingletonPersistent<ElysiumSceneManager>
     {
         [SerializeField] private Image blackFader;
-        [SerializeField] private GameObject loadingScreenBlocker;
+        //[SerializeField] private GameObject loadingScreenBlocker;
 
         [SerializeField] private float fadeDuration = 0.25f;
 
@@ -103,15 +103,15 @@ namespace Managers
             }
         }
 
-        public void PopBlockLoader(bool isOn)
-        {
-            loadingScreenBlocker.SetActive(isOn);
-        }
-
-        public bool IsBlockLoaderOn()
-        {
-            return loadingScreenBlocker.activeInHierarchy;
-        }
+        // public void PopBlockLoader(bool isOn)
+        // {
+        //     loadingScreenBlocker.SetActive(isOn);
+        // }
+        //
+        // public bool IsBlockLoaderOn()
+        // {
+        //     return loadingScreenBlocker.activeInHierarchy;
+        // }
     }
 
     public enum Scenes
