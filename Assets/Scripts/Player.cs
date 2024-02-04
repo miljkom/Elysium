@@ -62,6 +62,11 @@ public class Player : MonoBehaviour
     {
         if (_inCollisionWithWall)
             _timeCollisionWithWall += Time.deltaTime;
+        if (_timeCollisionWithWall > timeToMakeComboWhenInCollision)
+        {
+            _playerMovement.Bounce(false);
+            _timeCollisionWithWall = 0;
+        }
     }
 
     private void CheckIfComboIsDone()

@@ -23,6 +23,10 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        {
+        }
+
         public override void UpMovement(float movementSpeed)
         {
             Debug.Log("Can't move up and horizontal in Falling down state. Will move straight.");

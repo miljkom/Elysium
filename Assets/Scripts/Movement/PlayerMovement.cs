@@ -20,6 +20,7 @@ namespace Movement
         private float _straightMovementSpeed;
         private float _upAndHorizontalMovementSpeed;
         private float _comboMovementSpeed;
+        private Vector2 _previousJumpAngle;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -86,7 +87,17 @@ namespace Movement
             ComboCounter = 1;
         }
         
-        public void OnComboHappened()=> _onComboHappened?.Invoke();
+        public void OnComboHappened() => _onComboHappened?.Invoke();
+
+        public void Bounce(bool canMakeCombo)
+        {
+            _state.Bounce(new Vector2(_previousJumpAngle.x * -1, _previousJumpAngle.y), _upAndHorizontalMovementSpeed / 2, canMakeCombo);
+        }
+
+        public void SetPreviousJumpAngle(Vector2 jumpAngle)
+        {
+            _previousJumpAngle = jumpAngle;
+        }
     }
 
     public enum States

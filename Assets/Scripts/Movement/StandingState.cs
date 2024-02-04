@@ -38,7 +38,12 @@ namespace Movement
                 PlayerMovement.ChangeState(States.UpMovementState);
                 Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
             }
+            PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             AnimationController.RotatePlayer(direction);
+        }
+
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        {
         }
 
         private bool ShouldMakeCombo()

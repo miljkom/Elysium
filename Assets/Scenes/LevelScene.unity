@@ -11203,7 +11203,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857432585}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0000009536743, y: 9.639999, z: -10}
+  m_LocalPosition: {x: 0, y: 9.639999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16833,6 +16833,10 @@ PrefabInstance:
       propertyPath: upAndHorizontalMovementSpeed
       value: 888
       objectReference: {fileID: 0}
+    - target: {fileID: 5474409419448949901, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
+      propertyPath: timeToMakeComboWhenInCollision
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 5474409419448949904, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -17313,7 +17317,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1212859740}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0000009536743, y: 9.639999, z: -10}
+  m_LocalPosition: {x: 0, y: 9.639999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

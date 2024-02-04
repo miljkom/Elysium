@@ -19,6 +19,10 @@ namespace Movement
             throw new System.NotImplementedException();
         }
 
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        {
+        }
+
         public override void UpMovement(float movementSpeed)
         {
             throw new System.NotImplementedException();

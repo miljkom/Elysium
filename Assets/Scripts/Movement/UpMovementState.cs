@@ -4,6 +4,8 @@ namespace Movement
 {
     public class UpMovementState : State
     {
+        private float _previousDeltaX;
+        
         public UpMovementState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController) 
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
@@ -21,6 +23,13 @@ namespace Movement
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
             Debug.Log("Can't move up and horizontal in UpMovementState");
+        }
+
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        {
+            Rigidbody2D.velocity = new Vector2(0, 0);
+            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            AnimationController.RotatePlayer(jumpAngle.x > 0);
         }
 
         public override void UpMovement(float movementSpeed)
