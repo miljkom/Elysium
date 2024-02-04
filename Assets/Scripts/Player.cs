@@ -108,22 +108,22 @@ public class Player : MonoBehaviour
     private void StayInsideWalls(float deltaInputXPosition)
     {
         //todo Uros use left and right side of player
-        DontGoOverLeftWall(deltaInputXPosition);
-        DontGoOverRightWall(deltaInputXPosition);
+        DontGoOverLeftWall();
+        DontGoOverRightWall();
     }
 
-    private void DontGoOverLeftWall(float deltaInputXPosition)
+    private void DontGoOverLeftWall()
     {
-        if (_transform.position.x >= _xValueForLeftBoundaryWall || deltaInputXPosition > 0) return;
+        if (_transform.position.x < _xValueForLeftBoundaryWall) return;
         
         var boundaryPosition = _transform.position;
         boundaryPosition.x = _xValueForLeftBoundaryWall + 0.1f;
         _transform.position = boundaryPosition;
     }
 
-    private void DontGoOverRightWall(float deltaInputXPosition)
+    private void DontGoOverRightWall()
     {
-        if (_transform.position.x < _xValueForRightBoundaryWall || deltaInputXPosition < 0) return;
+        if (_transform.position.x > _xValueForRightBoundaryWall) return;
         
         var boundaryPosition = _transform.position;
         boundaryPosition.x = _xValueForRightBoundaryWall - 0.1f;
