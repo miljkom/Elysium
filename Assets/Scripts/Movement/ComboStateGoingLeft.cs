@@ -42,12 +42,16 @@ namespace Movement
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 AnimationController.RotatePlayer(direction);
                 PlayerMovement.OnComboHappened();
+                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
                 Debug.LogError("Combooooooo. Now will go right. Combo Counter is " + PlayerMovement.ComboCounter);
             }
         }
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
+            Rigidbody2D.velocity = new Vector2(0, 0);
+            Rigidbody2D.AddForce(jumpAngle.normalized * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+            AnimationController.RotatePlayer(jumpAngle.x > 0);
         }
 
         public override void UpMovement(float movementSpeed)
