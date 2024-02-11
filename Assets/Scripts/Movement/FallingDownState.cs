@@ -4,6 +4,7 @@ namespace Movement
 {
     public class FallingDownState : State
     {
+        private bool _forceRemoved;
         public FallingDownState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
@@ -11,8 +12,12 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
-            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
+            if (!_forceRemoved)
+            {
+                _forceRemoved = true;
+                Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+            }
+            Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
             AnimationController.RotatePlayer(direction);
         }
 
@@ -36,6 +41,7 @@ namespace Movement
         {
             Debug.Log($"Welcome to {this}");
             AnimationController.PlayFallAnimation();
+            _forceRemoved = false;
         }
         
         public override void ExitState()

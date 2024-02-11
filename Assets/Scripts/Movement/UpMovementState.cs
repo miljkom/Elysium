@@ -4,8 +4,7 @@ namespace Movement
 {
     public class UpMovementState : State
     {
-        private float _previousDeltaX;
-        
+        private bool _changedDirection;
         public UpMovementState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController) 
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
@@ -13,10 +12,21 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            //todo Uros proveri da li moze sa ovim
-            if(deltaXMovement < 0)
-                Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
-            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
+            // //todo Uros proveri da li moze sa ovim
+            var currentDirection = PlayerMovement.GetPreviousJumpAngle();
+            var previousDirection = Mathf.Sign(currentDirection.x);
+            if ((previousDirection < 0 && deltaXMovement > 0) || (previousDirection > 0 && deltaXMovement < 0) )
+            {
+                if (!_changedDirection)
+                {
+                    Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+                    _changedDirection = true;
+                    Debug.LogError("Restart force");
+                }
+               
+            }
+            Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
+            Debug.LogError("Usao");
             AnimationController.RotatePlayer(direction);
         }
 
@@ -43,6 +53,7 @@ namespace Movement
             AnimationController.ResetAllTriggers();
             AnimationController.PlayJumpAnimation();
             PlayerMovement.ResetComboCounter();
+            _changedDirection = false;
         }
         
         public override void ExitState()

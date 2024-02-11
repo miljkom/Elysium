@@ -5,6 +5,7 @@ namespace Movement
     public class ComboStateGoingRight : State
     {
         private readonly float _comboMovementSpeed;
+        private bool _forceRemoved;
         
         public ComboStateGoingRight(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController, float comboMovementSpeed) 
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
@@ -22,10 +23,14 @@ namespace Movement
             }
             else
             {
-                //todo Uros proveri da li moze sa ovim
-                if(deltaXMovement < 0)
+                if (!_forceRemoved && inputToGoLeft)
+                {
+                    _forceRemoved = true;
                     Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
-                PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
+                    Debug.LogError("Restart force");
+                }
+                    
+                Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
                 AnimationController.RotatePlayer(direction);
             }     
         }
@@ -62,7 +67,7 @@ namespace Movement
 
         public override void EnterState()
         {
-           
+            _forceRemoved = false;
         }
         
         public override void ExitState()

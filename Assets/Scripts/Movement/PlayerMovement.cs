@@ -98,6 +98,11 @@ namespace Movement
         {
             _previousJumpAngle = jumpAngle;
         }
+        
+        public Vector2 GetPreviousJumpAngle()
+        {
+            return _previousJumpAngle;
+        }
     }
 
     public enum States
