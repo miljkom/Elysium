@@ -1,4 +1,5 @@
 using Movement;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
+    [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
 
     public static int ComboCounter;
@@ -62,11 +64,20 @@ public class Player : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling && !CanMakeCombo())
         {
-           _playerMovement.ChangeState(States.FallingDownState);
+            _playerMovement.ChangeState(States.FallingDownState);
+            if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
+            {
+                FailedLevel();
+                return;
+            }
         }
         _previousPlayerYPosition = currentYPosition;
     }
-    
+    private void FailedLevel()
+    {
+        
+    }
+
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
     {
         _jumpAngle = jumpAngle.normalized;
