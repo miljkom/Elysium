@@ -67,15 +67,11 @@ public class Player : MonoBehaviour
             _playerMovement.ChangeState(States.FallingDownState);
             if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
             {
-                FailedLevel();
+                GameManager.Instance.FailedLevel();
                 return;
             }
         }
         _previousPlayerYPosition = currentYPosition;
-    }
-    private void FailedLevel()
-    {
-        
     }
 
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)

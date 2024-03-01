@@ -4347,7 +4347,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.74, y: 2.7}
+  m_Size: {x: 2.77, y: 4.1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -4454,7 +4454,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.1, y: 2.53}
+  m_Size: {x: 3.09, y: 4.54}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -9722,6 +9722,7 @@ MonoBehaviour:
   timeToMakeComboWhenInCollision: 1
   leftBoundaryWall: {fileID: 0}
   rightBoundaryWall: {fileID: 0}
+  bottomBoundary: {fileID: 0}
   animationController: {fileID: 1061766675}
 --- !u!1 &5474409420471881680
 GameObject:
