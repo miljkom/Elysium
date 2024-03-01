@@ -1,5 +1,6 @@
 using System;
 using Movement;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxBounceAngle;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
+    [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
 
     public static int ComboCounter;
@@ -90,11 +92,16 @@ public class Player : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling && !CanMakeCombo())
         {
-           _playerMovement.ChangeState(States.FallingDownState);
+            _playerMovement.ChangeState(States.FallingDownState);
+            if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
+            {
+                GameManager.Instance.FailedLevel();
+                return;
+            }
         }
         _previousPlayerYPosition = currentYPosition;
     }
-    
+
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
     {
         _jumpAngle = jumpAngle.normalized;

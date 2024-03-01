@@ -145,7 +145,6 @@ public class PlatformObjectPool : MonoBehaviour
 
     private IEnumerator DeactivatePlatformDelayed(GameObject platform)
     {
-        //animation miljko #todo
         //yield return new WaitForSeconds(despawnTimer); ovo ne radi
         platform.SetActive(false);
         yield return null;
