@@ -16814,6 +16814,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 564337728}
     - target: {fileID: 5474409419448949901, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
+      propertyPath: maxBounceAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5474409419448949901, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
+      propertyPath: minBounceAngle
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5474409419448949901, guid: ff3fef65abf764f559621720ab4b7de9, type: 3}
       propertyPath: upSpeedMovement
       value: 888
       objectReference: {fileID: 0}

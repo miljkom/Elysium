@@ -12,7 +12,7 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            // //todo Uros proveri da li moze sa ovim
+            //todo Uros proveri da li moze sa ovim
             var currentDirection = PlayerMovement.GetPreviousJumpAngle();
             var previousDirection = Mathf.Sign(currentDirection.x);
             if ((previousDirection < 0 && deltaXMovement > 0) || (previousDirection > 0 && deltaXMovement < 0) )
@@ -26,7 +26,6 @@ namespace Movement
                
             }
             Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
-            Debug.LogError("Usao");
             AnimationController.RotatePlayer(direction);
         }
 
@@ -38,8 +37,10 @@ namespace Movement
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
-            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
             AnimationController.RotatePlayer(jumpAngle.x > 0);
+            PlayerMovement.IncreaseComboCounter();
+            Debug.LogError("bounce with angle " + jumpAngle);
         }
 
         public override void UpMovement(float movementSpeed)

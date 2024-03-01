@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
     [SerializeField] private float comboDuration;
     [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
+    [SerializeField] private float minBounceAngle;
+    [SerializeField] private float maxBounceAngle;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private AnimationController animationController;
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour
     private void InitializePlayerMovement()
     {
         var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, animationController, OnComboHappened);
+            upAndHorizontalMovementSpeed, minBounceAngle, maxBounceAngle, animationController, OnComboHappened);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
 
