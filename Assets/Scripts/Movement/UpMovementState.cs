@@ -12,7 +12,6 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            //todo Uros proveri da li moze sa ovim
             var currentDirection = PlayerMovement.GetPreviousJumpAngle();
             var previousDirection = Mathf.Sign(currentDirection.x);
             if ((previousDirection < 0 && deltaXMovement > 0) || (previousDirection > 0 && deltaXMovement < 0) )
@@ -31,7 +30,6 @@ namespace Movement
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            Debug.Log("Can't move up and horizontal in UpMovementState");
         }
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
@@ -45,12 +43,10 @@ namespace Movement
 
         public override void UpMovement(float movementSpeed)
         {
-            Debug.Log("Can't move up in UpMovementState");
         }
 
         public override void EnterState()
         {
-            Debug.Log("Welcome to UpMovementState");
             AnimationController.ResetAllTriggers();
             AnimationController.PlayJumpAnimation();
             PlayerMovement.ResetComboCounter();

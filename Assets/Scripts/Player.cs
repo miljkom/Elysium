@@ -17,8 +17,6 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
-
-    public static int ComboCounter;
     
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
@@ -93,13 +91,17 @@ public class Player : MonoBehaviour
         if (playerFalling && !CanMakeCombo())
         {
             _playerMovement.ChangeState(States.FallingDownState);
-            if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
-            {
-                GameManager.Instance.FailedLevel();
-                return;
-            }
+            EndGameIfNeeded();
         }
         _previousPlayerYPosition = currentYPosition;
+    }
+
+    private void EndGameIfNeeded()
+    {
+        if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
+        {
+            GameManager.Instance.FailedLevel();
+        }
     }
 
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)

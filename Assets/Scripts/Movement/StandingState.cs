@@ -18,6 +18,7 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
+            //todo Uros add force
             _timesWhenMovementHappened.Add(Time.time + SecondsTillPossibleCombo);
             Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
             PlayerTransform.position += Vector3.right * (deltaXMovement * movementSpeed * Time.deltaTime);
