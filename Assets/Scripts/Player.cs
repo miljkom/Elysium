@@ -121,6 +121,12 @@ public class Player : MonoBehaviour
         _playerMovement.UpMovement();
     }
     
+    public void OnTouch()
+    {
+        if(CanMakeCombo())
+            _playerMovement.UpAndHorizontalMovement(new Vector2(1,1), true, CanMakeCombo());
+    }
+    
     private void StayInsideWalls(float deltaInputXPosition)
     {
         //todo Uros use left and right side of player

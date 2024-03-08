@@ -25,6 +25,7 @@ public class InputSystem : MonoBehaviour
         {
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
+            EndTouch(touch)
         }
         //delete magic number
         boundary.SetActive(!(transform.position.y >= 17f));
@@ -62,6 +63,14 @@ public class InputSystem : MonoBehaviour
         else if (upFingerMovement)
         {
             player.OnSwipeUp();
+        }
+    }
+    
+    private void EndTouch(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Ended)
+        {
+            player.OnTouch();
         }
     }
   
