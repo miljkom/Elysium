@@ -95,8 +95,6 @@ namespace Movement
             //todo Uros da li ovo trba sa 3 mesta da se zove ili samo iz standing-a
             ComboCounter = 1;
         }
-        
-        public void ResetCombo() => _onComboHappened?.Invoke();
 
         public void Bounce(bool canMakeCombo)
         {
@@ -142,7 +140,6 @@ namespace Movement
 
         public void BounceMade()
         {
-            ResetCombo();
             _canMakeBounce = false;
         }
     }

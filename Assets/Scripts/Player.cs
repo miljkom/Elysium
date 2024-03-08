@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
     private bool _inCollisionWithWall;
     private float _xValueForLeftBoundaryWall;
     private float _xValueForRightBoundaryWall;
-    private float _secondsSinceLastCombo;
     private bool _inComboState;
     
     private void Awake()
@@ -47,32 +46,14 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Bounce();
-        CheckComboState();
         CheckIfPlayerIsFalling();
     }
-
-    private void CheckComboState()
-    {
-        CheckIfComboIsDone();
-    }
+    
 
     private void Bounce()
     {
         if (_inCollisionWithWall)
             _playerMovement.Bounce(false);
-    }
-
-    private void CheckIfComboIsDone()
-    {
-        if (!_inComboState) return;
-
-        Debug.Log("You are in combo for: " + _secondsSinceLastCombo);
-        if (_secondsSinceLastCombo > comboDuration)
-        {
-            _inComboState = false;
-        }
-
-        _secondsSinceLastCombo += Time.deltaTime;
     }
 
     private void CheckIfPlayerIsFalling()
@@ -162,7 +143,6 @@ public class Player : MonoBehaviour
 
     private void OnComboHappened()
     {
-        _secondsSinceLastCombo = 0;
         _inComboState = true;
     }
 }

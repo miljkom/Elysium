@@ -8,6 +8,7 @@ namespace Movement
     {
         private const float SecondsTillPossibleCombo = 2;
         private const int MovementNeededToMakeCombo = 20;
+        
         private List<float> _timesWhenMovementHappened = new();
         private DateTime _possibleComboTill;
 
@@ -27,7 +28,11 @@ namespace Movement
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            if (ShouldMakeCombo())
+            if (canMakeCombo)
+            {
+                ContinueCombo(jumpAngle, movementSpeed);
+            }
+            else if (ShouldMakeCombo())
             {
                 FirstComboJump(movementSpeed, jumpAngle.x);
                 PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
@@ -41,6 +46,29 @@ namespace Movement
             }
             PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             AnimationController.RotatePlayer(direction);
+        }
+
+        private void ContinueCombo(Vector2 jumpAngle, float movementSpeed)
+        {
+            var facingRightSide = true;
+            Rigidbody2D.velocity = new Vector2(0, 0);
+            if (facingRightSide)
+            {
+                var comboJumpAngle = new Vector2(1,2).normalized;
+                Rigidbody2D.AddForce(comboJumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                PlayerMovement.ChangeState(States.ComboStateGoingRight);
+                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
+            }
+            else
+            {
+                
+                var comboJumpAngle = new Vector2(1,2).normalized;
+                Rigidbody2D.AddForce(comboJumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                PlayerMovement.ChangeState(States.ComboStateGoingRight);
+                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
+            }
+            AnimationController.RotatePlayer(facingRightSide);
+            PlayerMovement.IncreaseComboCounter();
         }
 
         private bool ShouldMakeCombo()
@@ -74,7 +102,6 @@ namespace Movement
         {
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
             Rigidbody2D.AddForce(jumpAngle * movementSpeed);
-            PlayerMovement.ResetCombo();
             Debug.LogError("Combooooooo");
         }
         
