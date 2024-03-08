@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
     public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
     {
         _playerMovement.StraightMovement(deltaInputXPosition, direction, CanMakeCombo());
-        StayInsideWalls(deltaInputXPosition);
+        StayInsideWalls();
     }
 
     public void OnSwipeUp()
@@ -121,13 +121,8 @@ public class Player : MonoBehaviour
         _playerMovement.UpMovement();
     }
     
-    public void OnTouch()
-    {
-        if(CanMakeCombo())
-            _playerMovement.UpAndHorizontalMovement(new Vector2(1,1), true, CanMakeCombo());
-    }
     
-    private void StayInsideWalls(float deltaInputXPosition)
+    private void StayInsideWalls()
     {
         //todo Uros use left and right side of player
         DontGoOverLeftWall();
