@@ -23,9 +23,9 @@ namespace Movement
         private float _upAndHorizontalMovementSpeed;
         private float _comboMovementSpeed;
         private Vector2 _previousJumpAngle;
-
         private float _minBounceAngle = 45f;
         private float _maxBounceAngle = 80f;
+        private bool _canMakeBounce;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -92,6 +92,7 @@ namespace Movement
 
         public void ResetComboCounter()
         {
+            //todo Uros da li ovo trba sa 3 mesta da se zove ili samo iz standing-a
             ComboCounter = 1;
         }
         
@@ -99,6 +100,8 @@ namespace Movement
 
         public void Bounce(bool canMakeCombo)
         {
+            if (!_canMakeBounce) return;
+            
             var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
             _state.Bounce(CalculateBounceAngle(directionToBounce), _upAndHorizontalMovementSpeed, canMakeCombo);
         }
@@ -129,6 +132,17 @@ namespace Movement
             var x = (float)Math.Cos(angleRadians) * directionToJump;
             var y = (float)Math.Sin(angleRadians);
             return new Vector2(x,y).normalized;
+        }
+
+        public void PlayerLanded()
+        {
+            ResetComboCounter();
+            _canMakeBounce = true;
+        }
+
+        public void BounceMade()
+        {
+            _canMakeBounce = false;
         }
     }
 

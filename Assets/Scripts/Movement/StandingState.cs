@@ -71,6 +71,7 @@ namespace Movement
         {
             _timesWhenMovementHappened = new List<float>();
             PlayerMovement.ResetComboCounter();
+            PlayerMovement.PlayerLanded();
         }
         
         public override void ExitState()

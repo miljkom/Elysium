@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
     [SerializeField] private float comboDuration;
-    [SerializeField] private float timeToMakeComboWhenInCollision = 1f;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
     [SerializeField] private Transform leftBoundaryWall;
@@ -26,7 +25,6 @@ public class Player : MonoBehaviour
     private bool _goingLeft;
     private bool _goingRight;
     private bool _inCollisionWithWall;
-    private float _timeCollisionWithWall;
     private float _xValueForLeftBoundaryWall;
     private float _xValueForRightBoundaryWall;
     private float _secondsSinceLastCombo;
@@ -50,36 +48,29 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        Bounce();
         CheckComboState();
         CheckIfPlayerIsFalling();
     }
 
     private void CheckComboState()
     {
-        UpdateWallCollision();
         CheckIfComboIsDone();
     }
 
-    private void UpdateWallCollision()
+    private void Bounce()
     {
         if (_inCollisionWithWall)
-            _timeCollisionWithWall += Time.deltaTime;
-        if (_timeCollisionWithWall > timeToMakeComboWhenInCollision)
-        {
             _playerMovement.Bounce(false);
-            _timeCollisionWithWall = 0;
-        }
     }
 
     private void CheckIfComboIsDone()
     {
         if (!_inComboState) return;
-        _timeCollisionWithWall += Time.deltaTime;
 
         if (_secondsSinceLastCombo > comboDuration)
         {
             _inComboState = false;
-            _timeCollisionWithWall = 0;
         }
         
     }
@@ -158,18 +149,16 @@ public class Player : MonoBehaviour
     public void SetInCollisionWithWall()
     {
         _inCollisionWithWall = true;
-        _timeCollisionWithWall = 0;
     }
     
     public void NotInCollisionWithWall()
     {
         _inCollisionWithWall = false;
-        _timeCollisionWithWall = 0;
     }
 
     private bool CanMakeCombo()
     {
-        var canMakeComboFromWall = _inCollisionWithWall && _timeCollisionWithWall < timeToMakeComboWhenInCollision;
+        var canMakeComboFromWall = _inCollisionWithWall;
         return canMakeComboFromWall || _inComboState;
     }
 

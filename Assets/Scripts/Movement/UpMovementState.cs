@@ -38,7 +38,7 @@ namespace Movement
             Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
             AnimationController.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.IncreaseComboCounter();
-            Debug.LogError("bounce with angle " + jumpAngle);
+            PlayerMovement.BounceMade(); 
         }
 
         public override void UpMovement(float movementSpeed)
