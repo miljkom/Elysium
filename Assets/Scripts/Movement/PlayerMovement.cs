@@ -55,7 +55,7 @@ namespace Movement
             _minBounceAngle = playerMovementData.MinBounceAngle;
             _maxBounceAngle = playerMovementData.MaxBounceAngle;
             _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
-            _onComboHappened = playerMovementData.OnComboHappened;
+            _onComboHappened = playerMovementData.ResetCombo;
         }
 
 
@@ -96,7 +96,7 @@ namespace Movement
             ComboCounter = 1;
         }
         
-        public void OnComboHappened() => _onComboHappened?.Invoke();
+        public void ResetCombo() => _onComboHappened?.Invoke();
 
         public void Bounce(bool canMakeCombo)
         {
@@ -142,6 +142,7 @@ namespace Movement
 
         public void BounceMade()
         {
+            ResetCombo();
             _canMakeBounce = false;
         }
     }
@@ -166,11 +167,11 @@ namespace Movement
         public readonly float MinBounceAngle;
         public readonly float MaxBounceAngle;
         public readonly AnimationController AnimationController;
-        public readonly Action OnComboHappened;
+        public readonly Action ResetCombo;
 
         public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
             float straightMovementSpeed, float upAndHorizontalMovementSpeed, float minBounceAngle, float maxBounceAngle, 
-            AnimationController animationController, Action onComboHappened)
+            AnimationController animationController, Action resetCombo)
         {
             PlayerTransform = playerTransform;
             Rigidbody2D = rigidbody2D;
@@ -180,7 +181,7 @@ namespace Movement
             MinBounceAngle = minBounceAngle;
             MaxBounceAngle = maxBounceAngle;
             AnimationController = animationController;
-            onComboHappened = OnComboHappened;
+            ResetCombo = resetCombo;
         }
     }
 }

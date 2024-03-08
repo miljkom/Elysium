@@ -43,10 +43,6 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
-        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
-        {
-        }
-
         private bool ShouldMakeCombo()
         {
             if (_timesWhenMovementHappened.Count == 0) 
@@ -73,17 +69,21 @@ namespace Movement
             PlayerMovement.ResetComboCounter();
             PlayerMovement.PlayerLanded();
         }
-        
-        public override void ExitState()
-        {
-        }
 
         private void FirstComboJump(float movementSpeed, float direction)
         {
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
             Rigidbody2D.AddForce(jumpAngle * movementSpeed);
-            PlayerMovement.OnComboHappened();
+            PlayerMovement.ResetCombo();
             Debug.LogError("Combooooooo");
+        }
+        
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        {
+        }
+        
+        public override void ExitState()
+        {
         }
     }
 }

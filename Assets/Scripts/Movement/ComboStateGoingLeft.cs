@@ -47,7 +47,7 @@ namespace Movement
                 Rigidbody2D.AddForce(comboJumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 AnimationController.RotatePlayer(direction);
-                PlayerMovement.OnComboHappened();
+                PlayerMovement.ResetCombo();
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
                 Debug.LogError("Combooooooo. Now will go right. Combo Counter is " + PlayerMovement.ComboCounter);
             }

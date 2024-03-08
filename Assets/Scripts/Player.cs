@@ -1,6 +1,4 @@
-using System;
 using Movement;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -68,11 +66,13 @@ public class Player : MonoBehaviour
     {
         if (!_inComboState) return;
 
+        Debug.Log("You are in combo for: " + _secondsSinceLastCombo);
         if (_secondsSinceLastCombo > comboDuration)
         {
             _inComboState = false;
         }
-        
+
+        _secondsSinceLastCombo += Time.deltaTime;
     }
 
     private void CheckIfPlayerIsFalling()
@@ -111,7 +111,6 @@ public class Player : MonoBehaviour
     {
         _playerMovement.UpMovement();
     }
-    
     
     private void StayInsideWalls()
     {
@@ -158,8 +157,7 @@ public class Player : MonoBehaviour
 
     private bool CanMakeCombo()
     {
-        var canMakeComboFromWall = _inCollisionWithWall;
-        return canMakeComboFromWall || _inComboState;
+        return _inComboState;
     }
 
     private void OnComboHappened()
