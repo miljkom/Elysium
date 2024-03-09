@@ -7,7 +7,7 @@ public class ParallaxBackground : MonoBehaviour
 {
     [SerializeField] private ParallaxCamera parallaxCamera;
     
-    private Dictionary<ParallaxLayer, List<GameObject>> parallaxLayers = new ();
+    private List<ParallaxLayer> parallaxLayers = new ();
  
     void Start()
     {
@@ -18,7 +18,6 @@ public class ParallaxBackground : MonoBehaviour
         
         if (parallaxCamera != null)
             parallaxCamera.onCameraTranslate += Move;
-        
     }
  
     void SetLayers()
@@ -28,19 +27,12 @@ public class ParallaxBackground : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             ParallaxLayer layer = transform.GetChild(i).GetComponent<ParallaxLayer>();
-            
-            List<GameObject> layerList = new ();
-            for (int j = 0; j < layer.transform.childCount ; j++)
-            {
-                layerList.Add(layer.transform.GetChild(j).gameObject);
-            }
 
-            // Sorting by Y value
-            layerList = layerList.OrderBy(obj => obj.transform.position.y).ToList();
-            layer.SetBoundaryPoints(layerList);
+            layer.CalculateTextureUnitSize();
+            
             if (layer != null)
             {
-                parallaxLayers.Add(layer, layerList);
+                parallaxLayers.Add(layer);
             }
         }
     }
@@ -48,8 +40,8 @@ public class ParallaxBackground : MonoBehaviour
     {
         foreach (var layer in parallaxLayers)
         {
-            layer.Key.Move(delta);
-            layer.Key.ChangeObjectsTransorm(layer.Value, delta);
+            layer.Move(delta);
+            layer.ChangeObjectsTransorm(parallaxCamera, delta);
         }
     }
 
