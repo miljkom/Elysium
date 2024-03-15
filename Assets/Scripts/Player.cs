@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
-    [SerializeField] private float comboDuration;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
     [SerializeField] private Transform leftBoundaryWall;
@@ -16,6 +15,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
     [SerializeField] private float timeToContinueCombo;
+    
+    private const float LoseConditionYDistance = 10f;
     
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
@@ -90,7 +91,7 @@ public class Player : MonoBehaviour
 
     private void EndGameIfNeeded()
     {
-        if (Mathf.Abs(_transform.position.y - bottomBoundary.position.x) > 10f)
+        if (Mathf.Abs(_transform.position.y - bottomBoundary.position.y) > LoseConditionYDistance)
         {
             GameManager.Instance.FailedLevel();
         }
