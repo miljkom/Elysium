@@ -57,7 +57,8 @@ namespace Movement
             if (facingRightSide)
             {
                 var comboJumpAngle = new Vector2(1,1).normalized;
-                Rigidbody2D.AddForce(comboJumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Debug.LogError(PlayerMovement.ComboCounter);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
@@ -65,7 +66,7 @@ namespace Movement
             {
                 
                 var comboJumpAngle = new Vector2(1,2).normalized;
-                Rigidbody2D.AddForce(comboJumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
