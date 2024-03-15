@@ -38,13 +38,14 @@ namespace Movement
                 PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
                     ? States.ComboStateGoingLeft
                     : States.ComboStateGoingRight);
+                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
             else
             {
                 PlayerMovement.ChangeState(States.UpMovementState);
                 Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
-            PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             AnimationController.RotatePlayer(direction);
         }
 
@@ -67,6 +68,7 @@ namespace Movement
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
+            Debug.LogError("combo from standing");
             AnimationController.RotatePlayer(facingRightSide);
             PlayerMovement.IncreaseComboCounter();
         }
@@ -102,6 +104,7 @@ namespace Movement
         {
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
             Rigidbody2D.AddForce(jumpAngle * movementSpeed);
+            PlayerMovement.ComboStarted();
             Debug.LogError("Combooooooo");
         }
         

@@ -1,3 +1,4 @@
+using System;
 using Movement;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
+    [SerializeField] private float timeToContinueCombo;
     
     private PlayerMovement _playerMovement;
     private Vector2 _jumpAngle;
@@ -25,7 +27,9 @@ public class Player : MonoBehaviour
     private bool _inCollisionWithWall;
     private float _xValueForLeftBoundaryWall;
     private float _xValueForRightBoundaryWall;
+    private float _timeAfterLandingFromCombo;
     private bool _inComboState;
+    private bool _standingOnPlatform;
     
     private void Awake()
     {
@@ -39,28 +43,44 @@ public class Player : MonoBehaviour
     private void InitializePlayerMovement()
     {
         var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, minBounceAngle, maxBounceAngle, animationController, OnComboHappened);
+            upAndHorizontalMovementSpeed, minBounceAngle, maxBounceAngle, animationController);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
 
     private void Update()
     {
         Bounce();
+        CheckIfCanMakeCombo();
         CheckIfPlayerIsFalling();
     }
     
-
     private void Bounce()
     {
         if (_inCollisionWithWall)
             _playerMovement.Bounce(false);
+    }
+    
+    private void CheckIfCanMakeCombo()
+    {
+        if(!_playerMovement.IsInCombo || !_standingOnPlatform) return;
+
+        if (timeToContinueCombo < _timeAfterLandingFromCombo)
+            StopCombo();
+        _timeAfterLandingFromCombo += Time.deltaTime;
+    }
+
+    private void StopCombo()
+    {
+        _playerMovement.StopCombo();
+        _timeAfterLandingFromCombo = 0;
+        _standingOnPlatform = false;
     }
 
     private void CheckIfPlayerIsFalling()
     {
         var currentYPosition = _transform.position.y;
         var playerFalling = currentYPosition < _previousPlayerYPosition;
-        if (playerFalling && !CanMakeCombo())
+        if (playerFalling && !_playerMovement.IsInCombo)
         {
             _playerMovement.ChangeState(States.FallingDownState);
             EndGameIfNeeded();
@@ -79,12 +99,12 @@ public class Player : MonoBehaviour
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
     {
         _jumpAngle = jumpAngle.normalized;
-        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction, CanMakeCombo());
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction);
     }
     
     public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
     {
-        _playerMovement.StraightMovement(deltaInputXPosition, direction, CanMakeCombo());
+        _playerMovement.StraightMovement(deltaInputXPosition, direction);
         StayInsideWalls();
     }
 
@@ -123,9 +143,19 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Platform") && other.enabled)
         {
             _playerMovement.ChangeState(States.StandingState);
+            if (_playerMovement.IsInCombo)
+            {
+                StartComboCounter();
+                _standingOnPlatform = true;
+            }
         }
     }
-    
+
+    private void StartComboCounter()
+    {
+        _timeAfterLandingFromCombo = 0;
+    }
+
     public void SetInCollisionWithWall()
     {
         _inCollisionWithWall = true;
@@ -135,15 +165,6 @@ public class Player : MonoBehaviour
     {
         _inCollisionWithWall = false;
     }
-
-    private bool CanMakeCombo()
-    {
-        return _inComboState;
-    }
-
-    private void OnComboHappened()
-    {
-        _inComboState = true;
-    }
+    
 }
 

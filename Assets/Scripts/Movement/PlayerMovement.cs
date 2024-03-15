@@ -7,7 +7,8 @@ namespace Movement
     public class PlayerMovement
     {
         public int ComboCounter { get; private set; } = 1;
-
+        public bool IsInCombo { get; private set; }
+        
         private const int MaxComboCounter = 4;
         
         private readonly Dictionary<States, State> _concreteState = new();
@@ -26,6 +27,7 @@ namespace Movement
         private float _minBounceAngle = 45f;
         private float _maxBounceAngle = 80f;
         private bool _canMakeBounce;
+   
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -68,14 +70,14 @@ namespace Movement
             _state.EnterState();
         }
 
-        public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction, bool canMakeCombo)
+        public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
         {
-            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction, canMakeCombo);
+            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction, IsInCombo);
         }
         
-        public void StraightMovement(float deltaXMovement, bool direction, bool canMakeCombo)
+        public void StraightMovement(float deltaXMovement, bool direction)
         {
-            _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction, canMakeCombo);
+            _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction, IsInCombo);
         }
         
         public void UpMovement()
@@ -93,7 +95,7 @@ namespace Movement
         public void ResetComboCounter()
         {
             //todo Uros da li ovo trba sa 3 mesta da se zove ili samo iz standing-a
-            ComboCounter = 1;
+            
         }
 
         public void Bounce(bool canMakeCombo)
@@ -142,6 +144,17 @@ namespace Movement
         {
             _canMakeBounce = false;
         }
+
+        public void ComboStarted()
+        {
+            IsInCombo = true;
+        }
+
+        public void StopCombo()
+        {
+            ComboCounter = 1;
+            IsInCombo = false;
+        }
     }
 
     public enum States
@@ -168,7 +181,7 @@ namespace Movement
 
         public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
             float straightMovementSpeed, float upAndHorizontalMovementSpeed, float minBounceAngle, float maxBounceAngle, 
-            AnimationController animationController, Action resetCombo)
+            AnimationController animationController)
         {
             PlayerTransform = playerTransform;
             Rigidbody2D = rigidbody2D;
@@ -178,7 +191,6 @@ namespace Movement
             MinBounceAngle = minBounceAngle;
             MaxBounceAngle = maxBounceAngle;
             AnimationController = animationController;
-            ResetCombo = resetCombo;
         }
     }
 }
