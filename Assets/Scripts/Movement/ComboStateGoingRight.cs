@@ -37,6 +37,9 @@ namespace Movement
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
         {
+            var blockCombo = true;
+            if (blockCombo) return;
+            
             var inputToGoLeft = jumpAngle.x < 0;
             var playerIsOnRightSide = PlayerTransform.position.x > 0;
             if (inputToGoLeft && canMakeCombo && playerIsOnRightSide)

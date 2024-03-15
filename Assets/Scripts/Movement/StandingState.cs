@@ -53,9 +53,10 @@ namespace Movement
         {
             var facingRightSide = true;
             Rigidbody2D.velocity = new Vector2(0, 0);
+            PlayerMovement.IncreaseComboCounter();
             if (facingRightSide)
             {
-                var comboJumpAngle = new Vector2(1,2).normalized;
+                var comboJumpAngle = new Vector2(1,1).normalized;
                 Rigidbody2D.AddForce(comboJumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
@@ -70,7 +71,6 @@ namespace Movement
             }
             Debug.LogError("combo from standing");
             AnimationController.RotatePlayer(facingRightSide);
-            PlayerMovement.IncreaseComboCounter();
         }
 
         private bool ShouldMakeCombo()
@@ -96,16 +96,14 @@ namespace Movement
         public override void EnterState()
         {
             _timesWhenMovementHappened = new List<float>();
-            PlayerMovement.ResetComboCounter();
             PlayerMovement.PlayerLanded();
         }
 
         private void FirstComboJump(float movementSpeed, float direction)
         {
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
-            Rigidbody2D.AddForce(jumpAngle * movementSpeed);
+            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter));
             PlayerMovement.ComboStarted();
-            Debug.LogError("Combooooooo");
         }
         
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)

@@ -48,7 +48,6 @@ namespace Movement
         {
             AnimationController.ResetAllTriggers();
             AnimationController.PlayJumpAnimation();
-            PlayerMovement.ResetComboCounter();
             _changedDirection = false;
         }
         

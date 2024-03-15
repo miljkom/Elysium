@@ -88,14 +88,8 @@ namespace Movement
 
         public void IncreaseComboCounter()
         {
-            if(ComboCounter < MaxComboCounter)
+            if(ComboCounter <= MaxComboCounter)
                 ComboCounter++;
-        }
-
-        public void ResetComboCounter()
-        {
-            //todo Uros da li ovo trba sa 3 mesta da se zove ili samo iz standing-a
-            
         }
 
         public void Bounce(bool canMakeCombo)
@@ -136,7 +130,6 @@ namespace Movement
 
         public void PlayerLanded()
         {
-            ResetComboCounter();
             _canMakeBounce = true;
         }
 
