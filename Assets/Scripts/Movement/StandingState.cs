@@ -51,27 +51,29 @@ namespace Movement
 
         private void ContinueCombo(Vector2 jumpAngle, float movementSpeed)
         {
-            var facingRightSide = true;
-            Rigidbody2D.velocity = new Vector2(0, 0);
-            PlayerMovement.IncreaseComboCounter();
-            if (facingRightSide)
+            if (PlayerMovement.GetPreviousJumpAngle().x < 0 && jumpAngle.x > 0)
             {
+                Rigidbody2D.velocity = new Vector2(0, 0);
+                PlayerMovement.IncreaseComboCounter();
                 var comboJumpAngle = new Vector2(1,1).normalized;
                 Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
-                Debug.LogError(PlayerMovement.ComboCounter);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
-                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
+            }
+            else if(PlayerMovement.GetPreviousJumpAngle().x > 0 && jumpAngle.x < 0)
+            {
+                Rigidbody2D.velocity = new Vector2(0, 0);
+                PlayerMovement.IncreaseComboCounter();
+                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                PlayerMovement.ChangeState(States.ComboStateGoingLeft);
             }
             else
             {
-                
-                var comboJumpAngle = new Vector2(1,2).normalized;
-                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
-                PlayerMovement.ChangeState(States.ComboStateGoingRight);
-                PlayerMovement.SetPreviousJumpAngle(jumpAngle);
+                PlayerMovement.StopCombo();
+                return;
             }
+            PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             Debug.LogError("combo from standing");
-            AnimationController.RotatePlayer(facingRightSide);
+            AnimationController.RotatePlayer(jumpAngle.x > 0);
         }
 
         private bool ShouldMakeCombo()
