@@ -15,6 +15,7 @@ namespace Movement
             public readonly float DiagonalMovementSpeed;
             public readonly int MaxComboCounter;
             public readonly float[] ComboSpeedMultipliers;
+            public readonly float BounceSpeed;
             public readonly float MinBounceAngle;
             public readonly float MaxBounceAngle;
             public readonly AnimationController AnimationController;
@@ -22,7 +23,7 @@ namespace Movement
 
             public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
                 float straightMovementSpeed, float diagonalMovementSpeed, int maxComboCounter,
-                float[] comboSpeedMultipliers,float minBounceAngle, float maxBounceAngle, 
+                float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, 
                 AnimationController animationController)
             {
                 PlayerTransform = playerTransform;
@@ -32,6 +33,7 @@ namespace Movement
                 DiagonalMovementSpeed = diagonalMovementSpeed;
                 MaxComboCounter = maxComboCounter;
                 ComboSpeedMultipliers = comboSpeedMultipliers;
+                BounceSpeed = bounceSpeed;
                 MinBounceAngle = minBounceAngle;
                 MaxBounceAngle = maxBounceAngle;
                 AnimationController = animationController;
@@ -64,12 +66,11 @@ namespace Movement
         private float _diagonalMovementSpeed;
         private float[] _comboSpeedMultiplier;
         private int _maxComboCounter;
-        private float _comboMovementSpeed;
-        private Vector2 _previousJumpAngle;
-        private float _minBounceAngle = 45f;
-        private float _maxBounceAngle = 80f;
+        private float _bounceSpeed;
+        private float _minBounceAngle;
+        private float _maxBounceAngle;
         private bool _canMakeBounce;
-
+        private Vector2 _previousJumpAngle;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -96,6 +97,7 @@ namespace Movement
             _animationController = playerMovementData.AnimationController;
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
+            _bounceSpeed = playerMovementData.BounceSpeed;
             _minBounceAngle = playerMovementData.MinBounceAngle;
             _maxBounceAngle = playerMovementData.MaxBounceAngle;
             _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
@@ -133,7 +135,7 @@ namespace Movement
 
         public void IncreaseComboCounter()
         {
-            if(ComboCounterIndex < _maxComboCounter)
+            if(ComboCounterIndex < _maxComboCounter - 1)
                 ComboCounterIndex++;
         }
 
@@ -142,7 +144,7 @@ namespace Movement
             if (!_canMakeBounce) return;
             
             var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
-            _state.Bounce(CalculateBounceAngle(directionToBounce), _diagonalMovementSpeed, canMakeCombo);
+            _state.Bounce(CalculateBounceAngle(directionToBounce), GetBounceSpeed(), canMakeCombo);
         }
 
         public void SetPreviousJumpAngle(Vector2 jumpAngle)
@@ -203,6 +205,11 @@ namespace Movement
             var x = (float)Math.Cos(angleRadians) * directionToJump;
             var y = (float)Math.Sin(angleRadians);
             return new Vector2(x,y).normalized;
+        }
+        
+        private float GetBounceSpeed()
+        {
+            return _bounceSpeed * _comboSpeedMultiplier[ComboCounterIndex];
         }
     }
 }

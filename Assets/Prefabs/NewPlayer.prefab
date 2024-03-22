@@ -3189,13 +3189,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d599627e8c4203891f649a9f12d8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchResetTimer: 0
-  comboObject: {fileID: 0}
   rb2D: {fileID: 5474409419448949907}
-  upSpeedMovement: 222
+  upSpeedMovement: 888
   straightMovementSpeed: 40
-  upAndHorizontalMovementSpeed: 222
-  timeToMakeComboWhenInCollision: 1
+  upAndHorizontalMovementSpeed: 888
+  bounceSpeed: 600
+  minBounceAngle: 45
+  maxBounceAngle: 80
+  maxComboCounter: 5
+  comboSpeedMultipliers:
+  - 1.1
+  - 1.2
+  - 1.3
+  - 1.4
+  - 1.5
+  timeToContinueCombo: 0.5
   leftBoundaryWall: {fileID: 0}
   rightBoundaryWall: {fileID: 0}
   bottomBoundary: {fileID: 0}

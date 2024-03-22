@@ -60,14 +60,14 @@ namespace Movement
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
                 var comboJumpAngle = new Vector2(1,1).normalized;
-                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounterIndex * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * movementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
             }
             else if(PlayerMovement.GetPreviousJumpAngle().x > 0 && jumpAngle.x < 0)
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
-                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounterIndex * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * movementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingLeft);
             }
             else

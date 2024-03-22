@@ -52,15 +52,13 @@ namespace Movement
                 PlayerMovement.ChangeState(States.ComboStateGoingLeft);
                 AnimationController.RotatePlayer(direction);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
-                Debug.LogError("Combooooooo. Now will go left. Combo Counter is " + PlayerMovement.ComboCounterIndex);
             }
         }
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
-            //todo Uros too fast with combo counter 
-            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed); //* PlayerMovement.ComboCounter));
+            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
             AnimationController.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade();
         }

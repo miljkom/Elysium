@@ -10941,22 +10941,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1348031993}
     - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: maxBounceAngle
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: minBounceAngle
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: maxComboCounter
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: upSpeedMovement
-      value: 888
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: leftBoundaryWall
       value: 
       objectReference: {fileID: 690701623}
@@ -10965,40 +10949,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 339547561}
     - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: timeToContinueCombo
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: upAndHorizontalMovementSpeed
-      value: 888
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: timeToMakeComboWhenInCollision
       value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.data[0]
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.data[1]
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.data[2]
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.data[3]
-      value: 1.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
-      propertyPath: comboSpeedMultipliers.Array.data[4]
-      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5474409419448949904, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: m_RootOrder

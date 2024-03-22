@@ -8,15 +8,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
-    [SerializeField] private int maxComboCounter;
-    [SerializeField] private float[] comboSpeedMultipliers;
+    [SerializeField] private float bounceSpeed;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
+    [SerializeField] private int maxComboCounter;
+    [SerializeField] private float[] comboSpeedMultipliers;
+    [SerializeField] private float timeToContinueCombo;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
-    [SerializeField] private float timeToContinueCombo;
     
     private const float LoseConditionYDistance = 10f;
     
@@ -69,8 +70,8 @@ public class Player : MonoBehaviour
     private void InitializePlayerMovement()
     {
         var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, minBounceAngle, 
-            maxBounceAngle, animationController);
+            upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
+            minBounceAngle, maxBounceAngle, animationController);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
 
