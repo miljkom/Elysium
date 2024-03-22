@@ -50,7 +50,6 @@ namespace Movement
             ComboStateGoingRight = 5,
         }
         
-        public int ComboCounterIndex { get; private set; }
         public bool IsInCombo { get; private set; }
         
         private readonly Dictionary<States, State> _concreteState = new();
@@ -70,6 +69,7 @@ namespace Movement
         private float _minBounceAngle;
         private float _maxBounceAngle;
         private bool _canMakeBounce;
+        private int _comboCounterIndex;
         private Vector2 _previousJumpAngle;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
@@ -135,8 +135,8 @@ namespace Movement
 
         public void IncreaseComboCounter()
         {
-            if(ComboCounterIndex < _maxComboCounter - 1)
-                ComboCounterIndex++;
+            if(_comboCounterIndex < _maxComboCounter - 1)
+                _comboCounterIndex++;
         }
 
         public void Bounce(bool canMakeCombo)
@@ -180,13 +180,13 @@ namespace Movement
         public void StopCombo()
         {
             Debug.LogError("Gotov combo");
-            ComboCounterIndex = 0;
+            _comboCounterIndex = 0;
             IsInCombo = false;
         }
         
         private float GetDiagonalComboSpeed()
         {
-            return _diagonalMovementSpeed * _comboSpeedMultiplier[ComboCounterIndex];
+            return _diagonalMovementSpeed * _comboSpeedMultiplier[_comboCounterIndex];
         }
         
         private void SetupBounceAngleForCombo()
@@ -201,7 +201,7 @@ namespace Movement
         
         private Vector2 CalculateBounceAngle(int directionToJump)
         {
-            var angleRadians = _bounceAngleForCombo[ComboCounterIndex] * Math.PI / 180f;
+            var angleRadians = _bounceAngleForCombo[_comboCounterIndex] * Math.PI / 180f;
             var x = (float)Math.Cos(angleRadians) * directionToJump;
             var y = (float)Math.Sin(angleRadians);
             return new Vector2(x,y).normalized;
@@ -209,7 +209,7 @@ namespace Movement
         
         private float GetBounceSpeed()
         {
-            return _bounceSpeed * _comboSpeedMultiplier[ComboCounterIndex];
+            return _bounceSpeed * _comboSpeedMultiplier[_comboCounterIndex];
         }
     }
 }
