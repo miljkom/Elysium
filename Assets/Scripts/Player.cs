@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
     private float _xValueForRightBoundaryWall;
     private float _timeAfterLandingFromCombo;
     private bool _inComboState;
-    private bool _standingOnPlatform;
     
     private void Awake()
     {
@@ -63,8 +62,9 @@ public class Player : MonoBehaviour
     
     private void CheckIfCanMakeCombo()
     {
-        if(!_playerMovement.IsInCombo || !_standingOnPlatform) return;
-
+        if(!_playerMovement.IsInCombo || !_playerMovement.IsPlayerStanding()) return;
+        
+        Debug.LogError("U combou je");
         if (timeToContinueCombo < _timeAfterLandingFromCombo)
             StopCombo();
         _timeAfterLandingFromCombo += Time.deltaTime;
@@ -74,7 +74,6 @@ public class Player : MonoBehaviour
     {
         _playerMovement.StopCombo();
         _timeAfterLandingFromCombo = 0;
-        _standingOnPlatform = false;
     }
 
     private void CheckIfPlayerIsFalling()
@@ -147,13 +146,13 @@ public class Player : MonoBehaviour
             if (_playerMovement.IsInCombo)
             {
                 StartComboCounter();
-                _standingOnPlatform = true;
             }
         }
     }
 
     private void StartComboCounter()
     {
+        Debug.LogError("Started combo");
         _timeAfterLandingFromCombo = 0;
     }
 

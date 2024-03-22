@@ -88,7 +88,7 @@ namespace Movement
 
         public void IncreaseComboCounter()
         {
-            if(ComboCounter <= MaxComboCounter)
+            if(ComboCounter < MaxComboCounter)
                 ComboCounter++;
         }
 
@@ -103,6 +103,11 @@ namespace Movement
         public void SetPreviousJumpAngle(Vector2 jumpAngle)
         {
             _previousJumpAngle = jumpAngle;
+        }
+
+        public bool IsPlayerStanding()
+        {
+            return _state is StandingState;
         }
         
         public Vector2 GetPreviousJumpAngle()
@@ -145,6 +150,7 @@ namespace Movement
 
         public void StopCombo()
         {
+            Debug.LogError("Gotov combo");
             ComboCounter = 1;
             IsInCombo = false;
         }

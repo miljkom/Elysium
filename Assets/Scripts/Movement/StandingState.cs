@@ -92,6 +92,7 @@ namespace Movement
 
         public override void UpMovement(float movementSpeed)
         {
+            PlayerMovement.StopCombo();
             PlayerMovement.ChangeState(States.UpMovementState);
             Rigidbody2D.AddForce(Vector2.up * movementSpeed);
         }
