@@ -28,14 +28,14 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
         }
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
-            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounterIndex * 0.6f));
             AnimationController.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade(); 
         }

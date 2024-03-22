@@ -17,7 +17,7 @@ public abstract class State
     }
     
     public abstract void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo);
-    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo);
+    public abstract void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo);
     public abstract void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo);
     public abstract void UpMovement(float movementSpeed);
 

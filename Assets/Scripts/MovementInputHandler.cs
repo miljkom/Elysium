@@ -1,7 +1,7 @@
 using UnityEngine;
 using Touch = UnityEngine.Touch;
 
-public class InputSystem : MonoBehaviour
+public class MovementInputHandler : MonoBehaviour
 {
     [SerializeField] private float verticalSwipeThreshold = 0.5f;
     [SerializeField] private float horizontalSwipeThreshold = 0.5f;

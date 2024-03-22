@@ -6,10 +6,50 @@ namespace Movement
 {
     public class PlayerMovement
     {
-        public int ComboCounter { get; private set; } = 1;
-        public bool IsInCombo { get; private set; }
+        public class PlayerMovementData
+        {
+            public readonly Transform PlayerTransform;
+            public readonly Rigidbody2D Rigidbody2D;
+            public readonly float UpMovementSpeed;
+            public readonly float StraightMovementSpeed;
+            public readonly float DiagonalMovementSpeed;
+            public readonly int MaxComboCounter;
+            public readonly float[] ComboSpeedMultipliers;
+            public readonly float MinBounceAngle;
+            public readonly float MaxBounceAngle;
+            public readonly AnimationController AnimationController;
+            public readonly Action ResetCombo;
+
+            public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
+                float straightMovementSpeed, float diagonalMovementSpeed, int maxComboCounter,
+                float[] comboSpeedMultipliers,float minBounceAngle, float maxBounceAngle, 
+                AnimationController animationController)
+            {
+                PlayerTransform = playerTransform;
+                Rigidbody2D = rigidbody2D;
+                UpMovementSpeed = upMovementSpeed;
+                StraightMovementSpeed = straightMovementSpeed;
+                DiagonalMovementSpeed = diagonalMovementSpeed;
+                MaxComboCounter = maxComboCounter;
+                ComboSpeedMultipliers = comboSpeedMultipliers;
+                MinBounceAngle = minBounceAngle;
+                MaxBounceAngle = maxBounceAngle;
+                AnimationController = animationController;
+            }
+        }
+    
+        public enum States
+        {
+            StandingState = 0,
+            UpMovementState = 1,
+            FallingDownState = 2,
+            OnWallState = 3,
+            ComboStateGoingLeft = 4,
+            ComboStateGoingRight = 5,
+        }
         
-        private const int MaxComboCounter = 4;
+        public int ComboCounterIndex { get; private set; }
+        public bool IsInCombo { get; private set; }
         
         private readonly Dictionary<States, State> _concreteState = new();
         private readonly Dictionary<int, float> _bounceAngleForCombo = new();
@@ -21,30 +61,32 @@ namespace Movement
         private Action _onComboHappened;
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
-        private float _upAndHorizontalMovementSpeed;
+        private float _diagonalMovementSpeed;
+        private float[] _comboSpeedMultiplier;
+        private int _maxComboCounter;
         private float _comboMovementSpeed;
         private Vector2 _previousJumpAngle;
         private float _minBounceAngle = 45f;
         private float _maxBounceAngle = 80f;
         private bool _canMakeBounce;
-   
+
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
             SetPlayerMovementData(playerMovementData);
             CreateStates();
             ChangeState(States.StandingState);
-            SetUpBounceAngleForCombo();
+            SetupBounceAngleForCombo();
         }
 
         private void CreateStates()
         {
-            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
             _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
             _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
             _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
-            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _upAndHorizontalMovementSpeed));
+            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
@@ -56,7 +98,9 @@ namespace Movement
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _minBounceAngle = playerMovementData.MinBounceAngle;
             _maxBounceAngle = playerMovementData.MaxBounceAngle;
-            _upAndHorizontalMovementSpeed = playerMovementData.UpAndHorizontalMovementSpeed;
+            _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
+            _maxComboCounter = playerMovementData.MaxComboCounter;
+            _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
             _onComboHappened = playerMovementData.ResetCombo;
         }
 
@@ -65,6 +109,7 @@ namespace Movement
         {
             if (_state == _concreteState[state]) return;
             if (state == States.FallingDownState && _state is ComboStateGoingRight or ComboStateGoingLeft) return;
+            
             _state?.ExitState();
             _state = _concreteState[state];
             _state.EnterState();
@@ -72,9 +117,9 @@ namespace Movement
 
         public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
         {
-            _state.UpAndHorizontalMovement(jumpAngle, _upAndHorizontalMovementSpeed, direction, IsInCombo);
+            _state.UpAndHorizontalMovement(jumpAngle, GetDiagonalComboSpeed(), direction, IsInCombo);
         }
-        
+
         public void StraightMovement(float deltaXMovement, bool direction)
         {
             _state.StraightMovement(deltaXMovement, _straightMovementSpeed, direction, IsInCombo);
@@ -88,8 +133,8 @@ namespace Movement
 
         public void IncreaseComboCounter()
         {
-            if(ComboCounter < MaxComboCounter)
-                ComboCounter++;
+            if(ComboCounterIndex < _maxComboCounter)
+                ComboCounterIndex++;
         }
 
         public void Bounce(bool canMakeCombo)
@@ -97,7 +142,7 @@ namespace Movement
             if (!_canMakeBounce) return;
             
             var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
-            _state.Bounce(CalculateBounceAngle(directionToBounce), _upAndHorizontalMovementSpeed, canMakeCombo);
+            _state.Bounce(CalculateBounceAngle(directionToBounce), _diagonalMovementSpeed, canMakeCombo);
         }
 
         public void SetPreviousJumpAngle(Vector2 jumpAngle)
@@ -113,24 +158,6 @@ namespace Movement
         public Vector2 GetPreviousJumpAngle()
         {
             return _previousJumpAngle;
-        }
-
-        private void SetUpBounceAngleForCombo()
-        {
-            var angleDifference = _maxBounceAngle - _minBounceAngle;
-            var angleIncrementPerCombo = angleDifference / MaxComboCounter;
-            for (var i = 0; i < MaxComboCounter; i++)
-            {
-                _bounceAngleForCombo.Add(i + 1, _minBounceAngle + angleIncrementPerCombo * i);
-            }
-        }
-        
-        private Vector2 CalculateBounceAngle(int directionToJump)
-        {
-            var angleRadians = _bounceAngleForCombo[ComboCounter] * Math.PI / 180f;
-            var x = (float)Math.Cos(angleRadians) * directionToJump;
-            var y = (float)Math.Sin(angleRadians);
-            return new Vector2(x,y).normalized;
         }
 
         public void PlayerLanded()
@@ -151,45 +178,31 @@ namespace Movement
         public void StopCombo()
         {
             Debug.LogError("Gotov combo");
-            ComboCounter = 1;
+            ComboCounterIndex = 0;
             IsInCombo = false;
         }
-    }
-
-    public enum States
-    {
-        StandingState = 0,
-        UpMovementState = 1,
-        FallingDownState = 2,
-        OnWallState = 3,
-        ComboStateGoingLeft = 4,
-        ComboStateGoingRight = 5,
-    }
-
-    public class PlayerMovementData
-    {
-        public readonly Transform PlayerTransform;
-        public readonly Rigidbody2D Rigidbody2D;
-        public readonly float UpMovementSpeed;
-        public readonly float StraightMovementSpeed;
-        public readonly float UpAndHorizontalMovementSpeed;
-        public readonly float MinBounceAngle;
-        public readonly float MaxBounceAngle;
-        public readonly AnimationController AnimationController;
-        public readonly Action ResetCombo;
-
-        public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
-            float straightMovementSpeed, float upAndHorizontalMovementSpeed, float minBounceAngle, float maxBounceAngle, 
-            AnimationController animationController)
+        
+        private float GetDiagonalComboSpeed()
         {
-            PlayerTransform = playerTransform;
-            Rigidbody2D = rigidbody2D;
-            UpMovementSpeed = upMovementSpeed;
-            StraightMovementSpeed = straightMovementSpeed;
-            UpAndHorizontalMovementSpeed = upAndHorizontalMovementSpeed;
-            MinBounceAngle = minBounceAngle;
-            MaxBounceAngle = maxBounceAngle;
-            AnimationController = animationController;
+            return _diagonalMovementSpeed * _comboSpeedMultiplier[ComboCounterIndex];
+        }
+        
+        private void SetupBounceAngleForCombo()
+        {
+            var angleDifference = _maxBounceAngle - _minBounceAngle;
+            var angleIncrementPerCombo = angleDifference / (_maxComboCounter - 1);
+            for (var i = 0; i < _maxComboCounter; i++)
+            {
+                _bounceAngleForCombo.Add(i, _minBounceAngle + angleIncrementPerCombo * i);
+            }
+        }
+        
+        private Vector2 CalculateBounceAngle(int directionToJump)
+        {
+            var angleRadians = _bounceAngleForCombo[ComboCounterIndex] * Math.PI / 180f;
+            var x = (float)Math.Cos(angleRadians) * directionToJump;
+            var y = (float)Math.Sin(angleRadians);
+            return new Vector2(x,y).normalized;
         }
     }
 }
