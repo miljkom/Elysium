@@ -58,7 +58,8 @@ namespace Movement
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
-            Rigidbody2D.AddForce(jumpAngle.normalized * (movementSpeed * PlayerMovement.ComboCounter * 0.1f));
+            //todo Uros too fast with combo counter 
+            Rigidbody2D.AddForce(jumpAngle.normalized * (movementSpeed * 0.6f)); //* PlayerMovement.ComboCounter));
             AnimationController.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade();
         }
