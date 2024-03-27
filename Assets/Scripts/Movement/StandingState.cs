@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using States = Movement.PlayerMovement.States;
 
 namespace Movement
 {
@@ -11,10 +12,13 @@ namespace Movement
         
         private List<float> _timesWhenMovementHappened = new();
         private DateTime _possibleComboTill;
+        private float _diagonalSpeedWithoutCombo;
 
-        public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
+        public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, 
+            AnimationController animationController, float diagonalSpeedWithoutCombo)
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
+            _diagonalSpeedWithoutCombo = diagonalSpeedWithoutCombo;
         }
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
@@ -26,15 +30,15 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
-            if (canMakeCombo)
+            if (canContinueCombo)
             {
-                ContinueCombo(jumpAngle, movementSpeed);
+                ContinueCombo(jumpAngle, comboMovementSpeed);
             }
-            else if (ShouldMakeCombo())
+            else if (ShouldMakeFirstCombo())
             {
-                FirstComboJump(movementSpeed, jumpAngle.x);
+                FirstComboJump(comboMovementSpeed, jumpAngle.x);
                 PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
                     ? States.ComboStateGoingLeft
                     : States.ComboStateGoingRight);
@@ -43,7 +47,7 @@ namespace Movement
             else
             {
                 PlayerMovement.ChangeState(States.UpMovementState);
-                Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+                Rigidbody2D.AddForce(jumpAngle.normalized * _diagonalSpeedWithoutCombo);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
             AnimationController.RotatePlayer(direction);
@@ -56,14 +60,14 @@ namespace Movement
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
                 var comboJumpAngle = new Vector2(1,1).normalized;
-                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * movementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
             }
             else if(PlayerMovement.GetPreviousJumpAngle().x > 0 && jumpAngle.x < 0)
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
-                Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Rigidbody2D.AddForce(jumpAngle * movementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingLeft);
             }
             else
@@ -76,7 +80,7 @@ namespace Movement
             AnimationController.RotatePlayer(jumpAngle.x > 0);
         }
 
-        private bool ShouldMakeCombo()
+        private bool ShouldMakeFirstCombo()
         {
             if (_timesWhenMovementHappened.Count == 0) 
                 return false;
@@ -84,7 +88,7 @@ namespace Movement
             if (_timesWhenMovementHappened[0] < Time.time)
             {
                 _timesWhenMovementHappened.RemoveAt(0);
-                ShouldMakeCombo();
+                ShouldMakeFirstCombo();
             }
 
             return _timesWhenMovementHappened.Count >= MovementNeededToMakeCombo;
@@ -105,8 +109,9 @@ namespace Movement
 
         private void FirstComboJump(float movementSpeed, float direction)
         {
+            //todo Uros zasto ovaj ugao, a ne pravi
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
-            Rigidbody2D.AddForce(jumpAngle * (movementSpeed * PlayerMovement.ComboCounter));
+            Rigidbody2D.AddForce(jumpAngle * movementSpeed);
             PlayerMovement.ComboStarted();
         }
         

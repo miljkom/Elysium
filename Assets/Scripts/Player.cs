@@ -8,13 +8,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
+    [SerializeField] private float bounceSpeed;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
+    [SerializeField] private int maxComboCounter;
+    [SerializeField] private float[] comboSpeedMultipliers;
+    [SerializeField] private float timeToContinueCombo;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
     [SerializeField] private Transform bottomBoundary;
     [SerializeField] private AnimationController animationController;
-    [SerializeField] private float timeToContinueCombo;
     
     private const float LoseConditionYDistance = 10f;
     
@@ -37,13 +40,38 @@ public class Player : MonoBehaviour
         _previousPlayerYPosition = _transform.position.y;
         _xValueForLeftBoundaryWall = leftBoundaryWall.position.x;
         _xValueForRightBoundaryWall = rightBoundaryWall.position.x;
+        ValidateComboSpeedMultipliers();
         InitializePlayerMovement();
+    }
+
+    private void ValidateComboSpeedMultipliers()
+    {
+        CheckCountOfComboSpeedMultipliers();
+        CheckComboSpeedMultipliersSortedAscending();
+    }
+
+    private void CheckCountOfComboSpeedMultipliers()
+    {
+        if (maxComboCounter != comboSpeedMultipliers.Length)
+            throw new Exception("Max combo counter is not same as combo speed multipliers count");
+    }
+
+    private void CheckComboSpeedMultipliersSortedAscending()
+    {
+        for (var i = 0; i < comboSpeedMultipliers.Length - 1; i++)
+        {
+            if (comboSpeedMultipliers[i] > comboSpeedMultipliers[i + 1])
+            {
+                throw new Exception("Combo speed multipliers must be sorted ascending");
+            }
+        }
     }
 
     private void InitializePlayerMovement()
     {
-        var playerMovementData = new PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, minBounceAngle, maxBounceAngle, animationController);
+        var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
+            upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
+            minBounceAngle, maxBounceAngle, animationController);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
 
@@ -82,7 +110,7 @@ public class Player : MonoBehaviour
         var playerFalling = currentYPosition < _previousPlayerYPosition;
         if (playerFalling && !_playerMovement.IsInCombo)
         {
-            _playerMovement.ChangeState(States.FallingDownState);
+            _playerMovement.ChangeState(PlayerMovement.States.FallingDownState);
             EndGameIfNeeded();
         }
         _previousPlayerYPosition = currentYPosition;
@@ -142,7 +170,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Platform") && other.enabled)
         {
-            _playerMovement.ChangeState(States.StandingState);
+            _playerMovement.ChangeState(PlayerMovement.States.StandingState);
             if (_playerMovement.IsInCombo)
             {
                 StartComboCounter();
@@ -165,6 +193,5 @@ public class Player : MonoBehaviour
     {
         _inCollisionWithWall = false;
     }
-    
 }
 

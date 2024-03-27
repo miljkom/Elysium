@@ -14,7 +14,7 @@ namespace Movement
             throw new System.NotImplementedException();
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
             throw new System.NotImplementedException();
         }

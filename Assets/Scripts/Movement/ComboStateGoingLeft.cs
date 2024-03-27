@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using States = Movement.PlayerMovement.States;
 
 namespace Movement
 {
@@ -35,30 +36,28 @@ namespace Movement
             }
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
             var blockCombo = true;
             if (blockCombo) return;
             var inputToGoRight = jumpAngle.x > 0;
             var playerIsOnLeftSide = PlayerTransform.position.x < 0;
-            if (inputToGoRight && canMakeCombo && playerIsOnLeftSide)
+            if (inputToGoRight && canContinueCombo && playerIsOnLeftSide)
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 var comboJumpAngle = new Vector2(1,2).normalized;
                 PlayerMovement.IncreaseComboCounter();
-                Rigidbody2D.AddForce(comboJumpAngle * (_comboMovementSpeed * PlayerMovement.ComboCounter * 0.6f));
+                Rigidbody2D.AddForce(comboJumpAngle * comboMovementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
                 AnimationController.RotatePlayer(direction);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
-                Debug.LogError("Combooooooo. Now will go right. Combo Counter is " + PlayerMovement.ComboCounter);
             }
         }
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
-            //todo Uros too fast with combo counter 
-            Rigidbody2D.AddForce(jumpAngle.normalized * (movementSpeed * 0.6f)); //* PlayerMovement.ComboCounter));
+            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
             AnimationController.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade();
         }

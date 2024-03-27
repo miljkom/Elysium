@@ -21,7 +21,7 @@ namespace Movement
             AnimationController.RotatePlayer(direction);
         }
 
-        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float movementSpeed, bool direction, bool canMakeCombo)
+        public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
             PlayerMovement.StraightMovement(jumpAngle.x, direction);
             AnimationController.RotatePlayer(direction);
