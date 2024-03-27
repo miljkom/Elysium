@@ -492,7 +492,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64, y: 29.789091}
+    oldSize: {x: 0.64, y: 29.48}
     newSize: {x: 0.64, y: 88.44}
     adaptiveTilingThreshold: 0.5
     drawMode: 2
@@ -5837,8 +5837,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 973865138}
-  - {fileID: 1465468831}
   - {fileID: 1264081646}
+  - {fileID: 1465468831}
   - {fileID: 1994940798}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -11958,7 +11958,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 627597279}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &1264081647
 ParticleSystemRenderer:
@@ -11999,8 +11999,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1803453427
-  m_SortingLayer: 4
+  m_SortingLayerID: -253387489
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -16953,7 +16953,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 627597279}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &1465468832
 ParticleSystemRenderer:
