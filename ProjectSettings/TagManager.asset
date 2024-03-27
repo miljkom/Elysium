@@ -48,6 +48,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 4041579807
+    locked: 0
+  - name: Platforms
+    uniqueID: 261839083
+    locked: 0
   - name: Character
     uniqueID: 3086398735
+    locked: 0
+  - name: Foreground
+    uniqueID: 1803453427
+    locked: 0
+  - name: HUD
+    uniqueID: 455380297
     locked: 0
