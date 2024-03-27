@@ -44,7 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ea14e1868d4c8e93f9f54caf6ed2eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformPrefab: {fileID: 3028690488938659876, guid: 15719d737c73bb247820eb08822b693d, type: 3}
+  platformPrefab:
+  - {fileID: 3028690488938659876, guid: 4e0accbe71521a445baff4c989d479eb, type: 3}
+  - {fileID: 3028690488938659876, guid: 328377b75a3e2a849a0233637a30d819, type: 3}
+  - {fileID: 3028690488938659876, guid: 29e8077ad7e411a4b9bc47d9fcc04925, type: 3}
+  - {fileID: 3028690488938659876, guid: 3c4752e2d1ad4424291a81aa25ca1624, type: 3}
   bigPlatformPrefab: {fileID: 3028690488938659876, guid: 9fb5f26cdede9f743a13694624324496, type: 3}
   playerTransform: {fileID: 0}
   container: {fileID: 0}

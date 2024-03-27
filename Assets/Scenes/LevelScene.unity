@@ -446,8 +446,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -253387489
-  m_SortingLayer: 1
+  m_SortingLayerID: 261839083
+  m_SortingLayer: 2
   m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: 976c39a5e1e66fa448584f2e2ab0e709, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5940,8 +5940,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -253387489
-  m_SortingLayer: 1
+  m_SortingLayerID: 261839083
+  m_SortingLayer: 2
   m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: 8472be7128300ac46a60a240e52f9532, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -22107,6 +22107,10 @@ PrefabInstance:
       propertyPath: bottomBounds
       value: 
       objectReference: {fileID: 1348031993}
+    - target: {fileID: 1614010288853347944, guid: 5faef765d8e98be4e80594c4e6252b06, type: 3}
+      propertyPath: platformConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: ea27216884e50dd4cb941425a6e8c66d, type: 2}
     - target: {fileID: 1614010288853347944, guid: 5faef765d8e98be4e80594c4e6252b06, type: 3}
       propertyPath: playerTransform
       value: 

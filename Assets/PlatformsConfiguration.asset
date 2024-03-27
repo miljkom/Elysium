@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f6bc5cbf352e341a2e0a5b6d0ea479, type: 3}
+  m_Name: PlatformsConfiguration
+  m_EditorClassIdentifier: 
+  BasicPlatforms:
+  - Prefab: {fileID: -2354649631110096536, guid: 4e0accbe71521a445baff4c989d479eb, type: 3}
+    SpawnPositionRange: 4.25
+    SpawnProbability: 10
+    _weight: 10
+  - Prefab: {fileID: -4163843820460457435, guid: 328377b75a3e2a849a0233637a30d819, type: 3}
+    SpawnPositionRange: 3.6
+    SpawnProbability: 20
+    _weight: 30
+  - Prefab: {fileID: -6502797104481730802, guid: 29e8077ad7e411a4b9bc47d9fcc04925, type: 3}
+    SpawnPositionRange: 3.25
+    SpawnProbability: 30
+    _weight: 109.5999984741211
+  - Prefab: {fileID: 1816727955308820942, guid: 3c4752e2d1ad4424291a81aa25ca1624, type: 3}
+    SpawnPositionRange: 3
+    SpawnProbability: 40
+    _weight: 149.5999984741211
+  ZonePlatform: {fileID: 3028690488938659876, guid: 6c7797f9382edac4e9214b1a664ec4d7, type: 3}
