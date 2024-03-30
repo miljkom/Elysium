@@ -11,19 +11,17 @@ namespace Movement
         private const int MovementNeededToMakeCombo = 20;
         
         private readonly float _diagonalSpeedWithoutCombo;
-        private readonly float _upMovementSpeed;
-        private readonly float _straightMovementSpeed;
+        private readonly AnimationController _animationController;
         
         private List<float> _timesWhenMovementHappened = new();
         private DateTime _possibleComboTill;
 
         public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, 
-            AnimationController animationController, float diagonalSpeedWithoutCombo, float upMovementSpeed, float straightMovementSpeed)
-            : base(playerMovement, playerTransform, rigidbody2D, animationController)
+            float diagonalSpeedWithoutCombo, AnimationController animationController)
+            : base(playerMovement, playerTransform, rigidbody2D)
         {
             _diagonalSpeedWithoutCombo = diagonalSpeedWithoutCombo;
-            _upMovementSpeed = upMovementSpeed;
-            _straightMovementSpeed = straightMovementSpeed;
+            _animationController = animationController;
         }
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
@@ -32,7 +30,7 @@ namespace Movement
             _timesWhenMovementHappened.Add(Time.time + SecondsTillPossibleCombo);
             Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
             PlayerTransform.position += Vector3.right * (deltaXMovement * movementSpeed * Time.deltaTime);
-            AnimationController.RotatePlayer(direction);
+            PlayerMovement.RotatePlayer(direction);
         }
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
@@ -55,7 +53,7 @@ namespace Movement
                 Rigidbody2D.AddForce(jumpAngle.normalized * _diagonalSpeedWithoutCombo);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
-            AnimationController.RotatePlayer(direction);
+            PlayerMovement.RotatePlayer(direction);
         }
 
         private void ContinueCombo(Vector2 jumpAngle, float movementSpeed)
@@ -82,7 +80,7 @@ namespace Movement
             }
             PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             Debug.LogError("combo from standing");
-            AnimationController.RotatePlayer(jumpAngle.x > 0);
+            PlayerMovement.RotatePlayer(jumpAngle.x > 0);
         }
 
         private bool ShouldMakeFirstCombo()
@@ -109,16 +107,8 @@ namespace Movement
         public override void EnterState()
         {
             _timesWhenMovementHappened = new List<float>();
+            _animationController.PlayLandAnimation();
             PlayerMovement.PlayerLanded();
-        }
-        
-        public override void OnTap(bool canContinueCombo)
-        {
-            // if (canContinueCombo)
-            // {
-            //     ContinueCombo(jumpAngle, comboMovementSpeed);
-            // }
-            UpMovement(_upMovementSpeed);
         }
 
         private void FirstComboJump(float movementSpeed, float direction)

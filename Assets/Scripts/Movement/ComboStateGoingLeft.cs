@@ -8,8 +8,8 @@ namespace Movement
         private readonly float _comboMovementSpeed;
         private bool _forceRemoved;
         
-        public ComboStateGoingLeft(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController, float comboMovementSpeed) 
-            : base(playerMovement, playerTransform, rigidbody2D, animationController)
+        public ComboStateGoingLeft(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, float comboMovementSpeed) 
+            : base(playerMovement, playerTransform, rigidbody2D)
         {
             _comboMovementSpeed = comboMovementSpeed;
         }
@@ -32,7 +32,7 @@ namespace Movement
                     Debug.LogError("Restart force");
                 }
                 Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
-                AnimationController.RotatePlayer(direction);
+                PlayerMovement.RotatePlayer(direction);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Movement
                 PlayerMovement.IncreaseComboCounter();
                 Rigidbody2D.AddForce(comboJumpAngle * comboMovementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
-                AnimationController.RotatePlayer(direction);
+                PlayerMovement.RotatePlayer(direction);
                 PlayerMovement.SetPreviousJumpAngle(jumpAngle);
             }
         }
@@ -58,15 +58,11 @@ namespace Movement
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
             Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
-            AnimationController.RotatePlayer(jumpAngle.x > 0);
+            PlayerMovement.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade();
         }
 
         public override void UpMovement(float movementSpeed)
-        {
-        }
-
-        public override void OnTap(bool canContinueCombo)
         {
         }
         

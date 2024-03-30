@@ -6,14 +6,12 @@ public abstract class State
     protected readonly PlayerMovement PlayerMovement;
     protected readonly Transform PlayerTransform;
     protected readonly Rigidbody2D Rigidbody2D;
-    protected readonly AnimationController AnimationController;
 
-    protected State(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, AnimationController animationController)
+    protected State(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D)
     {
         PlayerMovement = playerMovement;
         PlayerTransform = playerTransform;
         Rigidbody2D = rigidbody2D;
-        AnimationController = animationController;
     }
     
     public abstract void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo);
@@ -22,5 +20,4 @@ public abstract class State
     public abstract void UpMovement(float movementSpeed);
     public abstract void EnterState();
     public abstract void ExitState();
-    public abstract void OnTap(bool canContinueCombo);
 }

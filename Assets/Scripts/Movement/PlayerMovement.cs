@@ -45,12 +45,12 @@ namespace Movement
             StandingState = 0,
             UpMovementState = 1,
             FallingDownState = 2,
-            OnWallState = 3,
-            ComboStateGoingLeft = 4,
-            ComboStateGoingRight = 5,
+            ComboStateGoingLeft = 3,
+            ComboStateGoingRight = 4,
         }
         
         public bool IsInCombo { get; private set; }
+        public FacingDirection FacingDirection { get; private set; }
         
         private readonly Dictionary<States, State> _concreteState = new();
         private readonly Dictionary<int, float> _bounceAngleForCombo = new();
@@ -59,7 +59,6 @@ namespace Movement
         private Transform _playerTransform;
         private Rigidbody2D _rigidbody2D;
         private AnimationController _animationController;
-        private Action _onComboHappened;
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
         private float _diagonalMovementSpeed;
@@ -108,7 +107,18 @@ namespace Movement
         
         public void OnTapMovement()
         {
-            _state.OnTap(IsInCombo);
+            if (_state is not StandingState) return;
+            
+            var previousJumpDirection = _previousJumpAngle.x > 0 ? FacingDirection.Right : FacingDirection.Left;
+            if (IsInCombo && FacingDirection != previousJumpDirection)
+            {
+                _state.UpAndHorizontalMovement(CalculateBounceAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
+                    FacingDirection == FacingDirection.Right, IsInCombo);
+            }
+            else
+            {
+                _state.UpMovement(_upMovementSpeed);
+            }
         }
         
         public void IncreaseComboCounter()
@@ -161,16 +171,25 @@ namespace Movement
             _comboCounterIndex = 0;
             IsInCombo = false;
         }
-        
+
+        public void RotatePlayer(bool facingDirection)
+        {
+            FacingDirection = facingDirection ? FacingDirection.Right : FacingDirection.Left;
+            _animationController.RotatePlayer(facingDirection);
+        }
+
         private void CreateStates()
         {
             _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D,
-                _animationController, _diagonalMovementSpeed, _upMovementSpeed, _straightMovementSpeed));
-            _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
-            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+                 _diagonalMovementSpeed, _animationController));
+            _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, 
+                _animationController));
+            _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform,
+                _rigidbody2D, _animationController));
+            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this,
+                _playerTransform, _rigidbody2D, _diagonalMovementSpeed));
+            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this,
+                _playerTransform, _rigidbody2D, _diagonalMovementSpeed));
         }
 
         private void SetPlayerMovementData(PlayerMovementData playerMovementData)
@@ -186,7 +205,6 @@ namespace Movement
             _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
             _maxComboCounter = playerMovementData.MaxComboCounter;
             _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
-            _onComboHappened = playerMovementData.ResetCombo;
         }
         
         private float GetDiagonalComboSpeed()
@@ -216,5 +234,11 @@ namespace Movement
         {
             return _bounceSpeed * _comboSpeedMultiplier[_comboCounterIndex];
         }
+    }
+    
+    public enum FacingDirection
+    {
+        Left = -1,
+        Right = 1
     }
 }
