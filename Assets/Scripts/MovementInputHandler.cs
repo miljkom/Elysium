@@ -77,8 +77,8 @@ public class MovementInputHandler : MonoBehaviour
     
     private void OnInputOver(Touch touch)
     {
-        var canExecuteOnTapCommand = touch.phase != TouchPhase.Ended && _timeSinceInputStarted > timeUnderInputIsTap &&
-                                     _movementHappenedAfterNewInput;
+        var canExecuteOnTapCommand = touch.phase == TouchPhase.Ended && _timeSinceInputStarted < timeUnderInputIsTap &&
+                                     !_movementHappenedAfterNewInput;
         if(canExecuteOnTapCommand)
             player.OnTap();
     }

@@ -10,15 +10,20 @@ namespace Movement
         private const float SecondsTillPossibleCombo = 2;
         private const int MovementNeededToMakeCombo = 20;
         
+        private readonly float _diagonalSpeedWithoutCombo;
+        private readonly float _upMovementSpeed;
+        private readonly float _straightMovementSpeed;
+        
         private List<float> _timesWhenMovementHappened = new();
         private DateTime _possibleComboTill;
-        private float _diagonalSpeedWithoutCombo;
 
         public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, 
-            AnimationController animationController, float diagonalSpeedWithoutCombo)
+            AnimationController animationController, float diagonalSpeedWithoutCombo, float upMovementSpeed, float straightMovementSpeed)
             : base(playerMovement, playerTransform, rigidbody2D, animationController)
         {
             _diagonalSpeedWithoutCombo = diagonalSpeedWithoutCombo;
+            _upMovementSpeed = upMovementSpeed;
+            _straightMovementSpeed = straightMovementSpeed;
         }
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
@@ -105,6 +110,15 @@ namespace Movement
         {
             _timesWhenMovementHappened = new List<float>();
             PlayerMovement.PlayerLanded();
+        }
+        
+        public override void OnTap(bool canContinueCombo)
+        {
+            // if (canContinueCombo)
+            // {
+            //     ContinueCombo(jumpAngle, comboMovementSpeed);
+            // }
+            UpMovement(_upMovementSpeed);
         }
 
         private void FirstComboJump(float movementSpeed, float direction)

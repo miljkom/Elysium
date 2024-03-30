@@ -22,6 +22,10 @@ namespace Movement
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
         }
+        
+        public override void OnTap(bool canContinueCombo)
+        {
+        }
 
         public override void UpMovement(float movementSpeed)
         {

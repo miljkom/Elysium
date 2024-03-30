@@ -35,6 +35,10 @@ namespace Movement
         {
         }
 
+        public override void OnTap(bool canContinueCombo)
+        {
+        }
+        
         public override void EnterState()
         {
             AnimationController.PlayFallAnimation();

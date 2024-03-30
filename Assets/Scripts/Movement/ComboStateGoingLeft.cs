@@ -64,9 +64,12 @@ namespace Movement
 
         public override void UpMovement(float movementSpeed)
         {
-            
         }
 
+        public override void OnTap(bool canContinueCombo)
+        {
+        }
+        
         public override void EnterState()
         {
             _forceRemoved = false;

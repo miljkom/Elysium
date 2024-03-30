@@ -102,12 +102,13 @@ namespace Movement
         
         public void UpMovement()
         {
+            //todo Uros uzeti upMovement kao field kod svih?
             _state.UpMovement(_upMovementSpeed);
         }
         
         public void OnTapMovement()
         {
-            
+            _state.OnTap(IsInCombo);
         }
         
         public void IncreaseComboCounter()
@@ -163,7 +164,8 @@ namespace Movement
         
         private void CreateStates()
         {
-            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D,
+                _animationController, _diagonalMovementSpeed, _upMovementSpeed, _straightMovementSpeed));
             _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
             _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
             _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
