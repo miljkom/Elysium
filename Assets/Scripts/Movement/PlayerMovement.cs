@@ -80,33 +80,6 @@ namespace Movement
             SetupBounceAngleForCombo();
         }
 
-        private void CreateStates()
-        {
-            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
-            _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
-            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
-            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
-        }
-
-        private void SetPlayerMovementData(PlayerMovementData playerMovementData)
-        {
-            _playerTransform = playerMovementData.PlayerTransform;
-            _rigidbody2D = playerMovementData.Rigidbody2D;
-            _animationController = playerMovementData.AnimationController;
-            _upMovementSpeed = playerMovementData.UpMovementSpeed;
-            _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
-            _bounceSpeed = playerMovementData.BounceSpeed;
-            _minBounceAngle = playerMovementData.MinBounceAngle;
-            _maxBounceAngle = playerMovementData.MaxBounceAngle;
-            _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
-            _maxComboCounter = playerMovementData.MaxComboCounter;
-            _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
-            _onComboHappened = playerMovementData.ResetCombo;
-        }
-
-
         public void ChangeState(States state)
         {
             if (_state == _concreteState[state]) return;
@@ -132,7 +105,11 @@ namespace Movement
             _state.UpMovement(_upMovementSpeed);
         }
         
-
+        public void OnTapMovement()
+        {
+            
+        }
+        
         public void IncreaseComboCounter()
         {
             if(_comboCounterIndex < _maxComboCounter - 1)
@@ -182,6 +159,32 @@ namespace Movement
             Debug.LogError("Gotov combo");
             _comboCounterIndex = 0;
             IsInCombo = false;
+        }
+        
+        private void CreateStates()
+        {
+            _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+            _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.OnWallState, new OnWallState(this, _playerTransform, _rigidbody2D, _animationController));
+            _concreteState.Add(States.ComboStateGoingRight, new ComboStateGoingRight(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+            _concreteState.Add(States.ComboStateGoingLeft, new ComboStateGoingLeft(this, _playerTransform, _rigidbody2D, _animationController, _diagonalMovementSpeed));
+        }
+
+        private void SetPlayerMovementData(PlayerMovementData playerMovementData)
+        {
+            _playerTransform = playerMovementData.PlayerTransform;
+            _rigidbody2D = playerMovementData.Rigidbody2D;
+            _animationController = playerMovementData.AnimationController;
+            _upMovementSpeed = playerMovementData.UpMovementSpeed;
+            _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
+            _bounceSpeed = playerMovementData.BounceSpeed;
+            _minBounceAngle = playerMovementData.MinBounceAngle;
+            _maxBounceAngle = playerMovementData.MaxBounceAngle;
+            _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
+            _maxComboCounter = playerMovementData.MaxComboCounter;
+            _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
+            _onComboHappened = playerMovementData.ResetCombo;
         }
         
         private float GetDiagonalComboSpeed()

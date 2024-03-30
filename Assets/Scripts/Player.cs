@@ -43,7 +43,46 @@ public class Player : MonoBehaviour
         ValidateComboSpeedMultipliers();
         InitializePlayerMovement();
     }
+    
+    private void Update()
+    {
+        Bounce();
+        CheckIfCanMakeCombo();
+        CheckIfPlayerIsFalling();
+    }
 
+    public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
+    {
+        _jumpAngle = jumpAngle.normalized;
+        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction);
+    }
+    
+    public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
+    {
+        _playerMovement.StraightMovement(deltaInputXPosition, direction);
+        StayInsideWalls();
+    }
+
+    public void OnSwipeUp()
+    {
+        _playerMovement.UpMovement();
+    }
+    
+    public void SetInCollisionWithWall()
+    {
+        _inCollisionWithWall = true;
+    }
+    
+    public void NotInCollisionWithWall()
+    {
+        _inCollisionWithWall = false;
+    }
+
+    public void OnTap()
+    {
+        _playerMovement.OnTapMovement();
+    }
+    
     private void ValidateComboSpeedMultipliers()
     {
         CheckCountOfComboSpeedMultipliers();
@@ -73,13 +112,6 @@ public class Player : MonoBehaviour
             upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
             minBounceAngle, maxBounceAngle, animationController);
         _playerMovement = new PlayerMovement(playerMovementData);
-    }
-
-    private void Update()
-    {
-        Bounce();
-        CheckIfCanMakeCombo();
-        CheckIfPlayerIsFalling();
     }
     
     private void Bounce()
@@ -123,23 +155,6 @@ public class Player : MonoBehaviour
             GameManager.Instance.FailedLevel();
         }
     }
-
-    public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
-    {
-        _jumpAngle = jumpAngle.normalized;
-        _playerMovement.UpAndHorizontalMovement(_jumpAngle, direction);
-    }
-    
-    public void StraightHorizontalMovement(float deltaInputXPosition, bool direction)
-    {
-        _playerMovement.StraightMovement(deltaInputXPosition, direction);
-        StayInsideWalls();
-    }
-
-    public void OnSwipeUp()
-    {
-        _playerMovement.UpMovement();
-    }
     
     private void StayInsideWalls()
     {
@@ -182,16 +197,6 @@ public class Player : MonoBehaviour
     {
         Debug.LogError("Started combo");
         _timeAfterLandingFromCombo = 0;
-    }
-
-    public void SetInCollisionWithWall()
-    {
-        _inCollisionWithWall = true;
-    }
-    
-    public void NotInCollisionWithWall()
-    {
-        _inCollisionWithWall = false;
     }
 }
 

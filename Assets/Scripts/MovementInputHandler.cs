@@ -5,11 +5,14 @@ public class MovementInputHandler : MonoBehaviour
 {
     [SerializeField] private float verticalSwipeThreshold = 0.5f;
     [SerializeField] private float horizontalSwipeThreshold = 0.5f;
+    [SerializeField] private float timeUnderInputIsTap;
     [SerializeField] private Player player;
     [SerializeField] private GameObject boundary;
     
     private Vector2 _fingerCurrentPosition;
     private Vector2 _fingerStartingPosition;
+    private float _timeSinceInputStarted;
+    private bool _movementHappenedAfterNewInput;
     private Camera _cameraMain;
 
     private void Awake()
@@ -25,9 +28,10 @@ public class MovementInputHandler : MonoBehaviour
         {
             FirstTouch(touch);
             TouchWhileFingerIsMoving(touch);
+            OnInputOver(touch);
         }
         //delete magic number
-        boundary.SetActive(!(transform.position.y >= 17f));
+        boundary.SetActive(transform.position.y < 17f);
     }
 
     private void FirstTouch(Touch touch)
@@ -36,6 +40,8 @@ public class MovementInputHandler : MonoBehaviour
         
         _fingerStartingPosition = _cameraMain.ScreenToWorldPoint(touch.position);
         _fingerCurrentPosition = _cameraMain.ScreenToWorldPoint(touch.position);
+        _timeSinceInputStarted = 0;
+        _movementHappenedAfterNewInput = false;
     }
 
     private void TouchWhileFingerIsMoving(Touch touch)
@@ -53,17 +59,28 @@ public class MovementInputHandler : MonoBehaviour
         var horizontalFingerMovement = CheckHorizontalFingerMove();
         if (upFingerMovement && horizontalFingerMovement)
         {
-            player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(), CalculateUpFingerMovement()), CheckDirectionOnXAxis());
+            player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(),
+                CalculateUpFingerMovement()), CheckDirectionOnXAxis());
+            _movementHappenedAfterNewInput = true;
         }
         else if (horizontalFingerMovement)
         {
             player.StraightHorizontalMovement(CalculateHorizontalFingerMovement(), CheckDirectionOnXAxis());
+            _movementHappenedAfterNewInput = true;
         }
         else if (upFingerMovement)
         {
             player.OnSwipeUp();
+            _movementHappenedAfterNewInput = true;
         }
-        
+    }
+    
+    private void OnInputOver(Touch touch)
+    {
+        var canExecuteOnTapCommand = touch.phase != TouchPhase.Ended && _timeSinceInputStarted > timeUnderInputIsTap &&
+                                     _movementHappenedAfterNewInput;
+        if(canExecuteOnTapCommand)
+            player.OnTap();
     }
   
     private float CalculateUpFingerMovement() => _fingerCurrentPosition.y - _fingerStartingPosition.y;
