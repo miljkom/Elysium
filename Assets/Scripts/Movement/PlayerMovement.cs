@@ -13,18 +13,20 @@ namespace Movement
             public readonly float UpMovementSpeed;
             public readonly float StraightMovementSpeed;
             public readonly float DiagonalMovementSpeed;
-            public readonly int MaxComboCounter;
+            public readonly float MinJumpingAngle;
+            public readonly float MaxJumpingAngle;
             public readonly float[] ComboSpeedMultipliers;
             public readonly float BounceSpeed;
             public readonly float MinBounceAngle;
             public readonly float MaxBounceAngle;
+            public readonly float[] BounceSpeedMultipliers;
             public readonly int MovementNeededToMakeFirstCombo;
             public readonly AnimationController AnimationController;
             public readonly Func<bool> IsFallingDown;
 
             public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
-                float straightMovementSpeed, float diagonalMovementSpeed, int maxComboCounter,
-                float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, 
+                float straightMovementSpeed, float diagonalMovementSpeed, float minJumpingAngle, float maxJumpingAngle,
+                float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, float[] bounceSpeedMultipliers,
                 int movementNeededToMakeFirstCombo, AnimationController animationController, Func<bool> isFallingDown)
             {
                 PlayerTransform = playerTransform;
@@ -32,11 +34,13 @@ namespace Movement
                 UpMovementSpeed = upMovementSpeed;
                 StraightMovementSpeed = straightMovementSpeed;
                 DiagonalMovementSpeed = diagonalMovementSpeed;
-                MaxComboCounter = maxComboCounter;
+                MinJumpingAngle = minJumpingAngle;
+                MaxJumpingAngle = maxJumpingAngle;
                 ComboSpeedMultipliers = comboSpeedMultipliers;
                 BounceSpeed = bounceSpeed;
                 MinBounceAngle = minBounceAngle;
                 MaxBounceAngle = maxBounceAngle;
+                BounceSpeedMultipliers = bounceSpeedMultipliers;
                 MovementNeededToMakeFirstCombo = movementNeededToMakeFirstCombo;
                 AnimationController = animationController;
                 IsFallingDown = isFallingDown;
@@ -56,7 +60,8 @@ namespace Movement
         public FacingDirection FacingDirection { get; private set; }
         
         private readonly Dictionary<States, State> _concreteState = new();
-        private readonly Dictionary<int, float> _bounceAngleForCombo = new();
+        private readonly Dictionary<int, float> _jumpingAngles = new();
+        private readonly Dictionary<int, float> _bounceAngles = new();
         
         private State _state;
         private Transform _playerTransform;
@@ -65,13 +70,16 @@ namespace Movement
         private float _upMovementSpeed;
         private float _straightMovementSpeed;
         private float _diagonalMovementSpeed;
+        private float _minJumpingAngle;
+        private float _maxJumpingAngle;
         private float[] _comboSpeedMultiplier;
-        private int _maxComboCounter;
         private float _bounceSpeed;
         private float _minBounceAngle;
         private float _maxBounceAngle;
+        private float[] _bounceSpeedMultiplier;
         private bool _canMakeBounce;
         private int _comboCounterIndex;
+        private int _bounceCounterIndex;
         private int _movementNeededToMakeFirstCombo;
         private Vector2 _previousJumpAngle;
         private Func<bool> _isFallingDown;
@@ -81,7 +89,8 @@ namespace Movement
             SetPlayerMovementData(playerMovementData);
             CreateStates();
             ChangeState(States.StandingState);
-            SetupBounceAngleForCombo();
+            SetupJumpingAngle();
+            SetupBounceAngle();
         }
 
         public void ChangeState(States state)
@@ -97,7 +106,7 @@ namespace Movement
         public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
         {
             var directionToBounce = direction ? 1 : -1;
-            _state.UpAndHorizontalMovement(CalculateBounceAngle(directionToBounce), GetDiagonalComboSpeed(), direction, IsInCombo);
+            _state.UpAndHorizontalMovement(CalculateJumpingAngle(directionToBounce), GetDiagonalComboSpeed(), direction, IsInCombo);
         }
 
         public void StraightMovement(float deltaXMovement, bool direction)
@@ -118,7 +127,7 @@ namespace Movement
             var previousJumpDirection = _previousJumpAngle.x > 0 ? FacingDirection.Right : FacingDirection.Left;
             if (IsInCombo && FacingDirection != previousJumpDirection)
             {
-                _state.UpAndHorizontalMovement(CalculateBounceAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
+                _state.UpAndHorizontalMovement(CalculateJumpingAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
                     FacingDirection == FacingDirection.Right, IsInCombo);
             }
             else
@@ -129,8 +138,10 @@ namespace Movement
         
         public void IncreaseComboCounter()
         {
-            if(_comboCounterIndex < _maxComboCounter - 1)
+            if(_comboCounterIndex < _comboSpeedMultiplier.Length - 1)
                 _comboCounterIndex++;
+            if (_bounceCounterIndex < _bounceSpeedMultiplier.Length - 1)
+                _bounceCounterIndex++;
         }
 
         public void Bounce()
@@ -175,6 +186,7 @@ namespace Movement
         {
             Debug.LogError("Gotov combo");
             _comboCounterIndex = 0;
+            _bounceCounterIndex = 0;
             IsInCombo = false;
         }
 
@@ -206,10 +218,12 @@ namespace Movement
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _bounceSpeed = playerMovementData.BounceSpeed;
+            _minJumpingAngle = playerMovementData.MinJumpingAngle;
+            _maxJumpingAngle = playerMovementData.MaxJumpingAngle;
             _minBounceAngle = playerMovementData.MinBounceAngle;
             _maxBounceAngle = playerMovementData.MaxBounceAngle;
+            _bounceSpeedMultiplier = playerMovementData.BounceSpeedMultipliers;
             _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
-            _maxComboCounter = playerMovementData.MaxComboCounter;
             _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
             _movementNeededToMakeFirstCombo = playerMovementData.MovementNeededToMakeFirstCombo;
             _isFallingDown = playerMovementData.IsFallingDown;
@@ -220,19 +234,37 @@ namespace Movement
             return _diagonalMovementSpeed * _comboSpeedMultiplier[_comboCounterIndex];
         }
         
-        private void SetupBounceAngleForCombo()
+        private void SetupJumpingAngle()
+        {
+            var angleDifference = _maxJumpingAngle - _minJumpingAngle;
+            var angleIncrementPerCombo = angleDifference / (_comboSpeedMultiplier.Length - 1);
+            for (var i = 0; i < _comboSpeedMultiplier.Length; i++)
+            {
+                _jumpingAngles.Add(i, _minJumpingAngle + angleIncrementPerCombo * i);
+            }
+        }
+        
+        private Vector2 CalculateJumpingAngle(int directionToJump)
+        {
+            var angleRadians = _jumpingAngles[_comboCounterIndex] * Math.PI / 180f;
+            var x = (float)Math.Cos(angleRadians) * directionToJump;
+            var y = (float)Math.Sin(angleRadians);
+            return new Vector2(x,y).normalized;
+        }
+        
+        private void SetupBounceAngle()
         {
             var angleDifference = _maxBounceAngle - _minBounceAngle;
-            var angleIncrementPerCombo = angleDifference / (_maxComboCounter - 1);
-            for (var i = 0; i < _maxComboCounter; i++)
+            var angleIncrementPerCombo = angleDifference / (_bounceSpeedMultiplier.Length - 1);
+            for (var i = 0; i < _bounceSpeedMultiplier.Length; i++)
             {
-                _bounceAngleForCombo.Add(i, _minBounceAngle + angleIncrementPerCombo * i);
+                _bounceAngles.Add(i, _minBounceAngle + angleIncrementPerCombo * i);
             }
         }
         
         private Vector2 CalculateBounceAngle(int directionToJump)
         {
-            var angleRadians = _bounceAngleForCombo[_comboCounterIndex] * Math.PI / 180f;
+            var angleRadians = _bounceAngles[_bounceCounterIndex] * Math.PI / 180f;
             var x = (float)Math.Cos(angleRadians) * directionToJump;
             var y = (float)Math.Sin(angleRadians);
             return new Vector2(x,y).normalized;
@@ -240,7 +272,7 @@ namespace Movement
         
         private float GetBounceSpeed()
         {
-            return _bounceSpeed * _comboSpeedMultiplier[_comboCounterIndex];
+            return _bounceSpeed * _bounceSpeedMultiplier[_bounceCounterIndex];
         }
     }
     

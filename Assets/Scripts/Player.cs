@@ -8,13 +8,15 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D rigidbody2d;
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
-    [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
+    [FormerlySerializedAs("upAndHorizontalMovementSpeed")] [SerializeField] private float diagonalMovementSpeed = 200f;
     [SerializeField] private int movementNeededToMakeFirstCombo;
     [SerializeField] private float bounceSpeed;
+    [SerializeField] private float minJumpingAngle;
+    [SerializeField] private float maxJumpingAngle;
+    [SerializeField] private float[] comboSpeedMultipliers;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
-    [SerializeField] private int maxComboCounter;
-    [SerializeField] private float[] comboSpeedMultipliers;
+    [SerializeField] private float[] bounceSpeedMultipliers;
     [SerializeField] private float timeToContinueCombo;
     [SerializeField] private Transform leftBoundaryWall;
     [SerializeField] private Transform rightBoundaryWall;
@@ -91,14 +93,8 @@ public class Player : MonoBehaviour
     
     private void ValidateComboSpeedMultipliers()
     {
-        CheckCountOfComboSpeedMultipliers();
         CheckComboSpeedMultipliersSortedAscending();
-    }
-
-    private void CheckCountOfComboSpeedMultipliers()
-    {
-        if (maxComboCounter != comboSpeedMultipliers.Length)
-            throw new Exception("Max combo counter is not same as combo speed multipliers count");
+        CheckBounceSpeedMultipliersSortedAscending();
     }
 
     private void CheckComboSpeedMultipliersSortedAscending()
@@ -111,12 +107,24 @@ public class Player : MonoBehaviour
             }
         }
     }
+    
+    private void CheckBounceSpeedMultipliersSortedAscending()
+    {
+        for (var i = 0; i < bounceSpeedMultipliers.Length - 1; i++)
+        {
+            if (bounceSpeedMultipliers[i] > bounceSpeedMultipliers[i + 1])
+            {
+                throw new Exception("Combo speed multipliers must be sorted ascending");
+            }
+        }
+    }
 
     private void InitializePlayerMovement()
     {
-        var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rigidbody2d, upSpeedMovement, straightMovementSpeed,
-            upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
-            minBounceAngle, maxBounceAngle, movementNeededToMakeFirstCombo, animationController, IsPlayerIsFalling);
+        var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rigidbody2d, upSpeedMovement,
+            straightMovementSpeed, diagonalMovementSpeed, minJumpingAngle, maxJumpingAngle, 
+            comboSpeedMultipliers, bounceSpeed, minBounceAngle, maxBounceAngle, bounceSpeedMultipliers,
+            movementNeededToMakeFirstCombo, animationController, IsPlayerIsFalling);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
     
