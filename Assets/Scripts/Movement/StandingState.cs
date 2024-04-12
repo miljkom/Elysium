@@ -8,7 +8,7 @@ namespace Movement
     public class StandingState : State
     {
         private const float SecondsTillPossibleCombo = 2;
-        private int _movementNeededToMakeCombo;
+        private readonly int _movementNeededToMakeCombo;
         
         private readonly float _diagonalSpeedWithoutCombo;
         private readonly AnimationController _animationController;
@@ -120,7 +120,7 @@ namespace Movement
             PlayerMovement.ComboStarted();
         }
         
-        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool isPlayerFallingDown)
         {
         }
         

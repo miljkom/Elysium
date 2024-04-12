@@ -20,12 +20,12 @@ namespace Movement
             public readonly float MaxBounceAngle;
             public readonly int MovementNeededToMakeFirstCombo;
             public readonly AnimationController AnimationController;
-            public readonly Action ResetCombo;
+            public readonly Func<bool> IsFallingDown;
 
             public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
                 float straightMovementSpeed, float diagonalMovementSpeed, int maxComboCounter,
                 float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, 
-                int movementNeededToMakeFirstCombo, AnimationController animationController)
+                int movementNeededToMakeFirstCombo, AnimationController animationController, Func<bool> isFallingDown)
             {
                 PlayerTransform = playerTransform;
                 Rigidbody2D = rigidbody2D;
@@ -39,6 +39,7 @@ namespace Movement
                 MaxBounceAngle = maxBounceAngle;
                 MovementNeededToMakeFirstCombo = movementNeededToMakeFirstCombo;
                 AnimationController = animationController;
+                IsFallingDown = isFallingDown;
             }
         }
     
@@ -73,6 +74,7 @@ namespace Movement
         private int _comboCounterIndex;
         private int _movementNeededToMakeFirstCombo;
         private Vector2 _previousJumpAngle;
+        private Func<bool> _isFallingDown;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
         {
@@ -131,12 +133,12 @@ namespace Movement
                 _comboCounterIndex++;
         }
 
-        public void Bounce(bool canMakeCombo)
+        public void Bounce()
         {
             if (!_canMakeBounce) return;
             
             var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
-            _state.Bounce(CalculateBounceAngle(directionToBounce), GetBounceSpeed(), canMakeCombo);
+            _state.Bounce(CalculateBounceAngle(directionToBounce), GetBounceSpeed(), _isFallingDown());
         }
 
         public void SetPreviousJumpAngle(Vector2 jumpAngle)
@@ -209,6 +211,8 @@ namespace Movement
             _diagonalMovementSpeed = playerMovementData.DiagonalMovementSpeed;
             _maxComboCounter = playerMovementData.MaxComboCounter;
             _comboSpeedMultiplier = playerMovementData.ComboSpeedMultipliers;
+            _movementNeededToMakeFirstCombo = playerMovementData.MovementNeededToMakeFirstCombo;
+            _isFallingDown = playerMovementData.IsFallingDown;
         }
         
         private float GetDiagonalComboSpeed()

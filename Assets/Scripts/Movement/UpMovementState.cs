@@ -35,7 +35,7 @@ namespace Movement
         {
         }
 
-        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool isPlayerFallingDown)
         {
             Rigidbody2D.velocity = new Vector2(0, 0);
             Rigidbody2D.AddForce(jumpAngle * movementSpeed);

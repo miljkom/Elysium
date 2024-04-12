@@ -1,10 +1,11 @@
 using System;
 using Movement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb2D;
+    [SerializeField] private Rigidbody2D rigidbody2d;
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
@@ -49,7 +50,11 @@ public class Player : MonoBehaviour
     {
         Bounce();
         CheckIfCanMakeCombo();
-        CheckIfPlayerIsFalling();
+        if (IsPlayerIsFalling())
+        {
+            EndGameIfNeeded();
+            MoveToFallingDownState();
+        }
     }
 
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
@@ -109,16 +114,16 @@ public class Player : MonoBehaviour
 
     private void InitializePlayerMovement()
     {
-        var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
+        var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rigidbody2d, upSpeedMovement, straightMovementSpeed,
             upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
-            minBounceAngle, maxBounceAngle, movementNeededToMakeFirstCombo, animationController);
+            minBounceAngle, maxBounceAngle, movementNeededToMakeFirstCombo, animationController, IsPlayerIsFalling);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
     
     private void Bounce()
     {
         if (_inCollisionWithWall)
-            _playerMovement.Bounce(false);
+            _playerMovement.Bounce();
     }
     
     private void CheckIfCanMakeCombo()
@@ -137,16 +142,12 @@ public class Player : MonoBehaviour
         _timeAfterLandingFromCombo = 0;
     }
 
-    private void CheckIfPlayerIsFalling()
+    private bool IsPlayerIsFalling()
     {
         var currentYPosition = _transform.position.y;
         var playerFalling = currentYPosition < _previousPlayerYPosition;
-        if (playerFalling && !_playerMovement.IsInCombo)
-        {
-            _playerMovement.ChangeState(PlayerMovement.States.FallingDownState);
-            EndGameIfNeeded();
-        }
         _previousPlayerYPosition = currentYPosition;
+        return playerFalling;
     }
 
     private void EndGameIfNeeded()
@@ -155,6 +156,12 @@ public class Player : MonoBehaviour
         {
             GameManager.Instance.FailedLevel();
         }
+    }
+    
+    private void MoveToFallingDownState()
+    {
+        if(!_playerMovement.IsInCombo)
+            _playerMovement.ChangeState(PlayerMovement.States.FallingDownState);
     }
     
     private void StayInsideWalls()

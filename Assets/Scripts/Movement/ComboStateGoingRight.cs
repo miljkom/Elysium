@@ -39,12 +39,25 @@ namespace Movement
             }
         }
 
-        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
+        public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool isPlayerFallingDown)
         {
-            Rigidbody2D.velocity = new Vector2(0, 0);
-            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            AddForceForBounce(jumpAngle, movementSpeed, isPlayerFallingDown);
             PlayerMovement.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade();
+        }
+
+        private void AddForceForBounce(Vector2 jumpAngle, float movementSpeed, bool isPlayerFallingDown)
+        {
+            if (isPlayerFallingDown)
+            {
+                var bounceInDirection = jumpAngle.x > 0 ? new Vector2(0.5f, 0) : new Vector2(-0.5f, 0);
+                Rigidbody2D.AddForce(bounceInDirection * movementSpeed);
+            }
+            else
+            {
+                Rigidbody2D.velocity = new Vector2(0, 0);
+                Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
+            }
         }
 
         public override void UpMovement(float movementSpeed)
