@@ -33,6 +33,10 @@ namespace Movement
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool canMakeCombo)
         {
+            Rigidbody2D.velocity = new Vector2(0, 0);
+            Rigidbody2D.AddForce(jumpAngle * movementSpeed);
+            PlayerMovement.RotatePlayer(jumpAngle.x > 0);
+            PlayerMovement.BounceMade(); 
         }
 
         public override void UpMovement(float movementSpeed)
