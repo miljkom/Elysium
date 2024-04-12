@@ -17,6 +17,7 @@ namespace Movement
             public readonly float MaxJumpingAngle;
             public readonly float[] ComboSpeedMultipliers;
             public readonly float BounceSpeed;
+            public readonly float BounceSpeedFallingDown;
             public readonly float MinBounceAngle;
             public readonly float MaxBounceAngle;
             public readonly float[] BounceSpeedMultipliers;
@@ -26,7 +27,8 @@ namespace Movement
 
             public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
                 float straightMovementSpeed, float diagonalMovementSpeed, float minJumpingAngle, float maxJumpingAngle,
-                float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, float[] bounceSpeedMultipliers,
+                float[] comboSpeedMultipliers, float bounceSpeed, float bounceSpeedFallingDown, float minBounceAngle, 
+                float maxBounceAngle, float[] bounceSpeedMultipliers,
                 int movementNeededToMakeFirstCombo, AnimationController animationController, Func<bool> isFallingDown)
             {
                 PlayerTransform = playerTransform;
@@ -38,6 +40,7 @@ namespace Movement
                 MaxJumpingAngle = maxJumpingAngle;
                 ComboSpeedMultipliers = comboSpeedMultipliers;
                 BounceSpeed = bounceSpeed;
+                BounceSpeedFallingDown = bounceSpeedFallingDown;
                 MinBounceAngle = minBounceAngle;
                 MaxBounceAngle = maxBounceAngle;
                 BounceSpeedMultipliers = bounceSpeedMultipliers;
@@ -74,6 +77,7 @@ namespace Movement
         private float _maxJumpingAngle;
         private float[] _comboSpeedMultiplier;
         private float _bounceSpeed;
+        private float _bounceSpeedFallingDown;
         private float _minBounceAngle;
         private float _maxBounceAngle;
         private float[] _bounceSpeedMultiplier;
@@ -149,7 +153,8 @@ namespace Movement
             if (!_canMakeBounce) return;
             
             var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
-            _state.Bounce(CalculateBounceAngle(directionToBounce), GetBounceSpeed(), _isFallingDown());
+            var isFallingDown = _isFallingDown();
+            _state.Bounce(CalculateBounceAngle(directionToBounce), GetBounceSpeed(isFallingDown), isFallingDown);
         }
 
         public void SetPreviousJumpAngle(Vector2 jumpAngle)
@@ -218,6 +223,7 @@ namespace Movement
             _upMovementSpeed = playerMovementData.UpMovementSpeed;
             _straightMovementSpeed = playerMovementData.StraightMovementSpeed;
             _bounceSpeed = playerMovementData.BounceSpeed;
+            _bounceSpeedFallingDown = playerMovementData.BounceSpeedFallingDown;
             _minJumpingAngle = playerMovementData.MinJumpingAngle;
             _maxJumpingAngle = playerMovementData.MaxJumpingAngle;
             _minBounceAngle = playerMovementData.MinBounceAngle;
@@ -270,9 +276,10 @@ namespace Movement
             return new Vector2(x,y).normalized;
         }
         
-        private float GetBounceSpeed()
+        private float GetBounceSpeed(bool isFallingDown)
         {
-            return _bounceSpeed * _bounceSpeedMultiplier[_bounceCounterIndex];
+            var bounceSpeed = isFallingDown ? _bounceSpeedFallingDown : _bounceSpeed;
+            return bounceSpeed * _bounceSpeedMultiplier[_bounceCounterIndex];
         }
     }
     

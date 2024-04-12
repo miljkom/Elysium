@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     [FormerlySerializedAs("upAndHorizontalMovementSpeed")] [SerializeField] private float diagonalMovementSpeed = 200f;
     [SerializeField] private int movementNeededToMakeFirstCombo;
     [SerializeField] private float bounceSpeed;
+    [SerializeField] private float bounceSpeedFallingDown;
     [SerializeField] private float minJumpingAngle;
     [SerializeField] private float maxJumpingAngle;
     [SerializeField] private float[] comboSpeedMultipliers;
@@ -123,7 +124,7 @@ public class Player : MonoBehaviour
     {
         var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rigidbody2d, upSpeedMovement,
             straightMovementSpeed, diagonalMovementSpeed, minJumpingAngle, maxJumpingAngle, 
-            comboSpeedMultipliers, bounceSpeed, minBounceAngle, maxBounceAngle, bounceSpeedMultipliers,
+            comboSpeedMultipliers, bounceSpeed, bounceSpeedFallingDown, minBounceAngle, maxBounceAngle, bounceSpeedMultipliers,
             movementNeededToMakeFirstCombo, animationController, IsPlayerIsFalling);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
