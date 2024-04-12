@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float upSpeedMovement = 1f;
     [SerializeField] private float straightMovementSpeed = 20f;
     [SerializeField] private float upAndHorizontalMovementSpeed = 200f;
+    [SerializeField] private int movementNeededToMakeFirstCombo;
     [SerializeField] private float bounceSpeed;
     [SerializeField] private float minBounceAngle;
     [SerializeField] private float maxBounceAngle;
@@ -110,7 +111,7 @@ public class Player : MonoBehaviour
     {
         var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rb2D, upSpeedMovement, straightMovementSpeed,
             upAndHorizontalMovementSpeed, maxComboCounter, comboSpeedMultipliers, bounceSpeed, 
-            minBounceAngle, maxBounceAngle, animationController);
+            minBounceAngle, maxBounceAngle, movementNeededToMakeFirstCombo, animationController);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
     

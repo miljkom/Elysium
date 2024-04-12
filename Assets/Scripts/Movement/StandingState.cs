@@ -8,7 +8,7 @@ namespace Movement
     public class StandingState : State
     {
         private const float SecondsTillPossibleCombo = 2;
-        private const int MovementNeededToMakeCombo = 20;
+        private int _movementNeededToMakeCombo;
         
         private readonly float _diagonalSpeedWithoutCombo;
         private readonly AnimationController _animationController;
@@ -17,11 +17,12 @@ namespace Movement
         private DateTime _possibleComboTill;
 
         public StandingState(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, 
-            float diagonalSpeedWithoutCombo, AnimationController animationController)
+            float diagonalSpeedWithoutCombo, AnimationController animationController, int movementNeededToMakeCombo)
             : base(playerMovement, playerTransform, rigidbody2D)
         {
             _diagonalSpeedWithoutCombo = diagonalSpeedWithoutCombo;
             _animationController = animationController;
+            _movementNeededToMakeCombo = movementNeededToMakeCombo;
         }
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
@@ -94,7 +95,7 @@ namespace Movement
                 ShouldMakeFirstCombo();
             }
 
-            return _timesWhenMovementHappened.Count >= MovementNeededToMakeCombo;
+            return _timesWhenMovementHappened.Count >= _movementNeededToMakeCombo;
         }
 
         public override void UpMovement(float movementSpeed)

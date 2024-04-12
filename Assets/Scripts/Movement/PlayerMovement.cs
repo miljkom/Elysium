@@ -18,13 +18,14 @@ namespace Movement
             public readonly float BounceSpeed;
             public readonly float MinBounceAngle;
             public readonly float MaxBounceAngle;
+            public readonly int MovementNeededToMakeFirstCombo;
             public readonly AnimationController AnimationController;
             public readonly Action ResetCombo;
 
             public PlayerMovementData(Transform playerTransform, Rigidbody2D rigidbody2D, float upMovementSpeed,
                 float straightMovementSpeed, float diagonalMovementSpeed, int maxComboCounter,
                 float[] comboSpeedMultipliers, float bounceSpeed, float minBounceAngle, float maxBounceAngle, 
-                AnimationController animationController)
+                int movementNeededToMakeFirstCombo, AnimationController animationController)
             {
                 PlayerTransform = playerTransform;
                 Rigidbody2D = rigidbody2D;
@@ -36,6 +37,7 @@ namespace Movement
                 BounceSpeed = bounceSpeed;
                 MinBounceAngle = minBounceAngle;
                 MaxBounceAngle = maxBounceAngle;
+                MovementNeededToMakeFirstCombo = movementNeededToMakeFirstCombo;
                 AnimationController = animationController;
             }
         }
@@ -69,6 +71,7 @@ namespace Movement
         private float _maxBounceAngle;
         private bool _canMakeBounce;
         private int _comboCounterIndex;
+        private int _movementNeededToMakeFirstCombo;
         private Vector2 _previousJumpAngle;
 
         public PlayerMovement(PlayerMovementData playerMovementData)
@@ -182,7 +185,7 @@ namespace Movement
         private void CreateStates()
         {
             _concreteState.Add(States.StandingState, new StandingState(this, _playerTransform, _rigidbody2D,
-                 _diagonalMovementSpeed, _animationController));
+                 _diagonalMovementSpeed, _animationController, _movementNeededToMakeFirstCombo));
             _concreteState.Add(States.UpMovementState, new UpMovementState(this, _playerTransform, _rigidbody2D, 
                 _animationController));
             _concreteState.Add(States.FallingDownState, new FallingDownState(this, _playerTransform,
