@@ -16,24 +16,8 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            var inputToGoLeft = deltaXMovement < 0;
-            var playerIsOnRightSide = PlayerTransform.position.x > 0;
-            if (inputToGoLeft && canMakeCombo && playerIsOnRightSide)
-            {
-                UpAndHorizontalMovement(new Vector2(-1,2), _comboMovementSpeed, direction, canMakeCombo);
-            }
-            else
-            {
-                // if (!_forceRemoved && inputToGoLeft)
-                // {
-                //     _forceRemoved = true;
-                //     Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
-                //     Debug.LogError("Restart force");
-                // }
-                    
-                Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
-                PlayerMovement.RotatePlayer(direction);
-            }     
+            Rigidbody2D.AddForce(Vector3.right * (deltaXMovement * movementSpeed));
+            PlayerMovement.RotatePlayer(direction);
         }
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
