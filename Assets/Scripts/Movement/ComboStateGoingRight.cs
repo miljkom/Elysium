@@ -24,12 +24,12 @@ namespace Movement
             }
             else
             {
-                if (!_forceRemoved && inputToGoLeft)
-                {
-                    _forceRemoved = true;
-                    Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
-                    Debug.LogError("Restart force");
-                }
+                // if (!_forceRemoved && inputToGoLeft)
+                // {
+                //     _forceRemoved = true;
+                //     Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+                //     Debug.LogError("Restart force");
+                // }
                     
                 Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
                 PlayerMovement.RotatePlayer(direction);
