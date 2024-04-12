@@ -41,7 +41,7 @@ namespace Movement
             }
             else if (ShouldMakeFirstCombo())
             {
-                FirstComboJump(comboMovementSpeed, jumpAngle.x);
+                FirstComboJump(comboMovementSpeed, jumpAngle.x, jumpAngle);
                 PlayerMovement.ChangeState(Mathf.Sign(jumpAngle.x) < 0
                     ? States.ComboStateGoingLeft
                     : States.ComboStateGoingRight);
@@ -111,11 +111,11 @@ namespace Movement
             PlayerMovement.PlayerLanded();
         }
 
-        private void FirstComboJump(float movementSpeed, float direction)
+        private void FirstComboJump(float movementSpeed, float direction, Vector2 jumpingAngle)
         {
             //todo Uros zasto ovaj ugao, a ne pravi
             var jumpAngle = new Vector2(1 * Mathf.Sign(direction),2).normalized;
-            Rigidbody2D.AddForce(jumpAngle * movementSpeed);
+            Rigidbody2D.AddForce(jumpingAngle * movementSpeed);
             PlayerMovement.ComboStarted();
         }
         

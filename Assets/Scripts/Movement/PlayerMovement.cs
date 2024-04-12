@@ -91,7 +91,7 @@ namespace Movement
 
         public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
         {
-            var directionToBounce = _previousJumpAngle.x > 0 ? -1 : 1;
+            var directionToBounce = direction ? 1 : -1;
             _state.UpAndHorizontalMovement(CalculateBounceAngle(directionToBounce), GetDiagonalComboSpeed(), direction, IsInCombo);
         }
 
