@@ -7,6 +7,7 @@ namespace Movement
     {
         private readonly float _comboMovementSpeed;
         private bool _forceRemoved;
+        private bool _changedDirection;
         
         public ComboStateGoingLeft(PlayerMovement playerMovement, Transform playerTransform, Rigidbody2D rigidbody2D, float comboMovementSpeed) 
             : base(playerMovement, playerTransform, rigidbody2D)
@@ -17,6 +18,17 @@ namespace Movement
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction,
             bool canMakeCombo)
         {
+            var currentDirection = PlayerMovement.GetPreviousJumpAngle();
+            var previousDirection = Mathf.Sign(currentDirection.x);
+            if ((previousDirection < 0 && deltaXMovement > 0) || (previousDirection > 0 && deltaXMovement < 0))
+            {
+                if (!_changedDirection)
+                {
+                    Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+                    _changedDirection = true;
+                    Debug.LogError("Restart force");
+                }
+            }
             Rigidbody2D.AddForce(Vector3.right * (deltaXMovement * movementSpeed));
             PlayerMovement.RotatePlayer(direction);
         }
@@ -67,6 +79,7 @@ namespace Movement
         public override void EnterState()
         {
             _forceRemoved = false;
+            _changedDirection = false;
         }
         
         public override void ExitState()
