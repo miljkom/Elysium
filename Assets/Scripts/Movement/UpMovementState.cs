@@ -27,7 +27,8 @@ namespace Movement
                     Debug.LogError("Restart force");
                 }
             }
-            Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
+            
+            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
             PlayerMovement.RotatePlayer(direction);
         }
 
