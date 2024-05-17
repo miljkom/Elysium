@@ -202,11 +202,12 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Platform") && other.enabled)
         {
-            _playerMovement.ChangeState(PlayerMovement.States.StandingState);
-            if (_playerMovement.IsInCombo)
-            {
-                StartComboCounter();
-            }
+            OnTap();
+            // _playerMovement.ChangeState(PlayerMovement.States.StandingState);
+            // if (_playerMovement.IsInCombo)
+            // {
+            //     StartComboCounter();
+            // }
         }
     }
 

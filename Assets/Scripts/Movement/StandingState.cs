@@ -36,7 +36,7 @@ namespace Movement
 
         public override void UpAndHorizontalMovement(Vector2 jumpAngle, float comboMovementSpeed, bool direction, bool canContinueCombo)
         {
-            if (canContinueCombo)
+            if (true)
             {
                 ContinueCombo(jumpAngle, comboMovementSpeed);
             }
@@ -59,7 +59,7 @@ namespace Movement
 
         private void ContinueCombo(Vector2 jumpAngle, float movementSpeed)
         {
-            if (PlayerMovement.GetPreviousJumpAngle().x < 0 && jumpAngle.x > 0)
+            if (PlayerMovement.GetPreviousJumpAngle().x < 0)
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
@@ -67,7 +67,7 @@ namespace Movement
                 Rigidbody2D.AddForce(jumpAngle * movementSpeed);
                 PlayerMovement.ChangeState(States.ComboStateGoingRight);
             }
-            else if(PlayerMovement.GetPreviousJumpAngle().x > 0 && jumpAngle.x < 0)
+            else if(PlayerMovement.GetPreviousJumpAngle().x > 0)
             {
                 Rigidbody2D.velocity = new Vector2(0, 0);
                 PlayerMovement.IncreaseComboCounter();
@@ -110,6 +110,7 @@ namespace Movement
             _timesWhenMovementHappened = new List<float>();
             _animationController.PlayLandAnimation();
             PlayerMovement.PlayerLanded();
+            PlayerMovement.SetPreviousJumpAngle(new Vector2(1, 0));
         }
 
         private void FirstComboJump(float movementSpeed, float direction, Vector2 jumpingAngle)

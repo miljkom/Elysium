@@ -126,18 +126,29 @@ namespace Movement
         
         public void OnTapMovement()
         {
-            if (_state is not StandingState) return;
+            //if (_state is not StandingState) return;
             
             var previousJumpDirection = _previousJumpAngle.x > 0 ? FacingDirection.Right : FacingDirection.Left;
-            if (IsInCombo && FacingDirection != previousJumpDirection)
-            {
-                _state.UpAndHorizontalMovement(CalculateJumpingAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
-                    FacingDirection == FacingDirection.Right, IsInCombo);
-            }
+            if (previousJumpDirection == FacingDirection.Right)
+                ChangeState(States.ComboStateGoingRight);
             else
             {
-                _state.UpMovement(_upMovementSpeed);
+                ChangeState(States.ComboStateGoingLeft);
             }
+            ChangeState(States.StandingState);
+            _state.UpAndHorizontalMovement(CalculateJumpingAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
+                FacingDirection == FacingDirection.Right, IsInCombo);
+            
+            
+            // if (IsInCombo && FacingDirection != previousJumpDirection)
+            // {
+            //     _state.UpAndHorizontalMovement(CalculateJumpingAngle((int)FacingDirection), GetDiagonalComboSpeed(), 
+            //         FacingDirection == FacingDirection.Right, IsInCombo);
+            // }
+            // else
+            // {
+            //     _state.UpMovement(_upMovementSpeed);
+            // }
         }
         
         public void IncreaseComboCounter()
