@@ -18,7 +18,23 @@ namespace Movement
         
         public override void StraightMovement(float deltaXMovement, float movementSpeed, bool direction, bool canMakeCombo)
         {
-            PlayerTransform.position += Vector3.right  * (deltaXMovement * movementSpeed *  Time.deltaTime);
+            if (!_forceRemoved)
+            {
+                _forceRemoved = true;
+                Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+            }
+            var currentDirection = PlayerMovement.GetPreviousJumpAngle();
+            var previousDirection = Mathf.Sign(currentDirection.x);
+            if ((previousDirection < 0 && deltaXMovement > 0) || (previousDirection > 0 && deltaXMovement < 0))
+            {
+                if (!_changedDirection)
+                {
+                    Rigidbody2D.velocity = new Vector2(0, Rigidbody2D.velocity.y);
+                    _changedDirection = true;
+                    Debug.LogError("Restart force");
+                }
+            }
+            Rigidbody2D.AddForce(Vector3.right  * (deltaXMovement * movementSpeed ));
             PlayerMovement.RotatePlayer(direction);
         }
 
