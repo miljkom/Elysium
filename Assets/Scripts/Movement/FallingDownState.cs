@@ -46,8 +46,7 @@ namespace Movement
 
         public override void Bounce(Vector2 jumpAngle, float movementSpeed, bool isPlayerFallingDown)
         {
-            var bounceInDirection = jumpAngle.x > 0 ? new Vector2(0.5f, 0) : new Vector2(-0.5f, 0);
-            Rigidbody2D.AddForce(bounceInDirection * movementSpeed);
+            Rigidbody2D.AddForce(jumpAngle.normalized * movementSpeed);
             PlayerMovement.RotatePlayer(jumpAngle.x > 0);
             PlayerMovement.BounceMade(); 
         }

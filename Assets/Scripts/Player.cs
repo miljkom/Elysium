@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int movementNeededToMakeFirstCombo;
     [SerializeField] private float bounceSpeed;
     [SerializeField] private float bounceSpeedFallingDown;
+    [SerializeField] private float bounceAngleFallingDown;
     [SerializeField] private float minJumpingAngle;
     [SerializeField] private float maxJumpingAngle;
     [SerializeField] private float[] comboSpeedMultipliers;
@@ -30,6 +31,8 @@ public class Player : MonoBehaviour
     private Vector2 _jumpAngle;
     private Transform _transform;
     private float _previousPlayerYPosition;
+    private float _currentPlayerYPosition;
+    private bool _playerIsFallingDown;
     private bool _failedCombo;
     private bool _goingLeft;
     private bool _goingRight;
@@ -53,11 +56,25 @@ public class Player : MonoBehaviour
     {
         Bounce();
         CheckIfCanMakeCombo();
+    }
+
+    private void FixedUpdate()
+    {
+        _currentPlayerYPosition = transform.position.y;
+        SetIfPlayerIsFallingDown();
         if (IsPlayerIsFalling())
         {
             EndGameIfNeeded();
             MoveToFallingDownState();
         }
+        
+
+        _previousPlayerYPosition = _currentPlayerYPosition;
+    }
+
+    private void SetIfPlayerIsFallingDown()
+    {
+        _playerIsFallingDown = _currentPlayerYPosition < _previousPlayerYPosition;
     }
 
     public void UpAndHorizontalMovement(Vector2 jumpAngle, bool direction)
@@ -124,7 +141,8 @@ public class Player : MonoBehaviour
     {
         var playerMovementData = new PlayerMovement.PlayerMovementData(_transform, rigidbody2d, upSpeedMovement,
             straightMovementSpeed, diagonalMovementSpeed, minJumpingAngle, maxJumpingAngle, 
-            comboSpeedMultipliers, bounceSpeed, bounceSpeedFallingDown, minBounceAngle, maxBounceAngle, bounceSpeedMultipliers,
+            comboSpeedMultipliers, bounceSpeed, bounceSpeedFallingDown, minBounceAngle, maxBounceAngle, 
+            bounceSpeedMultipliers, bounceAngleFallingDown,
             movementNeededToMakeFirstCombo, animationController, IsPlayerIsFalling);
         _playerMovement = new PlayerMovement(playerMovementData);
     }
@@ -153,10 +171,8 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerIsFalling()
     {
-        var currentYPosition = _transform.position.y;
-        var playerFalling = currentYPosition < _previousPlayerYPosition;
-        _previousPlayerYPosition = currentYPosition;
-        return playerFalling;
+        Debug.LogError(_playerIsFallingDown);
+        return _playerIsFallingDown;
     }
 
     private void EndGameIfNeeded()
@@ -169,7 +185,7 @@ public class Player : MonoBehaviour
     
     private void MoveToFallingDownState()
     {
-        if(!_playerMovement.IsInCombo)
+        //if(!_playerMovement.IsInCombo)
             _playerMovement.ChangeState(PlayerMovement.States.FallingDownState);
     }
     
