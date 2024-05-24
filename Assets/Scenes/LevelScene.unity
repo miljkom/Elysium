@@ -6333,11 +6333,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: maxJumpingAngle
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: minJumpingAngle
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5474409419448949901, guid: 36af534b9bc2de045a52b61eb5418733, type: 3}
       propertyPath: upSpeedMovement

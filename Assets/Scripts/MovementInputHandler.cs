@@ -38,15 +38,16 @@ public class MovementInputHandler : MonoBehaviour
 
     private void Update()
     {
-        _fingerStartingPosition = _fingerCurrentPosition;
-        //todo Uros ovo je verovatno bolje da uzme samo 1. touch. Verujem da moze da se pojebe ukoliko igrac koristi 2 prsta
-        foreach (var touch in Input.touches)
-        {
-            FirstTouch(touch);
-            TouchWhileFingerIsMoving(touch);
-            OnInputOver(touch);
-        }
+        // _fingerStartingPosition = _fingerCurrentPosition;
+        // //todo Uros ovo je verovatno bolje da uzme samo 1. touch. Verujem da moze da se pojebe ukoliko igrac koristi 2 prsta
+        // foreach (var touch in Input.touches)
+        // {
+        //     FirstTouch(touch);
+        //     TouchWhileFingerIsMoving(touch);
+        //     OnInputOver(touch);
+        // }
         //delete magic number
+        CheckSwipe();
         boundary.SetActive(transform.position.y < 17f);
     }
 
