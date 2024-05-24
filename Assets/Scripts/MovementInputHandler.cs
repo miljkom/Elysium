@@ -14,10 +14,26 @@ public class MovementInputHandler : MonoBehaviour
     private float _timeSinceInputStarted;
     private bool _movementHappenedAfterNewInput;
     private Camera _cameraMain;
+    private Gyroscope gyro;
+    private bool gyroEnabled;
 
     private void Awake()
     {
         _cameraMain = Camera.main;
+        gyroEnabled = EnableGyro();
+        if(!gyroEnabled)
+            Destroy(player.gameObject);
+    }
+    
+    private bool EnableGyro()
+    {
+        if (SystemInfo.supportsGyroscope)
+        {
+            gyro = Input.gyro;
+            gyro.enabled = true;
+            return true;
+        }
+        return false;
     }
 
     private void Update()
@@ -55,24 +71,34 @@ public class MovementInputHandler : MonoBehaviour
     
     private void CheckSwipe()
     {
-        var upFingerMovement = CheckUpFingerMove();
-        var horizontalFingerMovement = CheckHorizontalFingerMove();
-        if (upFingerMovement && horizontalFingerMovement)
+        if (gyroEnabled)
         {
-            player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(),
-                CalculateUpFingerMovement()), CheckDirectionOnXAxis());
-            _movementHappenedAfterNewInput = true;
+            Vector3 tilt = Input.gyro.attitude.eulerAngles;
+            // Adjust the tilt as needed
+            tilt = new Vector3(tilt.x, tilt.y, tilt.z);
+            
+            // Depending on your device orientation you might need to adjust this
+            float xTilt = Mathf.Clamp(tilt.z, -1f, 1f); // Adjust the axis based on your game requirements
+            player.MovePlayer(xTilt);
         }
-        else if (horizontalFingerMovement)
-        {
-            player.StraightHorizontalMovement(CalculateHorizontalFingerMovement(), CheckDirectionOnXAxis());
-            _movementHappenedAfterNewInput = true;
-        }
-        else if (upFingerMovement)
-        {
-            player.OnSwipeUp();
-            _movementHappenedAfterNewInput = true;
-        }
+        // var upFingerMovement = CheckUpFingerMove();
+        // var horizontalFingerMovement = CheckHorizontalFingerMove();
+        // if (upFingerMovement && horizontalFingerMovement)
+        // {
+        //     player.UpAndHorizontalMovement(new Vector2(CalculateHorizontalFingerMovement(),
+        //         CalculateUpFingerMovement()), CheckDirectionOnXAxis());
+        //     _movementHappenedAfterNewInput = true;
+        // }
+        // else if (horizontalFingerMovement)
+        // {
+        //     player.StraightHorizontalMovement(CalculateHorizontalFingerMovement(), CheckDirectionOnXAxis());
+        //     _movementHappenedAfterNewInput = true;
+        // }
+        // else if (upFingerMovement)
+        // {
+        //     player.OnSwipeUp();
+        //     _movementHappenedAfterNewInput = true;
+        // }
     }
     
     private void OnInputOver(Touch touch)

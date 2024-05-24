@@ -171,7 +171,6 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerIsFalling()
     {
-        Debug.LogError(_playerIsFallingDown);
         return _playerIsFallingDown;
     }
 
@@ -231,6 +230,12 @@ public class Player : MonoBehaviour
     {
         Debug.LogError("Started combo");
         _timeAfterLandingFromCombo = 0;
+    }
+
+    public void MovePlayer(float xTilt)
+    {
+        Vector2 movement = new Vector2(xTilt, 0);
+        rigidbody2d.velocity = new Vector2(movement.x * 10f, rigidbody2d.velocity.y);
     }
 }
 
